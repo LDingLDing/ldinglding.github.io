@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css">
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	
+
+	<title>了解你使用的 Sort ( 实现剖析) - 3 | 李璐慧的个人网站 - Aloe's Personal Website</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="芦荟">
+	<meta name="description" content="">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="李璐慧的个人网站 - Aloe's Personal Website">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="了解你使用的 Sort ( 实现剖析) - 3 | 李璐慧的个人网站 - Aloe's Personal Website">
+	<meta property="og:description" content="">
+	<meta property="og:url" content="https://blog.liluhui.cn/2019/03/04/了解你使用的Sort-3/">
+
+	
+	<meta property="article:published_time" content="2019-03-04T00:03:00+08:00"/> 
+	<meta property="article:author" content="芦荟">
+	<meta property="article:published_first" content="李璐慧的个人网站 - Aloe's Personal Website, /2019/03/04/了解你使用的Sort-3/" />
+	
+</head>
+<body class="post-template">
+	<script>
+	!(function(c,b,d,a){c[a]||(c[a]={});c[a].config={pid:"ik1fdt7jh9@eae4827960753c5",appType:"web",imgUrl:"https://arms-retcode.aliyuncs.com/r.png?",sendResource:true,enableLinkTrace:true,behavior:true,useFmp:true};
+	with(b)with(body)with(insertBefore(createElement("script"),firstChild))setAttribute("crossorigin","",src=d)
+	})(window,document,"https://retcode.alicdn.com/retcode/bl.js","__bl");
+	</script>
+	<div class="site-wrapper">
+		
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">首页</a>
+                
+            </li>
+            
+        </ul> 
+    </div>
+     
+    <div class="site-nav-right">
+         
+        
+<div class="social-links" >
+    
+    
+    
+    
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2019-03-03T16:00:00.000Z" itemprop="datePublished">
+                    2019-03-4
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/算法/">算法</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">了解你使用的 Sort ( 实现剖析) - 3</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <p>先上图， 本篇文章涉及 <strong>归并排序</strong> 和 <strong>基数排序</strong> 两种算法</p>
+<p>往期：</p>
+<ul>
+<li><a href="/2019/03/02/了解你使用的Sort-1/" title="了解你使用的 Sort ( 实现剖析) - 1">了解你使用的 Sort ( 实现剖析) - 1</a> 中，介绍了 <strong>插入排序</strong> 和 <strong>交换排序</strong> 中四种排序算法</li>
+<li><a href="/2019/03/03/了解你使用的Sort-2/" title="了解你使用的 Sort ( 实现剖析) - 2">了解你使用的 Sort ( 实现剖析) - 2</a> 中，介绍了 <strong>选择排序</strong> 中两种算法</li>
+</ul>
+
+<h2 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h2><p>归并排序使用<strong>分治法</strong>，核心在于数列的“分”与“合”，不断地将两个已排好序的数组合并一个有序数组</p>
+<p>思路：</p>
+<ol>
+<li>将数组分割为两个部分，创建新的数组a1和 b1</li>
+<li>如果a1的长度大于2，则继续执行1过程，直至ai</li>
+<li>将ai中两个数字进行比较交换位置形成有效数组</li>
+<li><strong>递归</strong>向上比较两个数组大小并合并成新的有序数组 (例如比较数组第一位，即可得出哪个数组更小)</li>
+</ol>
+<p>&nbsp;</p>
+<p>参考动画去理解 ↓</p>
+<img src="/2019/03/04/了解你使用的Sort-3/1.gif" width="991" height="541">
+<h2 id="基数排序"><a href="#基数排序" class="headerlink" title="基数排序"></a>基数排序</h2><p>前置条件：</p>
+<ul>
+<li>必须为整数数组，或者你可以转化为整数数组</li>
+<li>知道数组的位数范围（比如 0 - 999 最多三位）</li>
+</ul>
+<p>基数排序是<strong>桶排序</strong>的改进算法。由于桶排序需要创建数组数据范围长度的空间，很浪费空间，基数排序则是一个逐位(个位、十位、百位等)的桶排序，空间仅需长度为10的数组</p>
+<p>思路：</p>
+<ol>
+<li>首先只关注数组a中每个数的<strong>个位</strong></li>
+<li>创建数组b长度为10 值默认0，遍历数组a，关注<strong>个位</strong>，如果值位9，则b[9]的值加1。即b[a[i]]++，最终得到个位数0-9分别有几个</li>
+<li>再次遍历数组a，进行基于个位的排序。由于步骤2可以确认每个数值的排序后索引范围，比如b[0]长度为3的话，所有a中个位为0的只要放在0-3位即可</li>
+<li>对<strong>十位</strong>再次进行上述步骤，逐位数进行排序</li>
+</ol>
+<p>&nbsp;</p>
+<p>参考动画去理解 （有点长 四分钟）↓</p>
+<img src="/2019/03/04/了解你使用的Sort-3/2.gif" width="961" height="436">
+<p>&nbsp;</p>
+<p>这个动画可能更好理解点，差别是这次的数组b是个二维数组，直接存入数组a的值 ↓</p>
+<img src="/2019/03/04/了解你使用的Sort-3/3.gif" width="1070" height="631">
+
+                </div>
+            </section>
+        </article>
+        
+        <div class="post-full-content">
+            <ul class="post-copyright">
+            <li class="post-copyright-author">
+                <strong>本文作者： </strong>芦荟</li>
+            <li class="post-copyright-link">
+                <strong>本文链接：</strong>
+                <a href="https://blog.liluhui.cn/2019/03/04/了解你使用的Sort-3/" title="了解你使用的 Sort ( 实现剖析) - 3">https://blog.liluhui.cn/2019/03/04/了解你使用的Sort-3/</a>
+            </li>
+            <li class="post-copyright-license">
+                <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div style="height: 4vw;width: 100%"></div>
+    <nav id="gobottom" class="pagination">
+        
+        <a class="prev-post" title="VPS出事的又一天" href="/2019/03/06/VPS出事的又一天/">
+            ← VPS出事的又一天
+        </a>
+        
+        <span class="prev-next-post">•</span>
+        
+        <a class="next-post" title="了解你使用的 Sort ( 实现剖析) - 2" href="/2019/03/03/了解你使用的Sort-2/">
+            了解你使用的 Sort ( 实现剖析) - 2 →
+        </a>
+        
+    </nav>
+
+    
+
+    
+    <div id="leancloud_visitors" data-index="/2019/03/04/了解你使用的Sort-3/" data-title="了解你使用的 Sort ( 实现剖析) - 3"></div>
+
+</main>
+
+
+
+	</div>
+	
+	
+
+
+	
+	
+
+
+
+
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<div>
+				<a href="/" title="李璐慧的个人网站 - Aloe's Personal Website">李璐慧的个人网站 - Aloe's Personal Website</a>
+				&copy; 2021
+			</div>
+			<div>
+				<a href="https://beian.miit.gov.cn" target="_blank">浙ICP备19010836号-1</a>
+			</div>
+		</section>
+		<nav class="site-footer-nav">
+			
+			<div>
+				<span>访问量统计: </span>
+				<span class="leancloud_visitors_count" data-index="home"></span>
+			</div>
+			
+        </nav>
+    </div>
+</footer>
+	
+
+
+<script>
+    if(window.navigator && navigator.serviceWorker) {
+        navigator.serviceWorker.getRegistrations()
+        .then(function(registrations) {
+            for(let registration of registrations) {
+                registration.unregister();
+            }
+        });
+    }
+</script>
+
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="李璐慧的个人网站 - Aloe's Personal Website">
+			
+            <span>李璐慧的个人网站 - Aloe's Personal Website</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">了解你使用的 Sort ( 实现剖析) - 3</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+
+
+
+
+
+
+<script src="/js/post.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("", "");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	var $doms = $(".leancloud_visitors_count")
+	if (!$doms.length) return
+	// var urls = $doms.map(function(){return $(this).attr('data-index')}) || [];
+	var urls = []
+	for (var i = 0; i < $doms.length; i++) {
+		urls.push($($doms[i]).attr('data-index'))
+	}
+	query.containedIn("url", urls);
+	query.find({
+		success: function(rst) {
+			// 初始化
+			$doms.each(function(i) {
+				$(this).text(0)
+			})
+			// 渲染数据
+			for (var i in rst) {
+				var item = rst[i]
+				$('.leancloud_visitors_count[data-index="'+ item.get('url') +'"]').text(item.get('time'))
+			}
+		},
+		error: function (obj, e) {
+			console.warn(obj, e)
+		}
+	})
+}
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	var $dom = $("#leancloud_visitors")
+	if (!$dom.length) return
+	url = $dom.attr('data-index').trim();
+	title = $dom.attr('data-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+					},
+					error: function(counter, e) {
+						console.warn(counter, e)
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				var acl = new AV.ACL();
+				acl.setPublicReadAccess(true);
+  			// acl.setWriteAccess(AV.User.current(),true);
+  			acl.setWriteAccess('*', true);
+				newcounter.setACL(acl)
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(e) {
+			console.warn(e)
+		}
+	});
+}
+$(function() {
+	try {
+		var Counter = AV.Object.extend("Counter");
+		addCount(Counter);
+		showTime(Counter);
+	} catch (e) {
+		console.log(e)
+	}
+}); 
+</script>
+</body>
+</html>

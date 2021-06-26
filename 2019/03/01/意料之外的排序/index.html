@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css">
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	
+
+	<title>意料之外的排序(Sort "Bug") | 李璐慧的个人网站 - Aloe's Personal Website</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="芦荟">
+	<meta name="description" content="排序问题">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="李璐慧的个人网站 - Aloe's Personal Website">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="意料之外的排序(Sort "Bug") | 李璐慧的个人网站 - Aloe's Personal Website">
+	<meta property="og:description" content="排序问题">
+	<meta property="og:url" content="https://blog.liluhui.cn/2019/03/01/意料之外的排序/">
+
+	
+	<meta property="article:published_time" content="2019-03-01T00:03:00+08:00"/> 
+	<meta property="article:author" content="芦荟">
+	<meta property="article:published_first" content="李璐慧的个人网站 - Aloe's Personal Website, /2019/03/01/意料之外的排序/" />
+	
+</head>
+<body class="post-template">
+	<script>
+	!(function(c,b,d,a){c[a]||(c[a]={});c[a].config={pid:"ik1fdt7jh9@eae4827960753c5",appType:"web",imgUrl:"https://arms-retcode.aliyuncs.com/r.png?",sendResource:true,enableLinkTrace:true,behavior:true,useFmp:true};
+	with(b)with(body)with(insertBefore(createElement("script"),firstChild))setAttribute("crossorigin","",src=d)
+	})(window,document,"https://retcode.alicdn.com/retcode/bl.js","__bl");
+	</script>
+	<div class="site-wrapper">
+		
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">首页</a>
+                
+            </li>
+            
+        </ul> 
+    </div>
+     
+    <div class="site-nav-right">
+         
+        
+<div class="social-links" >
+    
+    
+    
+    
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2019-02-28T16:00:00.000Z" itemprop="datePublished">
+                    2019-03-1
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/JavaScript/">JavaScript</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">意料之外的排序(Sort "Bug")</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <h2 id="数字排序"><a href="#数字排序" class="headerlink" title="数字排序"></a>数字排序</h2><p>先抛出一个你一定遇到过的问题</p>
+<img src="/2019/03/01/意料之外的排序/1.png" width="518" height="86">
+<p>当我们对一个数组进行排序的时候，你会发现结果诶？？再仔细一看，怎么像是感觉根据字符串排序了，我传入的明明是数字..</p>
+<p><br></p>
+<p>★ 所以第一个点，我们要记住<code>compareFunction</code>默认是会转换为字符串按照字符的 Unicode 位点进行排序的</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arr.sort([compareFunction])</span><br></pre></td></tr></table></figure>
+<p>数字排序要这样写</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">arr.sort(<span class="function"><span class="keyword">function</span>(<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> a - b</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// or</span></span><br><span class="line"></span><br><span class="line">arr.sort(<span class="function">(<span class="params">a, b</span>) =&gt;</span> a - b)</span><br></pre></td></tr></table></figure>
+<h2 id="中文排序"><a href="#中文排序" class="headerlink" title="中文排序"></a>中文排序</h2><p>上面提到 <code>compareFunction</code> 默认是按照 Unicode 点位进行比较的，那么中文肯定是不能如图这样排序了</p>
+<img src="/2019/03/01/意料之外的排序/2.png" width="436" height="81">
+<p><img src alt></p>
+<p>这时候，你需要一个转化为其他字符集来比较的方法 <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/localeCompare" target="_blank" rel="noopener"><code>String.localeCompare</code></a>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">referenceStr.localeCompare(compareString[, locales[, options]])</span><br></pre></td></tr></table></figure>
+<p>实现  ↓ </p>
+<img src="/2019/03/01/意料之外的排序/3.png" width="559" height="83">
+<p><code>localeCompare</code> 可以指定具体语言进行字符的比较，不过这个目前坑比较多 需要小心使用，比如</p>
+<ul>
+<li><p><a href="https://caniuse.com/#feat=localecompare" target="_blank" rel="noopener">兼容性</a>上还比较新，需要注意 (IE11+、safari10+)</p>
+</li>
+<li><p>比较结果的约定是<strong>正负数</strong>，不同浏览器下返回不一致，所以不要指定数值做结果判断</p>
+</li>
+<li><p>大数据情况如何优化</p>
+</li>
+<li><p><code>locales</code> 规范众多，不同浏览器不是都有对应实现，甚至实测不同浏览器同一 locals 下排序结果也有不同</p>
+</li>
+</ul>
+<img src="/2019/03/01/意料之外的排序/4.png" width="586" height="481">
+<p><br></p>
+<p>So, 这么麻烦有没有其他方案呢？</p>
+<blockquote>
+<p>你可以转成拼音再比较啊，虽然丢失了我们伟大的声调.. 出门右上方 Github ..</p>
+</blockquote>
+<h2 id="对象排序"><a href="#对象排序" class="headerlink" title="对象排序"></a>对象排序</h2><p>我不知道你们有没有遇到过，理论上对象排序（根据对象某一个字段排序）按照如下方式是可行的，但是会出现错误</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> items = [</span><br><span class="line">  &#123; <span class="attr">name</span>: <span class="string">'Edward'</span>, <span class="attr">value</span>: <span class="number">21</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">name</span>: <span class="string">'Sharpe'</span>, <span class="attr">value</span>: <span class="number">37</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">name</span>: <span class="string">'And'</span>, <span class="attr">value</span>: <span class="number">45</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">name</span>: <span class="string">'The'</span>, <span class="attr">value</span>: <span class="number">-12</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">name</span>: <span class="string">'Magnetic'</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">name</span>: <span class="string">'Zeros'</span>, <span class="attr">value</span>: <span class="number">37</span> &#125;</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"><span class="comment">// sort by value</span></span><br><span class="line">items.sort(<span class="function"><span class="keyword">function</span> (<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (a.value - b.value)</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>我当时经历的实际现象是由于mqtt队列存储的时间不可靠，而且今日的数据是全量返回没有分页设计，这就需要前端对可能大量话数据进行排序，大概就是这样一个数据 [{…..,time: 1551455510878000},{…..,time: 1551455510878000},…]。出问题的用户当时的数据量是80+条 </p>
+<p>由于当时紧急处理也没把用户的数据存一份，我实际模拟的几次，包括把 time 抽成一维数组进行校验，还是按照数组对象形式，都没有在同样的环境里复现这个问题</p>
+<p>（模拟一百条数据，最后一句检测有没有排序错误 ↓）<br><img src="/2019/03/01/意料之外的排序/5.png" width="791" height="351"></p>
+<p>（模拟一百条数据，最后一句检测有没有排序错误 ↓）<br><img src="/2019/03/01/意料之外的排序/6.png" width="795" height="308"></p>
+<p>（模拟一百条数据，加上洗牌算法，最后一句检测有没有排序错误 ↓）<br><img src="/2019/03/01/意料之外的排序/7.png" width="796" height="327"></p>
+<div id="对象排序-Demo"></div>
+
+<p>解决方案是将 time 和 对应数据索引位 做了个映射关系 (map)，，由于非理想情况下可能出现同一时间多条对话，实际是 time 对应多个索引位，顺序依赖数据源 （所以还是有风险，我这个项目的数据源并不靠谱）</p>
+<p>参考如下吧</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> data = [&#123;time&#125;, &#123;time&#125;, &#123;time&#125;, &#123;time&#125;, ...]</span><br><span class="line"><span class="keyword">var</span> output = [] </span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> map = &#123;&#125;</span><br><span class="line"><span class="keyword">var</span> timeArr = []</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> data) &#123;</span><br><span class="line">    timeArr.push(data[i].time)</span><br><span class="line">    map[data[i].time] = map[data[i].time] || []</span><br><span class="line">    map[data[i].time].push(i)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">timeArr.sort(<span class="function"><span class="keyword">function</span>(<span class="params">a, b</span>) </span>&#123;<span class="keyword">return</span> a - b&#125;)</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> timeArr) &#123;</span><br><span class="line">    output.push( map[timeArr[i]].shift() )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="稳定排序"><a href="#稳定排序" class="headerlink" title="稳定排序"></a>稳定排序</h2><p>有没有碰到过每次排序因为比较值的大小一样，然后每次排序一样的就忽前忽后、忽上忽下..  比如表格，你点下排序、再重复多点几次看看，顺手还能反馈几个Bug</p>
+<p>我想，你需要<code>稳定排序</code></p>
+<blockquote>
+<p> 稳定排序：如果a原本在b前面，而a=b，排序之后a仍然在b的前面； 不稳定：如果a原本在b的前面，而a=b，排序之后a可能会出现在b的后面；</p>
+</blockquote>
+<p>&nbsp;</p>
+<p>先上个找来的图 ↓ </p>
+<img src="/2019/03/01/意料之外的排序/8.png" width="659" height="411">
+<p>各个浏览器内核对排序算法的规划不太一样，没仔细查了，我们以 V8 来看</p>
+<blockquote>
+<p>v8 在处理 sort 方法时，使用了插入排序和快排两种方案。当目标数组长度小于10时，使用插入排序；反之，使用快排</p>
+</blockquote>
+<p>所以，原生 Sort 基本无法避免，更何况你需要兼顾各个内核，另外参考以下建议</p>
+<ol>
+<li>放弃原生Sort, 另外实现表中稳定排序算法，开源库应该有很多</li>
+<li>参考上面 <a href="#对象排序-Demo">对象排序</a> 中的做索引位映射表也可以解决</li>
+<li>让后端搞吧</li>
+</ol>
+
+                </div>
+            </section>
+        </article>
+        
+        <div class="post-full-content">
+            <ul class="post-copyright">
+            <li class="post-copyright-author">
+                <strong>本文作者： </strong>芦荟</li>
+            <li class="post-copyright-link">
+                <strong>本文链接：</strong>
+                <a href="https://blog.liluhui.cn/2019/03/01/意料之外的排序/" title="意料之外的排序(Sort "Bug")">https://blog.liluhui.cn/2019/03/01/意料之外的排序/</a>
+            </li>
+            <li class="post-copyright-license">
+                <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div style="height: 4vw;width: 100%"></div>
+    <nav id="gobottom" class="pagination">
+        
+        <a class="prev-post" title="了解你使用的 Sort ( 实现剖析) - 1" href="/2019/03/02/了解你使用的Sort-1/">
+            ← 了解你使用的 Sort ( 实现剖析) - 1
+        </a>
+        
+        <span class="prev-next-post">•</span>
+        
+    </nav>
+
+    
+
+    
+    <div id="leancloud_visitors" data-index="/2019/03/01/意料之外的排序/" data-title="意料之外的排序(Sort "Bug")"></div>
+
+</main>
+
+
+
+	</div>
+	
+	
+
+
+	
+	
+
+
+
+
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<div>
+				<a href="/" title="李璐慧的个人网站 - Aloe's Personal Website">李璐慧的个人网站 - Aloe's Personal Website</a>
+				&copy; 2021
+			</div>
+			<div>
+				<a href="https://beian.miit.gov.cn" target="_blank">浙ICP备19010836号-1</a>
+			</div>
+		</section>
+		<nav class="site-footer-nav">
+			
+			<div>
+				<span>访问量统计: </span>
+				<span class="leancloud_visitors_count" data-index="home"></span>
+			</div>
+			
+        </nav>
+    </div>
+</footer>
+	
+
+
+<script>
+    if(window.navigator && navigator.serviceWorker) {
+        navigator.serviceWorker.getRegistrations()
+        .then(function(registrations) {
+            for(let registration of registrations) {
+                registration.unregister();
+            }
+        });
+    }
+</script>
+
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="李璐慧的个人网站 - Aloe's Personal Website">
+			
+            <span>李璐慧的个人网站 - Aloe's Personal Website</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">意料之外的排序(Sort "Bug")</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+
+
+
+
+
+
+<script src="/js/post.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("", "");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	var $doms = $(".leancloud_visitors_count")
+	if (!$doms.length) return
+	// var urls = $doms.map(function(){return $(this).attr('data-index')}) || [];
+	var urls = []
+	for (var i = 0; i < $doms.length; i++) {
+		urls.push($($doms[i]).attr('data-index'))
+	}
+	query.containedIn("url", urls);
+	query.find({
+		success: function(rst) {
+			// 初始化
+			$doms.each(function(i) {
+				$(this).text(0)
+			})
+			// 渲染数据
+			for (var i in rst) {
+				var item = rst[i]
+				$('.leancloud_visitors_count[data-index="'+ item.get('url') +'"]').text(item.get('time'))
+			}
+		},
+		error: function (obj, e) {
+			console.warn(obj, e)
+		}
+	})
+}
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	var $dom = $("#leancloud_visitors")
+	if (!$dom.length) return
+	url = $dom.attr('data-index').trim();
+	title = $dom.attr('data-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+					},
+					error: function(counter, e) {
+						console.warn(counter, e)
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				var acl = new AV.ACL();
+				acl.setPublicReadAccess(true);
+  			// acl.setWriteAccess(AV.User.current(),true);
+  			acl.setWriteAccess('*', true);
+				newcounter.setACL(acl)
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(e) {
+			console.warn(e)
+		}
+	});
+}
+$(function() {
+	try {
+		var Counter = AV.Object.extend("Counter");
+		addCount(Counter);
+		showTime(Counter);
+	} catch (e) {
+		console.log(e)
+	}
+}); 
+</script>
+</body>
+</html>

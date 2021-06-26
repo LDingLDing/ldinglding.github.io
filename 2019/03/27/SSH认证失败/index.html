@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css">
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	
+
+	<title>SSH 认证失败 (从问题理解 SSH 认证) | 李璐慧的个人网站 - Aloe's Personal Website</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="芦荟">
+	<meta name="description" content="">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="李璐慧的个人网站 - Aloe's Personal Website">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="SSH 认证失败 (从问题理解 SSH 认证) | 李璐慧的个人网站 - Aloe's Personal Website">
+	<meta property="og:description" content="">
+	<meta property="og:url" content="https://blog.liluhui.cn/2019/03/27/SSH认证失败/">
+
+	
+	<meta property="article:published_time" content="2019-03-27T00:03:00+08:00"/> 
+	<meta property="article:author" content="芦荟">
+	<meta property="article:published_first" content="李璐慧的个人网站 - Aloe's Personal Website, /2019/03/27/SSH认证失败/" />
+	
+</head>
+<body class="post-template">
+	<script>
+	!(function(c,b,d,a){c[a]||(c[a]={});c[a].config={pid:"ik1fdt7jh9@eae4827960753c5",appType:"web",imgUrl:"https://arms-retcode.aliyuncs.com/r.png?",sendResource:true,enableLinkTrace:true,behavior:true,useFmp:true};
+	with(b)with(body)with(insertBefore(createElement("script"),firstChild))setAttribute("crossorigin","",src=d)
+	})(window,document,"https://retcode.alicdn.com/retcode/bl.js","__bl");
+	</script>
+	<div class="site-wrapper">
+		
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">首页</a>
+                
+            </li>
+            
+        </ul> 
+    </div>
+     
+    <div class="site-nav-right">
+         
+        
+<div class="social-links" >
+    
+    
+    
+    
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2019-03-26T16:04:32.000Z" itemprop="datePublished">
+                    2019-03-27
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/建站/">建站</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">SSH 认证失败 (从问题理解 SSH 认证)</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <h2 id="问题描述-amp-解决"><a href="#问题描述-amp-解决" class="headerlink" title="问题描述&amp;解决"></a>问题描述&amp;解决</h2><p>远端重置 SSH 后，连接失败，提示错误内容如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ </span><br><span class="line">WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED! </span><br><span class="line">@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@</span><br><span class="line">IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!</span><br><span class="line">Someone could be eavesdropping on you right now (man-in-the-middle attack)!</span><br><span class="line">It is also possible that the RSA host key has just been changed.</span><br><span class="line">The fingerprint for the RSA key sent by the remote host is 36:68:a6:e6:43:34:6b:82:d7:f4:df:1f:c2:e7:37:cc.</span><br><span class="line">Please contact your system administrator.</span><br><span class="line">Add correct host key in /u/xlian008/.ssh/known_hosts to get rid of this message.</span><br><span class="line">Offending key in /u/xlian008/.ssh/known_hosts:2RSA host key for 116.62.242.180 has changed and you have requested strict checking.</span><br><span class="line">Host key verification failed.</span><br></pre></td></tr></table></figure>
+<p>根据描述，本地 <code>known_hosts</code> 下已记录远端的公钥信息，需要删除掉本地的记录</p>
+<p><strong>解决方式一</strong></p>
+<p>手动删除 <code>~/.ssh/known_hosts</code> 文件中对应内容</p>
+<p><strong>解决方式二</strong></p>
+<p>命令行删除<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -f &quot;~/.ssh/known_hosts&quot; -R 116.62.242.180</span><br></pre></td></tr></table></figure></p>
+<hr>
+<p>删除 <code>known_hosts</code> 中对应记录依然连接不上，提示错误内容如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ssh root@116.62.242.180</span><br><span class="line">The authenticity of host &apos;116.62.242.180 (116.62.242.180)&apos; can&apos;t be established.</span><br><span class="line">ECDSA key fingerprint is SHA256:tAdae+FbyMnCDJdVp7BpN+qhrOGm6PWDdd8BPIImmOU.</span><br><span class="line">Are you sure you want to continue connecting (yes/no)?</span><br><span class="line">Host key verification failed.</span><br></pre></td></tr></table></figure>
+<p><strong>解决方式</strong></p>
+<p>通过信息提示中的指纹获取远端公钥信息，并加入到 <code>known_hosts</code> 文件中</p>
+<p>S1.获取公钥<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keyscan -t ECDSA -p 22 116.62.242.180</span><br></pre></td></tr></table></figure></p>
+<p>S2.将返回的内容追加到 <code>known_hosts</code>  文件内容中</p>
+<h2 id="SSH-之-konw-hosts"><a href="#SSH-之-konw-hosts" class="headerlink" title="SSH 之 konw_hosts"></a>SSH 之 konw_hosts</h2><h3 id="为什么有-known-hosts-这个设计呢？"><a href="#为什么有-known-hosts-这个设计呢？" class="headerlink" title="为什么有 known_hosts 这个设计呢？"></a>为什么有 known_hosts 这个设计呢？</h3><p>首先了解 SSH 连接建立的过程：</p>
+<ol>
+<li><strong>客户端发起 SSH 连接请求</strong> </li>
+<li><strong>服务端传送公钥给客户端：</strong> 此时客户端接收到服务端的公钥</li>
+<li><strong>客户端记录/对比服务器的公钥并记录到~/.ssh/known_hosts ：</strong> 若客户端第一次接收到此服务器，则将服务器的公钥记录在 ~/.ssh/known_hosts 。若已经记录过，则会进行对比，如果有差异则报错。</li>
+<li><strong>客户端传送公钥数据到服务端：</strong> 此时服务端接收到客户端的公钥</li>
+<li><strong>开始双向加解密来验证登陆权限：</strong> 服务端传送数据时用客户端的公钥加密，那么客户端接收用自己的私钥解密；客户端传送数据时用客户端的公钥加密，同理服务端接收用自己的私钥解密。</li>
+</ol>
+<p>在实际操作中，有这样的安全问题，有人截获了登陆请求，伪造了公钥，那么真的难以分辨出来。所以在第一次连接某个ip地址时，都会有指纹信息的提示，这个步骤通常情况下是需要人工校验的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ssh root@116.62.242.180</span><br><span class="line">The authenticity of host &apos;116.62.242.180 (116.62.242.180)&apos; can&apos;t be established.</span><br><span class="line">ECDSA key fingerprint is SHA256:tAdae+FbyMnCDJdVp7BpN+qhrOGm6PWDdd8BPIImmOU.</span><br><span class="line">Are you sure you want to continue connecting (yes/no)?</span><br></pre></td></tr></table></figure>
+<p>为了减少这样的安全风险，连接过的 ip 及其对应公钥信息就存储在客户端本地了，可靠性更高，这就是 known_hosts 的设计目的</p>
+<p>&nbsp;</p>
+<h3 id="那么首次连接时，如何校验指纹信息是否正确呢？"><a href="#那么首次连接时，如何校验指纹信息是否正确呢？" class="headerlink" title="那么首次连接时，如何校验指纹信息是否正确呢？"></a>那么首次连接时，如何校验指纹信息是否正确呢？</h3><p>（这个过程不是必须的，为安全起见，建议校验正确再进行 SSH 连接）</p>
+<p>需要使用 <code>ssh-keygen</code> 工具来计算公钥指纹</p>
+<p>进入服务器，<strong>/etc/ssh</strong> 下有几种密钥，这些文件是在安装 openssh-server 后生成的，SSH 服务就是使用这些密钥进行加密和解密的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ ls -1 /etc/ssh/ssh_host* </span><br><span class="line">/etc/ssh/ssh_host_dsa_key </span><br><span class="line">/etc/ssh/ssh_host_dsa_key.pub </span><br><span class="line">/etc/ssh/ssh_host_ecdsa_key </span><br><span class="line">/etc/ssh/ssh_host_ecdsa_key.pub </span><br><span class="line">/etc/ssh/ssh_host_ed25519_key </span><br><span class="line">/etc/ssh/ssh_host_ed25519_key.pub </span><br><span class="line">/etc/ssh/ssh_host_rsa_key </span><br><span class="line">/etc/ssh/ssh_host_rsa_key.pub</span><br></pre></td></tr></table></figure></p>
+<p>在服务器通过如下命令生成密钥指纹</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -lf /etc/ssh/ssh_host_rsa_key.pub</span><br></pre></td></tr></table></figure>
+<p><strong>-E</strong> 默认为 rsa，根据需要可以改为 ecdsa、md5.. 同时文件也要对应<br><strong>-l</strong> 默认为 sha256</p>
+<h2 id="SSH-之-ssh-keyscan"><a href="#SSH-之-ssh-keyscan" class="headerlink" title="SSH 之 ssh-keyscan"></a>SSH 之 ssh-keyscan</h2><p><code>ssh-keyscan</code>  命令是一个收集大量主机公钥的使用工具。可以使用该工具生成和验证 ssh 的 <code>known_hosts</code> 文件。</p>
+<p>使用语法如下，详细参数见<a href="https://linux.die.net/man/1/ssh-keyscan" target="_blank" rel="noopener">文档</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keyscan [-46Hv] [-f file] [-p port] [-T timeout] [-t type] [host | addrlist namelist] ...</span><br></pre></td></tr></table></figure></p>
+<p>在上面的遇到的问题中，<code>type</code>  根据错误提示知道远端用的是 <code>ECDSA</code> 密钥类型，其他可能有 <code>rsa1</code>、<code>rsa</code>、<code>dsa</code>，这些都是数字签名算法。几者的差别可以见此<a href="https://security.stackexchange.com/questions/23383/ssh-key-type-rsa-dsa-ecdsa-are-there-easy-answers-for-which-to-choose-when" target="_blank" rel="noopener">讨论</a>。</p>
+<p>这个工具很有用，考虑如果在大量机器组成的集群可以实现自动化进行 SSH 访问和部署工作。</p>
+
+                </div>
+            </section>
+        </article>
+        
+        <div class="post-full-content">
+            <ul class="post-copyright">
+            <li class="post-copyright-author">
+                <strong>本文作者： </strong>芦荟</li>
+            <li class="post-copyright-link">
+                <strong>本文链接：</strong>
+                <a href="https://blog.liluhui.cn/2019/03/27/SSH认证失败/" title="SSH 认证失败 (从问题理解 SSH 认证)">https://blog.liluhui.cn/2019/03/27/SSH认证失败/</a>
+            </li>
+            <li class="post-copyright-license">
+                <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div style="height: 4vw;width: 100%"></div>
+    <nav id="gobottom" class="pagination">
+        
+        <a class="prev-post" title="【推荐】做了个简约炫酷的404" href="/2019/03/29/【推荐】做了个简约炫酷的404/">
+            ← 【推荐】做了个简约炫酷的404
+        </a>
+        
+        <span class="prev-next-post">•</span>
+        
+        <a class="next-post" title="F@!K P3P" href="/2019/03/21/P3P/">
+            F@!K P3P →
+        </a>
+        
+    </nav>
+
+    
+
+    
+    <div id="leancloud_visitors" data-index="/2019/03/27/SSH认证失败/" data-title="SSH 认证失败 (从问题理解 SSH 认证)"></div>
+
+</main>
+
+
+
+	</div>
+	
+	
+
+
+	
+	
+
+
+
+
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<div>
+				<a href="/" title="李璐慧的个人网站 - Aloe's Personal Website">李璐慧的个人网站 - Aloe's Personal Website</a>
+				&copy; 2021
+			</div>
+			<div>
+				<a href="https://beian.miit.gov.cn" target="_blank">浙ICP备19010836号-1</a>
+			</div>
+		</section>
+		<nav class="site-footer-nav">
+			
+			<div>
+				<span>访问量统计: </span>
+				<span class="leancloud_visitors_count" data-index="home"></span>
+			</div>
+			
+        </nav>
+    </div>
+</footer>
+	
+
+
+<script>
+    if(window.navigator && navigator.serviceWorker) {
+        navigator.serviceWorker.getRegistrations()
+        .then(function(registrations) {
+            for(let registration of registrations) {
+                registration.unregister();
+            }
+        });
+    }
+</script>
+
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="李璐慧的个人网站 - Aloe's Personal Website">
+			
+            <span>李璐慧的个人网站 - Aloe's Personal Website</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">SSH 认证失败 (从问题理解 SSH 认证)</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+
+
+
+
+
+
+<script src="/js/post.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("", "");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	var $doms = $(".leancloud_visitors_count")
+	if (!$doms.length) return
+	// var urls = $doms.map(function(){return $(this).attr('data-index')}) || [];
+	var urls = []
+	for (var i = 0; i < $doms.length; i++) {
+		urls.push($($doms[i]).attr('data-index'))
+	}
+	query.containedIn("url", urls);
+	query.find({
+		success: function(rst) {
+			// 初始化
+			$doms.each(function(i) {
+				$(this).text(0)
+			})
+			// 渲染数据
+			for (var i in rst) {
+				var item = rst[i]
+				$('.leancloud_visitors_count[data-index="'+ item.get('url') +'"]').text(item.get('time'))
+			}
+		},
+		error: function (obj, e) {
+			console.warn(obj, e)
+		}
+	})
+}
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	var $dom = $("#leancloud_visitors")
+	if (!$dom.length) return
+	url = $dom.attr('data-index').trim();
+	title = $dom.attr('data-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+					},
+					error: function(counter, e) {
+						console.warn(counter, e)
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				var acl = new AV.ACL();
+				acl.setPublicReadAccess(true);
+  			// acl.setWriteAccess(AV.User.current(),true);
+  			acl.setWriteAccess('*', true);
+				newcounter.setACL(acl)
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(e) {
+			console.warn(e)
+		}
+	});
+}
+$(function() {
+	try {
+		var Counter = AV.Object.extend("Counter");
+		addCount(Counter);
+		showTime(Counter);
+	} catch (e) {
+		console.log(e)
+	}
+}); 
+</script>
+</body>
+</html>

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css">
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	
+
+	<title>ZRender 使用记录 | 李璐慧的个人网站 - Aloe's Personal Website</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="芦荟">
+	<meta name="description" content="">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="李璐慧的个人网站 - Aloe's Personal Website">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="ZRender 使用记录 | 李璐慧的个人网站 - Aloe's Personal Website">
+	<meta property="og:description" content="">
+	<meta property="og:url" content="https://blog.liluhui.cn/2019/03/12/ZRender使用记录/">
+
+	
+	<meta property="article:published_time" content="2019-03-12T22:03:00+08:00"/> 
+	<meta property="article:author" content="芦荟">
+	<meta property="article:published_first" content="李璐慧的个人网站 - Aloe's Personal Website, /2019/03/12/ZRender使用记录/" />
+	
+</head>
+<body class="post-template">
+	<script>
+	!(function(c,b,d,a){c[a]||(c[a]={});c[a].config={pid:"ik1fdt7jh9@eae4827960753c5",appType:"web",imgUrl:"https://arms-retcode.aliyuncs.com/r.png?",sendResource:true,enableLinkTrace:true,behavior:true,useFmp:true};
+	with(b)with(body)with(insertBefore(createElement("script"),firstChild))setAttribute("crossorigin","",src=d)
+	})(window,document,"https://retcode.alicdn.com/retcode/bl.js","__bl");
+	</script>
+	<div class="site-wrapper">
+		
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">首页</a>
+                
+            </li>
+            
+        </ul> 
+    </div>
+     
+    <div class="site-nav-right">
+         
+        
+<div class="social-links" >
+    
+    
+    
+    
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2019-03-12T14:39:11.000Z" itemprop="datePublished">
+                    2019-03-12
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/可视化/">可视化</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">ZRender 使用记录</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <p>在使用 ZRender 过程中遇到的一些问题…</p>
+<p>基础链接：</p>
+<ul>
+<li><a href="https://ecomfe.github.io/zrender-doc/public/api.html" target="_blank" rel="noopener">ZRnder 文档</a></li>
+<li><a href="https://github.com/ecomfe/zrender" target="_blank" rel="noopener">ZRender github</a></li>
+</ul>
+<h2 id="textLineHeight-行高配置无效"><a href="#textLineHeight-行高配置无效" class="headerlink" title="textLineHeight 行高配置无效"></a>textLineHeight 行高配置无效</h2><p>在家实测 4.0.7 已经修复了这个问题，在公司用的 4.0.4，看了下 commit 记录 官网是在 <code>4.0.6</code> 修复这个问题的，是由于代码中对传入配置优先级的取舍导致的</p>
+<iframe id="cp_embed_OqVgGb" src="//codepen.io/ldinglding/embed/OqVgGb?height=300&theme-id=dark&slug-hash=OqVgGb&default-tab=js,result&embed-version=2" scrolling="no" frameborder="no" height="300" allowtransparency="true" allowfullscreen="true" class="cp_embed_iframe" style="width: 100%; overflow: hidden;"></iframe>
+<h2 id="多行-n-超出省略-outerWidth"><a href="#多行-n-超出省略-outerWidth" class="headerlink" title="多行( \n ) + 超出省略( outerWidth )"></a>多行( \n ) + 超出省略( outerWidth )</h2><img src="/2019/03/12/ZRender使用记录/1.png" width="159" height="82">
+<p>扶额 …</p>
+<p>从测试代码看没有问题，可以实现多行时仅最后一行出省略符…的效果，那应该是我这块的宽度计算 <code>outerWidth</code> 有问题（我这边做的处理是根据传入的文本计算换行、自适应宽度、自适应高度、超出最大限制后出省略符）</p>
+<iframe id="cp_embed_LaVjMR" src="//codepen.io/ldinglding/embed/LaVjMR?height=300&theme-id=dark&slug-hash=LaVjMR&default-tab=js,result&embed-version=2" scrolling="no" frameborder="no" height="300" allowtransparency="true" allowfullscreen="true" class="cp_embed_iframe" style="width: 100%; overflow: hidden;"></iframe>
+<h2 id="事件到底如何使用"><a href="#事件到底如何使用" class="headerlink" title="事件到底如何使用"></a>事件到底如何使用</h2><p>上手的时候看文档是 <code>zrender.Eventful.on</code> ，就去查 <code>Eventful</code>  对象实例如何创建，然后文档没有任何描述我就去翻源码了，发现这个对象实例化要这么复杂？</p>
+<img src="/2019/03/12/ZRender使用记录/2.png" width="959" height="415">
+<p><a href="https://github.com/ecomfe/zrender/blob/master/src/mixin/Eventful.js#L13-L31" target="_blank" rel="noopener">code link</a></p>
+<p>我还去翻了下echarts怎么注册这个实例的，看着看着又发现了 ZRender 中的 src/core/event.js 是 Eventfull 上层封装，看来一切都是我想复杂了.. <code>Displayable</code>  是继承了<code>Eventfull</code> 的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> circle = <span class="keyword">new</span> zrender.Circle(opts);</span><br><span class="line">circle.on(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;&#125;)</span><br></pre></td></tr></table></figure>
+<p>Tip：测试了下，事件注册在渲染 ( zr.add ) 前后都有效。</p>
+<iframe id="cp_embed_XGbMMQ" src="//codepen.io/ldinglding/embed/XGbMMQ?height=500&theme-id=dark&slug-hash=XGbMMQ&default-tab=js,result&embed-version=2" scrolling="no" frameborder="no" height="500" allowtransparency="true" allowfullscreen="true" class="cp_embed_iframe" style="width: 100%; overflow: hidden;"></iframe>
+<h2 id="不支持-mouseenter-、mouseleave-（hover）"><a href="#不支持-mouseenter-、mouseleave-（hover）" class="headerlink" title="不支持 mouseenter 、mouseleave （hover） ?"></a>不支持 mouseenter 、mouseleave （hover） ?</h2><img src="/2019/03/12/ZRender使用记录/3.png" width="908" height="144">
+<p>从文档看，事件支持中没有鼠标移入移出的事件，但这种基础事件作为 echarts 的底层，我想肯定是有支持的，从源码中可以找到对事件 <code>mousemove</code> 和 <code>mouseout</code> 的支持，测试确实可行。</p>
+
+                </div>
+            </section>
+        </article>
+        
+        <div class="post-full-content">
+            <ul class="post-copyright">
+            <li class="post-copyright-author">
+                <strong>本文作者： </strong>芦荟</li>
+            <li class="post-copyright-link">
+                <strong>本文链接：</strong>
+                <a href="https://blog.liluhui.cn/2019/03/12/ZRender使用记录/" title="ZRender 使用记录">https://blog.liluhui.cn/2019/03/12/ZRender使用记录/</a>
+            </li>
+            <li class="post-copyright-license">
+                <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div style="height: 4vw;width: 100%"></div>
+    <nav id="gobottom" class="pagination">
+        
+        <a class="prev-post" title="Leancloud 快速搞定网站访问量统计" href="/2019/03/17/Leancloud快速搞定网站访问量统计/">
+            ← Leancloud 快速搞定网站访问量统计
+        </a>
+        
+        <span class="prev-next-post">•</span>
+        
+        <a class="next-post" title="计算字的宽高" href="/2019/03/12/计算字的宽高/">
+            计算字的宽高 →
+        </a>
+        
+    </nav>
+
+    
+
+    
+    <div id="leancloud_visitors" data-index="/2019/03/12/ZRender使用记录/" data-title="ZRender 使用记录"></div>
+
+</main>
+
+
+
+	</div>
+	
+	
+
+
+	
+	
+
+
+
+
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<div>
+				<a href="/" title="李璐慧的个人网站 - Aloe's Personal Website">李璐慧的个人网站 - Aloe's Personal Website</a>
+				&copy; 2021
+			</div>
+			<div>
+				<a href="https://beian.miit.gov.cn" target="_blank">浙ICP备19010836号-1</a>
+			</div>
+		</section>
+		<nav class="site-footer-nav">
+			
+			<div>
+				<span>访问量统计: </span>
+				<span class="leancloud_visitors_count" data-index="home"></span>
+			</div>
+			
+        </nav>
+    </div>
+</footer>
+	
+
+
+<script>
+    if(window.navigator && navigator.serviceWorker) {
+        navigator.serviceWorker.getRegistrations()
+        .then(function(registrations) {
+            for(let registration of registrations) {
+                registration.unregister();
+            }
+        });
+    }
+</script>
+
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="李璐慧的个人网站 - Aloe's Personal Website">
+			
+            <span>李璐慧的个人网站 - Aloe's Personal Website</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">ZRender 使用记录</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+
+
+
+
+
+
+<script src="/js/post.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("", "");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	var $doms = $(".leancloud_visitors_count")
+	if (!$doms.length) return
+	// var urls = $doms.map(function(){return $(this).attr('data-index')}) || [];
+	var urls = []
+	for (var i = 0; i < $doms.length; i++) {
+		urls.push($($doms[i]).attr('data-index'))
+	}
+	query.containedIn("url", urls);
+	query.find({
+		success: function(rst) {
+			// 初始化
+			$doms.each(function(i) {
+				$(this).text(0)
+			})
+			// 渲染数据
+			for (var i in rst) {
+				var item = rst[i]
+				$('.leancloud_visitors_count[data-index="'+ item.get('url') +'"]').text(item.get('time'))
+			}
+		},
+		error: function (obj, e) {
+			console.warn(obj, e)
+		}
+	})
+}
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	var $dom = $("#leancloud_visitors")
+	if (!$dom.length) return
+	url = $dom.attr('data-index').trim();
+	title = $dom.attr('data-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+					},
+					error: function(counter, e) {
+						console.warn(counter, e)
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				var acl = new AV.ACL();
+				acl.setPublicReadAccess(true);
+  			// acl.setWriteAccess(AV.User.current(),true);
+  			acl.setWriteAccess('*', true);
+				newcounter.setACL(acl)
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(e) {
+			console.warn(e)
+		}
+	});
+}
+$(function() {
+	try {
+		var Counter = AV.Object.extend("Counter");
+		addCount(Counter);
+		showTime(Counter);
+	} catch (e) {
+		console.log(e)
+	}
+}); 
+</script>
+</body>
+</html>

@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css">
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	
+
+	<title>同源策略(CORS)探究 | 李璐慧的个人网站 - Aloe's Personal Website</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="芦荟">
+	<meta name="description" content="">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="李璐慧的个人网站 - Aloe's Personal Website">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="同源策略(CORS)探究 | 李璐慧的个人网站 - Aloe's Personal Website">
+	<meta property="og:description" content="">
+	<meta property="og:url" content="https://blog.liluhui.cn/2019/03/08/同源策略探究/">
+
+	
+	<meta property="article:published_time" content="2019-03-08T18:03:00+08:00"/> 
+	<meta property="article:author" content="芦荟">
+	<meta property="article:published_first" content="李璐慧的个人网站 - Aloe's Personal Website, /2019/03/08/同源策略探究/" />
+	
+</head>
+<body class="post-template">
+	<script>
+	!(function(c,b,d,a){c[a]||(c[a]={});c[a].config={pid:"ik1fdt7jh9@eae4827960753c5",appType:"web",imgUrl:"https://arms-retcode.aliyuncs.com/r.png?",sendResource:true,enableLinkTrace:true,behavior:true,useFmp:true};
+	with(b)with(body)with(insertBefore(createElement("script"),firstChild))setAttribute("crossorigin","",src=d)
+	})(window,document,"https://retcode.alicdn.com/retcode/bl.js","__bl");
+	</script>
+	<div class="site-wrapper">
+		
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">首页</a>
+                
+            </li>
+            
+        </ul> 
+    </div>
+     
+    <div class="site-nav-right">
+         
+        
+<div class="social-links" >
+    
+    
+    
+    
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2019-03-08T10:57:41.000Z" itemprop="datePublished">
+                    2019-03-8
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/HTTP/">HTTP</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">同源策略(CORS)探究</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <h2 id="一、有哪些场景"><a href="#一、有哪些场景" class="headerlink" title="一、有哪些场景"></a>一、有哪些场景</h2><ul>
+<li>由 <code>XMLHttpRequest</code> 或者 <code>Fetch</code> 发起跨域 HTTP 请求</li>
+<li><a href="http://webfonts.info/index.php?title=%2540font-face_support_in_Firefox" target="_blank" rel="noopener">Web FONT</a> （CSS @font-face）</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Tutorial/Using_textures_in_WebGL" target="_blank" rel="noopener">WebGL 贴图</a></li>
+<li>canvas API 中的 <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage" target="_blank" rel="noopener">drawImage</a></li>
+<li>CSS 中的资源请求</li>
+</ul>
+<h2 id="二、简单的-CORS-实现"><a href="#二、简单的-CORS-实现" class="headerlink" title="二、简单的 CORS 实现"></a>二、简单的 CORS 实现</h2><p>在跨域 AJAX 请求中， <strong>浏览器端无需做任何操作</strong>，会自动在 header 信息中添加一个 <code>Orgin</code> 字段；<br>如果是 Fetch ，则需要添加字段 <code>mode: &#39;cors&#39;</code> 。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">GET http://square.10jqka.com.cn/usercenter/strategy/getrecommendlist HTTP/1.1</span><br><span class="line">Host: square.10jqka.com.cn</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Pragma: no-cache</span><br><span class="line">Cache-Control: no-cache</span><br><span class="line">Accept: */*</span><br><span class="line">Origin: http://www.10jqka.com.cn</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36</span><br><span class="line">Referer: http://www.10jqka.com.cn/</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9,en;q=0.8</span><br></pre></td></tr></table></figure>
+<p>这是我截的 Request Headers，第 7 行的 <code>Origin</code>  是 XMLHttpRequest 自动加在请求头中的 ，表示请求来自哪个站点，与 <code>Referer</code> 首部字段相似。</p>
+<p>&nbsp;</p>
+<p>而对应的，<strong>服务端</strong>需要在响应头中加入字段 <code>Access-Control-Allow-Origin</code>， 表示该资源可以允许哪些外域访问。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Server: openresty</span><br><span class="line">Date: Fri, 08 Mar 2019 05:34:03 GMT</span><br><span class="line">Content-Type: application/json; charset=utf-8</span><br><span class="line">Content-Length: 48</span><br><span class="line">Vary: Origin</span><br><span class="line">Access-Control-Allow-Origin: *</span><br><span class="line">Accept-Ranges: bytes</span><br><span class="line">x-frame-options: SAMEORIGIN</span><br><span class="line">x-xss-protection: 1; mode=block</span><br><span class="line">x-content-type-options: nosniff</span><br><span class="line">x-download-options: noopen</span><br><span class="line">x-readtime: 1</span><br><span class="line">VH: 210_254</span><br><span class="line">X-Cache: MISS from cachemd.10jqka.com.cn</span><br><span class="line">Via: 1.1 cachemd.10jqka.com.cn (squid/3.5.20)</span><br><span class="line">Connection: keep-alive</span><br></pre></td></tr></table></figure>
+<p>如上面例子的第 7 行， <code>Access-Control-Allow-Origin: *</code>  表示允许任何外域访问该资源。</p>
+<p>如果请求响应头没有包含 <code>Access-Control-Allow-Origin</code> ，则 <code>XMLHttpRequest</code> 会捕获错误，走入 <code>onerror</code>  回调中。</p>
+<p>至此，一个最简单的 CORS 就可以了。</p>
+<h2 id="三、携带-cookie"><a href="#三、携带-cookie" class="headerlink" title="三、携带 cookie"></a>三、携带 cookie</h2><p>CORS 请求默认是不发送 Cookie 和 HTTP 认证信息的，如果需要携带 cookie， <strong>浏览器端和服务端都需要再做一些操作</strong>。</p>
+<h3 id="3-1-浏览器"><a href="#3-1-浏览器" class="headerlink" title="3.1 浏览器"></a>3.1 浏览器</h3><p>浏览器端 XHR 需要打开 <code>withCredentials</code> 参数，Fetch 则需要设置 <code>credentials</code> 参数，如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Ajax</span></span><br><span class="line"><span class="keyword">var</span> xhr = <span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line">xhr.withCredentials = <span class="literal">true</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Fetch</span></span><br><span class="line">fetch(url, </span><br><span class="line">    mode: <span class="string">'cors'</span>,</span><br><span class="line">    credentials: <span class="string">'include'</span></span><br><span class="line">&#125;)</span><br><span class="line">.then(<span class="function"><span class="params">response</span> =&gt;</span> response.json()) <span class="comment">// parses response to JSON&#125;</span></span><br></pre></td></tr></table></figure>
+<p>这里需要注意下，有的内核实现的 XMLHttpRequest 是默认开启 withCredentials 的。</p>
+<h3 id="3-2-服务端"><a href="#3-2-服务端" class="headerlink" title="3.2 服务端"></a>3.2 服务端</h3><ol>
+<li><p>加上 <code>Access-Control-Allow-Credentials: true</code>， 表示服务器允许认证信息携带</p>
+</li>
+<li><p><code>Access-Control-Allow-Origin</code>  不可以是星号(*)，必须指明具体的域名</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Access-Control-Allow-Credentials: true</span><br><span class="line">Access-Control-Allow-Origin: http://mozilla.com</span><br></pre></td></tr></table></figure>
+<h2 id="四、预检请求-Preflight-Request"><a href="#四、预检请求-Preflight-Request" class="headerlink" title="四、预检请求 Preflight Request"></a>四、预检请求 Preflight Request</h2><ul>
+<li>POST 请求变成 OPTIONS 了怎么办？</li>
+<li>给跨域请求写了自定义的 header 就报错了怎么回事？</li>
+</ul>
+<p>也许某天你要经历或经历过这样的问题，那是因为你触发了 <code>Preflight request</code>，至于具体触发预检的情况，往下翻。</p>
+<img src="/2019/03/08/同源策略探究/1.png" width="546" height="578">
+<h3 id="4-1-解决方案"><a href="#4-1-解决方案" class="headerlink" title="4.1 解决方案"></a>4.1 解决方案</h3><p><strong>服务端</strong>需要再在 header 中加入一些字段，响应 OPTIONS 请求来表明是否预检通过。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Access-Control-Allow-Credentials: true</span><br><span class="line">Access-Control-Allow-Origin: http://mozilla.com</span><br><span class="line">Access-Control-Allow-Methods: POST, GET, OPTIONS</span><br><span class="line">Access-Control-Allow-Headers: X-PINGOTHER, Content-Type</span><br><span class="line">Access-Control-Max-Age: 86400</span><br></pre></td></tr></table></figure>
+<h4 id="1-Access-Control-Allow-Methods"><a href="#1-Access-Control-Allow-Methods" class="headerlink" title="(1) Access-Control-Allow-Methods"></a>(1) Access-Control-Allow-Methods</h4><p>该字段为必需，表示在 preflight request 中所要访问资源允许使用的方法或方法列表</p>
+<h4 id="2-Access-Control-Allow-Headers"><a href="#2-Access-Control-Allow-Headers" class="headerlink" title="(2) Access-Control-Allow-Headers"></a>(2) Access-Control-Allow-Headers</h4><p>如果在浏览器端发起 XMLHttpRequest 时写了非规范的 header 字段， 那么 <code>Access-Control-Allow-Headers</code> 是必须的。</p>
+<p>表示在 preflight request 中所要访问资源允许携带的 header 字段</p>
+<h4 id="3-Access-Control-Max-Age"><a href="#3-Access-Control-Max-Age" class="headerlink" title="(3) Access-Control-Max-Age"></a>(3) Access-Control-Max-Age</h4><p>可选这段，指定了 preflight request 的结果可以被缓存多久</p>
+<p>这个字段从一些第三方资料看，可能存在一些bug，某些浏览器的旧版本可能有上限值；另外禁用 cache 的情况下也会无效。</p>
+<h3 id="4-2-触发条件"><a href="#4-2-触发条件" class="headerlink" title="4.2 触发条件"></a>4.2 触发条件</h3><p>当满足下面任意一项条件，就会先发出预检请求</p>
+<ol>
+<li><p>使用了下面任一 HTTP 方法：</p>
+<ul>
+<li>PUT</li>
+<li>DELETE</li>
+<li>CONNECT</li>
+<li>OPTIONS</li>
+<li>TRACE</li>
+<li>PATCH</li>
+</ul>
+</li>
+<li><p>请求头中有<a href="https://fetch.spec.whatwg.org/#cors-safelisted-request-header" target="_blank" rel="noopener">安全首部字段集合</a>之外的字段</p>
+<ul>
+<li>Accept</li>
+<li>Content-Type</li>
+<li>等…</li>
+</ul>
+</li>
+</ol>
+<p>具体查官方文档，各浏览器可能有一定差异</p>
+<ol start="3">
+<li><p><code>Content-Type</code> 的值不是下述之一</p>
+<ul>
+<li>application/x-www-form-urlencoded</li>
+<li>multipart/form-data</li>
+<li>text/plain</li>
+</ul>
+</li>
+<li><p>请求中的 <code>XMLHttpRequestUpload</code> 对象注册了任意多个事件监听器</p>
+</li>
+<li><p>请求中使用了 <code>ReadableStream</code> 对象</p>
+</li>
+</ol>
+<h2 id="五、为什么设计预检请求"><a href="#五、为什么设计预检请求" class="headerlink" title="五、为什么设计预检请求"></a>五、为什么设计预检请求</h2><blockquote>
+<p>   <strong>Why is there a preflight request?</strong><br> &nbsp;<br>   For most type of requests two resource sharing checks are performed. Initially a “permission to make the request” check is done on the response to the preflight request. And then a “permission to read” check is done on the response to the actual request. Both of these checks need to succeed in order for success to be relayed to the API (e.g. XMLHttpRequest). The “permission to make the request” check is performed because deployed servers do not expect such cross-origin requests. E.g., a request using the HTTP DELETE method. If they reply positively to the preflight request the client knows it can go ahead and perform the actual desired request.</p>
+</blockquote>
+<p>摘自<a href="https://www.w3.org/wiki/CORS" target="_blank" rel="noopener">wiki-CORS</a>，大致意思是一是认为对于大多数请求进行两次请求是可行的，二是进行预检校验是很多场景安全性上的考虑。</p>
+<p>&nbsp; </p>
+<p>或者可以这么说，预检请求本身其实并没有做什么安全性上的检查，只是这项新的特性必须不影响各个项目，项目方必须知道有这样一项检查并针对它做些设置。</p>
+<h2 id="六、与-JSONP-比较？"><a href="#六、与-JSONP-比较？" class="headerlink" title="六、与 JSONP 比较？"></a>六、与 JSONP 比较？</h2><ol>
+<li>JSONP 不存在兼容问题，而 CORS 你必须确认你需要兼容的设备，必要情况需要做降级处理</li>
+<li>JSONP 只支持 GET 请求， CORS 则能支持所有 HTTP 请求类型</li>
+<li>JSONP 单次请求， CORS 触发预检则会有两次请求</li>
+</ol>
+<h2 id="七、附录"><a href="#七、附录" class="headerlink" title="七、附录"></a>七、附录</h2><ul>
+<li><a href="https://www.w3.org/TR/cors/" target="_blank" rel="noopener">W3C 文档</a></li>
+</ul>
+
+                </div>
+            </section>
+        </article>
+        
+        <div class="post-full-content">
+            <ul class="post-copyright">
+            <li class="post-copyright-author">
+                <strong>本文作者： </strong>芦荟</li>
+            <li class="post-copyright-link">
+                <strong>本文链接：</strong>
+                <a href="https://blog.liluhui.cn/2019/03/08/同源策略探究/" title="同源策略(CORS)探究">https://blog.liluhui.cn/2019/03/08/同源策略探究/</a>
+            </li>
+            <li class="post-copyright-license">
+                <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div style="height: 4vw;width: 100%"></div>
+    <nav id="gobottom" class="pagination">
+        
+        <a class="prev-post" title="如何打乱数组? (洗牌算法)" href="/2019/03/10/如何打乱数组/">
+            ← 如何打乱数组? (洗牌算法)
+        </a>
+        
+        <span class="prev-next-post">•</span>
+        
+        <a class="next-post" title="Fetch 和 Ajax 有什么差别" href="/2019/03/07/Fetch和Ajax有什么差别/">
+            Fetch 和 Ajax 有什么差别 →
+        </a>
+        
+    </nav>
+
+    
+
+    
+    <div id="leancloud_visitors" data-index="/2019/03/08/同源策略探究/" data-title="同源策略(CORS)探究"></div>
+
+</main>
+
+
+
+	</div>
+	
+	
+
+
+	
+	
+
+
+
+
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<div>
+				<a href="/" title="李璐慧的个人网站 - Aloe's Personal Website">李璐慧的个人网站 - Aloe's Personal Website</a>
+				&copy; 2021
+			</div>
+			<div>
+				<a href="https://beian.miit.gov.cn" target="_blank">浙ICP备19010836号-1</a>
+			</div>
+		</section>
+		<nav class="site-footer-nav">
+			
+			<div>
+				<span>访问量统计: </span>
+				<span class="leancloud_visitors_count" data-index="home"></span>
+			</div>
+			
+        </nav>
+    </div>
+</footer>
+	
+
+
+<script>
+    if(window.navigator && navigator.serviceWorker) {
+        navigator.serviceWorker.getRegistrations()
+        .then(function(registrations) {
+            for(let registration of registrations) {
+                registration.unregister();
+            }
+        });
+    }
+</script>
+
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="李璐慧的个人网站 - Aloe's Personal Website">
+			
+            <span>李璐慧的个人网站 - Aloe's Personal Website</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">同源策略(CORS)探究</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+
+
+
+
+
+
+<script src="/js/post.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("", "");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	var $doms = $(".leancloud_visitors_count")
+	if (!$doms.length) return
+	// var urls = $doms.map(function(){return $(this).attr('data-index')}) || [];
+	var urls = []
+	for (var i = 0; i < $doms.length; i++) {
+		urls.push($($doms[i]).attr('data-index'))
+	}
+	query.containedIn("url", urls);
+	query.find({
+		success: function(rst) {
+			// 初始化
+			$doms.each(function(i) {
+				$(this).text(0)
+			})
+			// 渲染数据
+			for (var i in rst) {
+				var item = rst[i]
+				$('.leancloud_visitors_count[data-index="'+ item.get('url') +'"]').text(item.get('time'))
+			}
+		},
+		error: function (obj, e) {
+			console.warn(obj, e)
+		}
+	})
+}
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	var $dom = $("#leancloud_visitors")
+	if (!$dom.length) return
+	url = $dom.attr('data-index').trim();
+	title = $dom.attr('data-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+					},
+					error: function(counter, e) {
+						console.warn(counter, e)
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				var acl = new AV.ACL();
+				acl.setPublicReadAccess(true);
+  			// acl.setWriteAccess(AV.User.current(),true);
+  			acl.setWriteAccess('*', true);
+				newcounter.setACL(acl)
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(e) {
+			console.warn(e)
+		}
+	});
+}
+$(function() {
+	try {
+		var Counter = AV.Object.extend("Counter");
+		addCount(Counter);
+		showTime(Counter);
+	} catch (e) {
+		console.log(e)
+	}
+}); 
+</script>
+</body>
+</html>

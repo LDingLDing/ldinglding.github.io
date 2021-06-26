@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css">
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	
+
+	<title>F@!K P3P | 李璐慧的个人网站 - Aloe's Personal Website</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="芦荟">
+	<meta name="description" content="">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="李璐慧的个人网站 - Aloe's Personal Website">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="F@!K P3P | 李璐慧的个人网站 - Aloe's Personal Website">
+	<meta property="og:description" content="">
+	<meta property="og:url" content="https://blog.liluhui.cn/2019/03/21/P3P/">
+
+	
+	<meta property="article:published_time" content="2019-03-21T23:03:00+08:00"/> 
+	<meta property="article:author" content="芦荟">
+	<meta property="article:published_first" content="李璐慧的个人网站 - Aloe's Personal Website, /2019/03/21/P3P/" />
+	
+</head>
+<body class="post-template">
+	<script>
+	!(function(c,b,d,a){c[a]||(c[a]={});c[a].config={pid:"ik1fdt7jh9@eae4827960753c5",appType:"web",imgUrl:"https://arms-retcode.aliyuncs.com/r.png?",sendResource:true,enableLinkTrace:true,behavior:true,useFmp:true};
+	with(b)with(body)with(insertBefore(createElement("script"),firstChild))setAttribute("crossorigin","",src=d)
+	})(window,document,"https://retcode.alicdn.com/retcode/bl.js","__bl");
+	</script>
+	<div class="site-wrapper">
+		
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">首页</a>
+                
+            </li>
+            
+        </ul> 
+    </div>
+     
+    <div class="site-nav-right">
+         
+        
+<div class="social-links" >
+    
+    
+    
+    
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2019-03-21T15:34:58.000Z" itemprop="datePublished">
+                    2019-03-21
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/安全/">安全</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">F@!K P3P</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <p>今天反爬服务遇到一个问题，业务方的页面A中的iframe页面B引用了反爬JS但是B页面一直获取不到cookie信息而被反爬服务拦截，现象在IE容器内可以重现，一开始以为 form 表单提交在 IE 下造成的 (前不久遇到过 from 表单提交在 chrome49内核下遇到<a href="https://bitbucket.org/chromiumembedded/cef/issues/1949/" target="_blank" rel="noopener">弹窗问题</a>留下对 form 的阴影吧 …)，之后定位到是页面B无法写入B域名的cookie。根本原因正是由于 <strong>隐私首选项 (Privacy Preferences Project)</strong> 这个协议，以下简称 <code>P3P</code>。</p>
+<h2 id="P3P-限制什么"><a href="#P3P-限制什么" class="headerlink" title="P3P 限制什么"></a>P3P 限制什么</h2><p>当前页面在跨域的请求中无法设置cookie，包括 iframe、script、img</p>
+<p>具体场景如： A.html 中引用 iframe（B.html），B.html设置B域的cookie无效</p>
+<h2 id="P3P-实现方-兼容"><a href="#P3P-实现方-兼容" class="headerlink" title="P3P 实现方(兼容)"></a>P3P 实现方(兼容)</h2><blockquote>
+<p>P3P为一项互联网标准，是为方便各网站以统一的网站隐私权政策格式为用户提供网站隐私权政策的表述，是一个允许网站声明其对收集自用户网页浏览器的信息的预期用途的协议。它由万维网联盟（W3C）开发，并在2002年4月16日被正式推荐，设计意图是给用户对自己在网络浏览时流露的个人信息更多控制。但在此后不久，它的开发便已停止。对于P3P的实现也较少。微软的Internet Explorer（中文：IE浏览器）是唯一一个支持P3P的主流浏览器。TRUSTe的总裁认为它之所以没有被广泛实现，是因为其困难性较高且缺乏价值。</p>
+</blockquote>
+<p>虽然这段摘自维基的描述声明 P3P 仅 IE 支持，但实测 Safari 和 相当早期的Chrome 也是支持的。目前的兼容重点依然是 <code>IE</code> 和 <code>Safari</code>。</p>
+<h2 id="怎么解决"><a href="#怎么解决" class="headerlink" title="怎么解决"></a>怎么解决</h2><h3 id="方案一-调低隐私级别或者加入可信站点列表"><a href="#方案一-调低隐私级别或者加入可信站点列表" class="headerlink" title="方案一. 调低隐私级别或者加入可信站点列表"></a>方案一. 调低隐私级别或者加入可信站点列表</h3><p>没啥软用，除非用户端的内核由你控制，不然让用户去设置不现实</p>
+<h4 id="IE加入可信站点列表"><a href="#IE加入可信站点列表" class="headerlink" title="IE加入可信站点列表"></a>IE加入可信站点列表</h4><img src="/2019/03/21/P3P/1.png" title="img">
+<h4 id="IE调低隐私级别"><a href="#IE调低隐私级别" class="headerlink" title="IE调低隐私级别"></a>IE调低隐私级别</h4><img src="/2019/03/21/P3P/2.png" title="img">
+<img src="/2019/03/21/P3P/3.png" title="img">
+<h4 id="safari"><a href="#safari" class="headerlink" title="safari"></a>safari</h4><img src="/2019/03/21/P3P/4.png" title="img">
+<img src="/2019/03/21/P3P/5.png" title="img">
+<p>&nbsp;</p>
+<h3 id="方案二-P3P声明"><a href="#方案二-P3P声明" class="headerlink" title="方案二.P3P声明"></a>方案二.P3P声明</h3><p>两个方案，<strong>P3P简单策略</strong> 和 <strong>完整部署P3P</strong></p>
+<p>&nbsp;<br><strong>完整部署</strong>涉及一堆网站的声明内容的部署，在服务器域名上部署好可一次搞定，但涉及隐私权保护政策，如果与实际页面行为不符合可以能会出官司问题？，而且声明的信息如何被浏览器判断隐私等级是没有唯一规范的，具体部署方案请自行google吧，微软官网部署文档已经删掉了？？Σ( ° △ °|||)</p>
+<p>&nbsp;<br>对一般解决业务场景中的这个问题，使用<strong>简单策略</strong>即可，只需在请求的响应头中加个字段，如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response.addHeader(<span class="string">"P3P"</span>, <span class="string">"CP=\"NOI ADM DEV PSAi COM NAV OUR STP IND DEM\""</span>)</span><br></pre></td></tr></table></figure>
+<p>不过看别人 CP 什么都不设也是OK的，像这种 <code>Header set P3P &quot;CP=\&quot;Thanks IE8\&quot;&quot;</code> ， 感觉这个协议完全成了笑话 ..</p>
+<p>&nbsp;<br>这些字段具体含义参考如下：</p>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>desc</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NOI</td>
+<td>未手机个人可识别资讯</td>
+</tr>
+<tr>
+<td>ADM</td>
+<td>资料是为了网站管理而被使用</td>
+</tr>
+<tr>
+<td>DEV</td>
+<td>资料是为了研究而被使用</td>
+</tr>
+<tr>
+<td>PSAi</td>
+<td>非易识别的相关资讯将被用来做研究、分析及报告。例如某个邮局区号的使用者人数</td>
+</tr>
+<tr>
+<td>COM</td>
+<td>电脑资讯将被收集</td>
+</tr>
+<tr>
+<td>NAV</td>
+<td>导览与点击串流资料将被收集</td>
+</tr>
+<tr>
+<td>OUR</td>
+<td>资料只给我们自己与我们的代理者使用</td>
+</tr>
+<tr>
+<td>STP</td>
+<td>资料是按收集目的被保留</td>
+</tr>
+<tr>
+<td>IND</td>
+<td>资料被保留的期限没有明确指定</td>
+</tr>
+<tr>
+<td>DEM</td>
+<td>个人特征资料将会被收集，例如性别、年龄及收入</td>
+</tr>
+</tbody>
+</table>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://www.w3.org/P3P/" target="_blank" rel="noopener">W3C-P3P</a></li>
+<li><a href="https://blog.darkthread.net/blog/p3p-header-and-iframe-session" target="_blank" rel="noopener">https://blog.darkthread.net/blog/p3p-header-and-iframe-session</a></li>
+</ul>
+
+                </div>
+            </section>
+        </article>
+        
+        <div class="post-full-content">
+            <ul class="post-copyright">
+            <li class="post-copyright-author">
+                <strong>本文作者： </strong>芦荟</li>
+            <li class="post-copyright-link">
+                <strong>本文链接：</strong>
+                <a href="https://blog.liluhui.cn/2019/03/21/P3P/" title="F@!K P3P">https://blog.liluhui.cn/2019/03/21/P3P/</a>
+            </li>
+            <li class="post-copyright-license">
+                <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div style="height: 4vw;width: 100%"></div>
+    <nav id="gobottom" class="pagination">
+        
+        <a class="prev-post" title="SSH 认证失败 (从问题理解 SSH 认证)" href="/2019/03/27/SSH认证失败/">
+            ← SSH 认证失败 (从问题理解 SSH 认证)
+        </a>
+        
+        <span class="prev-next-post">•</span>
+        
+        <a class="next-post" title="Number.EPSILON" href="/2019/03/19/Number-EPSILON/">
+            Number.EPSILON →
+        </a>
+        
+    </nav>
+
+    
+
+    
+    <div id="leancloud_visitors" data-index="/2019/03/21/P3P/" data-title="F@!K P3P"></div>
+
+</main>
+
+
+
+	</div>
+	
+	
+
+
+	
+	
+
+
+
+
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<div>
+				<a href="/" title="李璐慧的个人网站 - Aloe's Personal Website">李璐慧的个人网站 - Aloe's Personal Website</a>
+				&copy; 2021
+			</div>
+			<div>
+				<a href="https://beian.miit.gov.cn" target="_blank">浙ICP备19010836号-1</a>
+			</div>
+		</section>
+		<nav class="site-footer-nav">
+			
+			<div>
+				<span>访问量统计: </span>
+				<span class="leancloud_visitors_count" data-index="home"></span>
+			</div>
+			
+        </nav>
+    </div>
+</footer>
+	
+
+
+<script>
+    if(window.navigator && navigator.serviceWorker) {
+        navigator.serviceWorker.getRegistrations()
+        .then(function(registrations) {
+            for(let registration of registrations) {
+                registration.unregister();
+            }
+        });
+    }
+</script>
+
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="李璐慧的个人网站 - Aloe's Personal Website">
+			
+            <span>李璐慧的个人网站 - Aloe's Personal Website</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">F@!K P3P</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+
+
+
+
+
+
+<script src="/js/post.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("", "");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	var $doms = $(".leancloud_visitors_count")
+	if (!$doms.length) return
+	// var urls = $doms.map(function(){return $(this).attr('data-index')}) || [];
+	var urls = []
+	for (var i = 0; i < $doms.length; i++) {
+		urls.push($($doms[i]).attr('data-index'))
+	}
+	query.containedIn("url", urls);
+	query.find({
+		success: function(rst) {
+			// 初始化
+			$doms.each(function(i) {
+				$(this).text(0)
+			})
+			// 渲染数据
+			for (var i in rst) {
+				var item = rst[i]
+				$('.leancloud_visitors_count[data-index="'+ item.get('url') +'"]').text(item.get('time'))
+			}
+		},
+		error: function (obj, e) {
+			console.warn(obj, e)
+		}
+	})
+}
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	var $dom = $("#leancloud_visitors")
+	if (!$dom.length) return
+	url = $dom.attr('data-index').trim();
+	title = $dom.attr('data-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+					},
+					error: function(counter, e) {
+						console.warn(counter, e)
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				var acl = new AV.ACL();
+				acl.setPublicReadAccess(true);
+  			// acl.setWriteAccess(AV.User.current(),true);
+  			acl.setWriteAccess('*', true);
+				newcounter.setACL(acl)
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(e) {
+			console.warn(e)
+		}
+	});
+}
+$(function() {
+	try {
+		var Counter = AV.Object.extend("Counter");
+		addCount(Counter);
+		showTime(Counter);
+	} catch (e) {
+		console.log(e)
+	}
+}); 
+</script>
+</body>
+</html>

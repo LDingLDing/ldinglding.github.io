@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css">
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	
+
+	<title>JWT的Node简单实现 | 李璐慧的个人网站 - Aloe's Personal Website</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="芦荟">
+	<meta name="description" content="">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="李璐慧的个人网站 - Aloe's Personal Website">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="JWT的Node简单实现 | 李璐慧的个人网站 - Aloe's Personal Website">
+	<meta property="og:description" content="">
+	<meta property="og:url" content="https://blog.liluhui.cn/2019/05/13/JWT的Node简单实现/">
+
+	
+	<meta property="article:published_time" content="2019-05-13T20:05:00+08:00"/> 
+	<meta property="article:author" content="芦荟">
+	<meta property="article:published_first" content="李璐慧的个人网站 - Aloe's Personal Website, /2019/05/13/JWT的Node简单实现/" />
+	
+<link rel="stylesheet" href="/assets/css/APlayer.min.css" class="aplayer-style-marker">
+<script src="/assets/js/APlayer.min.js" class="aplayer-script-marker"></script>
+</head>
+<body class="post-template">
+	<script>
+	!(function(c,b,d,a){c[a]||(c[a]={});c[a].config={pid:"ik1fdt7jh9@eae4827960753c5",appType:"web",imgUrl:"https://arms-retcode.aliyuncs.com/r.png?",sendResource:true,enableLinkTrace:true,behavior:true,useFmp:true};
+	with(b)with(body)with(insertBefore(createElement("script"),firstChild))setAttribute("crossorigin","",src=d)
+	})(window,document,"https://retcode.alicdn.com/retcode/bl.js","__bl");
+	</script>
+	<div class="site-wrapper">
+		
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">首页</a>
+                
+            </li>
+            
+        </ul> 
+    </div>
+     
+    <div class="site-nav-right">
+         
+        
+<div class="social-links" >
+    
+    
+    
+    
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2019-05-13T12:45:24.000Z" itemprop="datePublished">
+                    2019-05-13
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/Node/">Node</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">JWT的Node简单实现</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    
+        <div id="aplayer-YsmOeVrW" class="aplayer aplayer-tag-marker" style="margin-bottom: 20px;">
+            <pre class="aplayer-lrc-content"></pre>
+        </div>
+        <script>
+          var ap = new APlayer({
+            element: document.getElementById("aplayer-YsmOeVrW"),
+            narrow: false,
+            autoplay: false,
+            showlrc: false,
+            music: {
+              title: "Hymn&nbsp;to&nbsp;life",
+              author: "Timo&nbsp;Tolkki",
+              url: "1.mp3",
+              pic: "http://p1.music.126.net/8jhzow7FXCkd1hdQ9Jh9JQ==/645413325514780.jpg?param=90y90",
+              lrc: ""
+            }
+          });
+          window.aplayers || (window.aplayers = []);
+          window.aplayers.push(ap);
+        </script>
+<h1 id="What-is-JWT"><a href="#What-is-JWT" class="headerlink" title="What is JWT"></a>What is JWT</h1><img src="/2019/05/13/JWT的Node简单实现/1.png" title="img">
+<p><a href="https://en.wikipedia.org/wiki/JSON_Web_Token" target="_blank" rel="noopener">JSON Web Token</a>(JWT) 是一种基于json格式的创建 token 的开放标准 <a href="https://tools.ietf.org/html/rfc7519" target="_blank" rel="noopener">RFC 7519</a>，常用于进行客户端与服务端的<strong>权限验证</strong>或是<strong>信息交换</strong>。</p>
+<p>在我们熟悉的客户端<strong>权限验证</strong>方案中，通常有两种</p>
+<ol>
+<li><p>用户登陆验证后服务端将权限凭证( seesionId  放在 cookie 中，每一次请求都会对请求自带的 cookie 进行校验</p>
+</li>
+<li><p>用户登陆验证后将权限凭证 token 返回给客户端，客户端将 token 存储在本地，之后的每一次请求需要将 token 携带（通常约定在 header 中），服务端在返回期望结果前先对 token 进行校验</p>
+</li>
+</ol>
+<p><strong>JWT</strong> 是 token 方案中一种，对格式进行约定的规范。</p>
+<p>该方案明显的<strong>优点</strong>是可扩展性强、跨域支持。</p>
+<p>&nbsp;</p>
+<p>接下来会从以下几个问题来聊聊 <strong>JWT</strong></p>
+<ul>
+<li><p>验证流程是怎样的？</p>
+</li>
+<li><p>JWT 的基本格式与 Node 实现</p>
+</li>
+<li><p>cookie 方案与 token 方案的特点</p>
+</li>
+</ul>
+<p>&nbsp;</p>
+<h1 id="验证流程"><a href="#验证流程" class="headerlink" title="验证流程"></a>验证流程</h1><ol>
+<li><p>客户端在用户通过个人信息登陆成功后从服务端获取到一个登陆凭证 JWT token ，通常 token 需要包含过期时间，让登陆凭证能超时自动失效掉。</p>
+</li>
+<li><p>客户端存储在本地，如 local storage、session storage。</p>
+</li>
+<li><p>每次发送请求， 将 JWT 协议的 token 放入请求头中。如果验证通过则返回预期结果，如果失败则需要重新登陆获得新的有效 token。</p>
+</li>
+<li><p>用户登出账户后，客户端需要清除掉 token。</p>
+</li>
+</ol>
+<p>相当于每一次发送请求都要将登陆凭证 token 上传，通常放在 Authorization header 中，用 Bearer schema</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Authorization: Bearer  &lt;token&gt;</span><br></pre></td></tr></table></figure>
+<p>&nbsp;</p>
+<h1 id="JWT-及-Node-实现"><a href="#JWT-及-Node-实现" class="headerlink" title="JWT 及 Node 实现"></a>JWT 及 Node 实现</h1><img src="/2019/05/13/JWT的Node简单实现/2.png" title="img">
+<p>JWT 由三个部分组成，以<code>.</code> 的形式连接，分别是</p>
+<ul>
+<li><p>Header</p>
+</li>
+<li><p>Payload</p>
+</li>
+<li><p>Signature</p>
+</li>
+</ul>
+<h2 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h2><p>Header 中常用字段 <code>alg</code>、<code>typ</code> ，用来声明生成签名部分（Signature）的算法，以及 token 的类型，JWT 方案就设置为 <code>JWT</code> 。</p>
+<p>算法选择上，可以选择对称加密算法，或是非对称加密算法 RS256 等，下面的简单实现以对称加密算法 HS256 为例。 </p>
+<p>一个常见的例子</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"alg"</span>: <span class="string">"HS256"</span>,</span><br><span class="line">  <span class="attr">"typ"</span>: <span class="string">"JWT"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>完整的字段格式整理如下，具体说明见<a href="https://tools.ietf.org/html/draft-ietf-jose-json-web-encryption-40#page-12" target="_blank" rel="noopener">文档</a>，这块我还无法全部理解</p>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>desc</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>alg</td>
+<td>Algorithm</td>
+</tr>
+<tr>
+<td>enc</td>
+<td>Encryption Algorithm</td>
+</tr>
+<tr>
+<td>zip</td>
+<td>Compression Algorithm</td>
+</tr>
+<tr>
+<td>jku</td>
+<td>JWK Set URL</td>
+</tr>
+<tr>
+<td>jwk</td>
+<td>JSON Web Key</td>
+</tr>
+<tr>
+<td>kid</td>
+<td>Key ID</td>
+</tr>
+<tr>
+<td>x5u</td>
+<td>X.509 URL</td>
+</tr>
+<tr>
+<td>x5c</td>
+<td>X.509 Certificate Chain</td>
+</tr>
+<tr>
+<td>x5t</td>
+<td>X.509 Certificate SHA-1 Thumbprint</td>
+</tr>
+<tr>
+<td>x5t#S256</td>
+<td>X.509 Certificate SHA-256 Thumbprint</td>
+</tr>
+<tr>
+<td>typ</td>
+<td>Type</td>
+</tr>
+<tr>
+<td>cty</td>
+<td>Content Type</td>
+</tr>
+<tr>
+<td>crit</td>
+<td>Critical</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Payload"><a href="#Payload" class="headerlink" title="Payload"></a>Payload</h2><p>Payload，即声明。通常是关于用户或其他数据的声明，需要注意不要将敏感信息明码传递了；另外规范约定了一组预定义的字段，虽然是非强制的，还是建议按照规范约定来。</p>
+<p>一个简单的例子如下</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123; </span><br><span class="line">    <span class="attr">"email"</span>: <span class="string">"liluhuizj@qq.com"</span>, </span><br><span class="line">    <span class="attr">"exp"</span>: <span class="number">1557673606348</span> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>完整的预定义字段如下</p>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>desc</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>iss</td>
+<td>发行者的 token</td>
+</tr>
+<tr>
+<td>sub</td>
+<td>主题的 token</td>
+</tr>
+<tr>
+<td>aud</td>
+<td>接受者(听众)的 token</td>
+</tr>
+<tr>
+<td>exp</td>
+<td>这可能是 Registered Claims 最常用的，定义数字格式的有效期限，重点是有效期限一定要大于现在的时间</td>
+</tr>
+<tr>
+<td>nbf</td>
+<td>生效时间，定义一个时间在这个时间之前 JWT 不能进行处理</td>
+</tr>
+<tr>
+<td>iat</td>
+<td>发行的时间，可以被用来判断 JWT 已经发出了多久</td>
+</tr>
+<tr>
+<td>jti</td>
+<td>JWT 唯一的识别值，可用来防止 JWT 被重复使用，尤其在一次性的 token 特別好用</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>我们可以通过这样一个方法生成 playload ：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">function payloadWithExpirationTime (payload, minutesFromNow) &#123; </span><br><span class="line">    let date = new Date() </span><br><span class="line">    date.setMinutes(date.getMinutes() + minutesFromNow) </span><br><span class="line">    payload.exp = date.getTime() </span><br><span class="line">    return payload </span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Signature"><a href="#Signature" class="headerlink" title="Signature"></a>Signature</h2><p>Signature 是对前两部分的加密签名，用于防止数组篡改。</p>
+<p>Signature 由三部分组成，分别是</p>
+<ul>
+<li><p>base64 编码后的 <strong>Header</strong></p>
+</li>
+<li><p>base64 编码后的 <strong>Payload</strong></p>
+</li>
+<li><p>仅服务端知道(定义)的 <strong>secret</strong></p>
+</li>
+</ul>
+<p>一个生成签名的基本范式是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HMACSHA256( base64UrlEncode(header) + &apos;.&apos; + base64UrlEncode(payload), &apos;secret&apos;)</span><br></pre></td></tr></table></figure></p>
+<h2 id="实现（生成）"><a href="#实现（生成）" class="headerlink" title="实现（生成）"></a>实现（生成）</h2><p>接下来我们用 Node 来实现，</p>
+<p>首先是把 JSON 对象编码为 base64 的方法</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">base64UrlEncodeJSON</span> (<span class="params">json</span>) </span>&#123; </span><br><span class="line">    <span class="keyword">return</span> Buffer.from( </span><br><span class="line">        <span class="built_in">JSON</span>.stringify(json) </span><br><span class="line">    ).toString(<span class="string">'base64'</span>) </span><br><span class="line">     .replace(<span class="regexp">/\+/g</span>, <span class="string">'-'</span>) </span><br><span class="line">     .replace(<span class="regexp">/\//g</span>, <span class="string">'_'</span>) </span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>然后需要一个加密生成签名的方法</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">const</span> crypto = <span class="built_in">require</span>(<span class="string">'crypto'</span>) </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">generateSignature</span> (<span class="params">str, secret</span>) </span>&#123; </span><br><span class="line">    <span class="keyword">return</span> crypto </span><br><span class="line">                .createHmac(<span class="string">'sha256'</span>, secret) </span><br><span class="line">                .update(str) </span><br><span class="line">                .digest(<span class="string">'base64'</span>) </span><br><span class="line">                .replace(<span class="regexp">/\+/g</span>, <span class="string">'-'</span>) </span><br><span class="line">                .replace(<span class="regexp">/\//g</span>, <span class="string">'_'</span>) </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调用方法，套用范式搞定</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">const</span> encodedHeaderInBase64 = base64UrlEncodeJSON(header) </span><br><span class="line"><span class="keyword">const</span> encodedPayloadInBase64 = base64UrlEncodeJSON(payload) </span><br><span class="line"><span class="keyword">const</span> encodedSignatureInBase64 = generateSignature(<span class="string">`<span class="subst">$&#123;encodedHeaderInBase64&#125;</span>.<span class="subst">$&#123;encodedPayloadInBase64&#125;</span>`</span>, <span class="string">'some-secret'</span>) </span><br><span class="line"><span class="keyword">const</span> token = <span class="string">`<span class="subst">$&#123;encodedHeaderInBase64&#125;</span>.<span class="subst">$&#123;encodedPayloadInBase64&#125;</span>.<span class="subst">$&#123;encodedSignatureInBase64&#125;</span>`</span></span><br></pre></td></tr></table></figure>
+<p>最终这个就是服务端生成的 JWT Token ：<br><code>${encodedHeaderInBase64}.${encodedPayloadInBase64}.${encodedSignatureInBase64}</code></p>
+<h2 id="实现（校验）"><a href="#实现（校验）" class="headerlink" title="实现（校验）"></a>实现（校验）</h2><p>生成 token 的方法已经搞定了，接下来是对 token 的解析校验了</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// Returns true if token is valid, otherwise returns false </span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isValid</span> (<span class="params">token, secret</span>) </span>&#123; </span><br><span class="line">    <span class="keyword">const</span> parts = token.split(<span class="string">'.'</span>) </span><br><span class="line">    <span class="keyword">const</span> header = base64UrlDecodeToJSON(parts[<span class="number">0</span>]) </span><br><span class="line">    <span class="keyword">const</span> payload = base64UrlDecodeToJSON(parts[<span class="number">1</span>]) </span><br><span class="line">    <span class="keyword">if</span> (header.alg !== <span class="string">'HS256'</span> || header.typ !== <span class="string">'JWT'</span>) &#123; </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span> </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">const</span> signature = parts[<span class="number">2</span>] </span><br><span class="line">    <span class="keyword">const</span> exp = payload.exp </span><br><span class="line">    <span class="keyword">if</span> (exp) &#123; </span><br><span class="line">        <span class="keyword">if</span> (exp &lt; <span class="keyword">new</span> <span class="built_in">Date</span>().getTime()) &#123; </span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span> </span><br><span class="line">        &#125; </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">return</span> generateSignature(<span class="string">`<span class="subst">$&#123;parts[<span class="number">0</span>]&#125;</span>.<span class="subst">$&#123;parts[<span class="number">1</span>]&#125;</span>`</span>, secret) === signature </span><br><span class="line">&#125; </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">base64UrlDecodeToJSON</span> (<span class="params">str</span>) </span>&#123; </span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">JSON</span>.parse( </span><br><span class="line">        Buffer.from( </span><br><span class="line">            str.replace(<span class="regexp">/-/g</span>, <span class="string">'+'</span>).replace(<span class="regexp">/_/g</span>, <span class="string">'/'</span>), <span class="string">'base64'</span> </span><br><span class="line">        ).toString(<span class="string">'utf8'</span>) </span><br><span class="line">    ) </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="使用场景的比较"><a href="#使用场景的比较" class="headerlink" title="使用场景的比较"></a>使用场景的比较</h1><p>文章的开头提到过通常最常用的两种方案 <code>cookie-session</code> 和 <code>Token</code>， 我觉得目前也不用太过于吹捧 token 方案，还是合理看待两者的特性和局限性吧。</p>
+<h2 id="存储"><a href="#存储" class="headerlink" title="存储"></a>存储</h2><ul>
+<li><p>cookie-session 方案在是在用户验证通过后，在服务端创建存储一条用户信息，客户端仅存储一个 SessionId 随着认证用户增多，服务器的开销会增大，但这个问题在目前外部session存储方案非常多的情况下基本都可以应对</p>
+</li>
+<li><p>Token 方案是将凭证信息存储在客户端，服务端无需存储</p>
+</li>
+<li><p>由于 session 通常存储在内存中，这也带来一些扩展性的问题 </p>
+</li>
+</ul>
+<h2 id="跨域"><a href="#跨域" class="headerlink" title="跨域"></a>跨域</h2><ul>
+<li><p>cookie-session 多域名端资源跨域请求时会遭到跨域问题，需要前后端处理共同处理才能携带 cookie</p>
+</li>
+<li><p>Token 前端主动在header中携带 token，不会有跨域问题</p>
+</li>
+</ul>
+<p>这里其实前端 header 中的字段非常规的话，依然会遇到的跨域问题的，其实我觉得跨域这事不是什么大事，参考各种 CORS 解决方案就是了。</p>
+<h2 id="安全性"><a href="#安全性" class="headerlink" title="安全性"></a>安全性</h2><ul>
+<li><p>cookie-session 方案用户很容易受到CSRF攻击，Token 方案则避免了这个问题</p>
+</li>
+<li><p>如果 sessionId 泄漏，别人可以盗用身份；如果 secret 泄漏也是同样的。虽然 secret 在各种案例中是全局的一个固定值，是不是也可以设计成和用户相关的来提高安全性？ </p>
+</li>
+<li><p>无论使用哪种方式切记用HTTPS来保证数据的安全性</p>
+</li>
+<li><p>JWT 生成的 token 看起来不可读，实际 base64 解码后数据信息一览无余，加密的签名只是用于服务端校验，所以不能明码存储敏感信息</p>
+</li>
+</ul>
+<h2 id="状态更新"><a href="#状态更新" class="headerlink" title="状态更新"></a>状态更新</h2><ul>
+<li><p>由于 Token 存在客户端，一旦签发后无法更改，比如用户登出了、更换密码、或是某个 JWT 被盗用，需要前期在设计时有特别的逻辑，否则真出现问题时将无能为力。真要用一定要考虑是否有这个场景，是否需要设计一个方式来避免这个问题 ，比如黑名单、服务器存储失效时间等等</p>
+</li>
+<li><p>同样，续签的处理对于 Token 方案来说也是需要设计的</p>
+</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>JWT 还是更适合做有效期极短的验证，比如限定时间的激活账号链接；或是一些简单的 restful api 认证。会话管理这套还是 cookie + session 有更完整的方案，JWT 如果要做会话管理还是需要参考结合 session + cookie 这套方案相似的处理。</p>
+<p>&nbsp;</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
+<li><p><a href="https://jwt.io/" target="_blank" rel="noopener">jwt.io/</a></p>
+</li>
+<li><p><a href="https://en.wikipedia.org/wiki/JSON_Web_Token" target="_blank" rel="noopener">JSON Web Token</a> </p>
+</li>
+<li><p><a href="https://guseyn.com/posts/simple-jwt" target="_blank" rel="noopener">simple-jwt</a></p>
+</li>
+</ul>
+
+                </div>
+            </section>
+        </article>
+        
+        <div class="post-full-content">
+            <ul class="post-copyright">
+            <li class="post-copyright-author">
+                <strong>本文作者： </strong>芦荟</li>
+            <li class="post-copyright-link">
+                <strong>本文链接：</strong>
+                <a href="https://blog.liluhui.cn/2019/05/13/JWT的Node简单实现/" title="JWT的Node简单实现">https://blog.liluhui.cn/2019/05/13/JWT的Node简单实现/</a>
+            </li>
+            <li class="post-copyright-license">
+                <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div style="height: 4vw;width: 100%"></div>
+    <nav id="gobottom" class="pagination">
+        
+        <a class="prev-post" title="我的2019" href="/2020/01/28/我的2019/">
+            ← 我的2019
+        </a>
+        
+        <span class="prev-next-post">•</span>
+        
+        <a class="next-post" title="【2分钟知识点】Dockerfile 不再使用 cd 之 WORKDIR" href="/2019/04/19/Dockerfile-WORKDIR/">
+            【2分钟知识点】Dockerfile 不再使用 cd 之 WORKDIR →
+        </a>
+        
+    </nav>
+
+    
+
+    
+    <div id="leancloud_visitors" data-index="/2019/05/13/JWT的Node简单实现/" data-title="JWT的Node简单实现"></div>
+
+</main>
+
+
+
+	</div>
+	
+	
+
+
+	
+	
+
+
+
+
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<div>
+				<a href="/" title="李璐慧的个人网站 - Aloe's Personal Website">李璐慧的个人网站 - Aloe's Personal Website</a>
+				&copy; 2021
+			</div>
+			<div>
+				<a href="https://beian.miit.gov.cn" target="_blank">浙ICP备19010836号-1</a>
+			</div>
+		</section>
+		<nav class="site-footer-nav">
+			
+			<div>
+				<span>访问量统计: </span>
+				<span class="leancloud_visitors_count" data-index="home"></span>
+			</div>
+			
+        </nav>
+    </div>
+</footer>
+	
+
+
+<script>
+    if(window.navigator && navigator.serviceWorker) {
+        navigator.serviceWorker.getRegistrations()
+        .then(function(registrations) {
+            for(let registration of registrations) {
+                registration.unregister();
+            }
+        });
+    }
+</script>
+
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="李璐慧的个人网站 - Aloe's Personal Website">
+			
+            <span>李璐慧的个人网站 - Aloe's Personal Website</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">JWT的Node简单实现</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+
+
+
+
+
+
+<script src="/js/post.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("", "");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	var $doms = $(".leancloud_visitors_count")
+	if (!$doms.length) return
+	// var urls = $doms.map(function(){return $(this).attr('data-index')}) || [];
+	var urls = []
+	for (var i = 0; i < $doms.length; i++) {
+		urls.push($($doms[i]).attr('data-index'))
+	}
+	query.containedIn("url", urls);
+	query.find({
+		success: function(rst) {
+			// 初始化
+			$doms.each(function(i) {
+				$(this).text(0)
+			})
+			// 渲染数据
+			for (var i in rst) {
+				var item = rst[i]
+				$('.leancloud_visitors_count[data-index="'+ item.get('url') +'"]').text(item.get('time'))
+			}
+		},
+		error: function (obj, e) {
+			console.warn(obj, e)
+		}
+	})
+}
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	var $dom = $("#leancloud_visitors")
+	if (!$dom.length) return
+	url = $dom.attr('data-index').trim();
+	title = $dom.attr('data-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+					},
+					error: function(counter, e) {
+						console.warn(counter, e)
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				var acl = new AV.ACL();
+				acl.setPublicReadAccess(true);
+  			// acl.setWriteAccess(AV.User.current(),true);
+  			acl.setWriteAccess('*', true);
+				newcounter.setACL(acl)
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(e) {
+			console.warn(e)
+		}
+	});
+}
+$(function() {
+	try {
+		var Counter = AV.Object.extend("Counter");
+		addCount(Counter);
+		showTime(Counter);
+	} catch (e) {
+		console.log(e)
+	}
+}); 
+</script>
+</body>
+</html>

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css">
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	
+
+	<title>Leancloud 快速搞定网站访问量统计 | 李璐慧的个人网站 - Aloe's Personal Website</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="芦荟">
+	<meta name="description" content="Hexo通过Leancloud快速方便实现阅读量/访问量统计，valine的阅读量统计支持">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="李璐慧的个人网站 - Aloe's Personal Website">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="Leancloud 快速搞定网站访问量统计 | 李璐慧的个人网站 - Aloe's Personal Website">
+	<meta property="og:description" content="Hexo通过Leancloud快速方便实现阅读量/访问量统计，valine的阅读量统计支持">
+	<meta property="og:url" content="https://blog.liluhui.cn/2019/03/17/Leancloud快速搞定网站访问量统计/">
+
+	
+	<meta property="article:published_time" content="2019-03-17T17:03:00+08:00"/> 
+	<meta property="article:author" content="芦荟">
+	<meta property="article:published_first" content="李璐慧的个人网站 - Aloe's Personal Website, /2019/03/17/Leancloud快速搞定网站访问量统计/" />
+	
+</head>
+<body class="post-template">
+	<script>
+	!(function(c,b,d,a){c[a]||(c[a]={});c[a].config={pid:"ik1fdt7jh9@eae4827960753c5",appType:"web",imgUrl:"https://arms-retcode.aliyuncs.com/r.png?",sendResource:true,enableLinkTrace:true,behavior:true,useFmp:true};
+	with(b)with(body)with(insertBefore(createElement("script"),firstChild))setAttribute("crossorigin","",src=d)
+	})(window,document,"https://retcode.alicdn.com/retcode/bl.js","__bl");
+	</script>
+	<div class="site-wrapper">
+		
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">首页</a>
+                
+            </li>
+            
+        </ul> 
+    </div>
+     
+    <div class="site-nav-right">
+         
+        
+<div class="social-links" >
+    
+    
+    
+    
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2019-03-17T09:09:44.000Z" itemprop="datePublished">
+                    2019-03-17
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/建站/">建站</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">Leancloud 快速搞定网站访问量统计</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <p>博客现在用的评论是 <a href="https://valine.js.org/" target="_blank" rel="noopener"><code>Valine</code></a>, 是一款基于 <a href="https://leancloud.cn/" target="_blank" rel="noopener">Leancloud</a> 的快速、简洁且高效的无后端评论系统。看配置什么都挺简单的，也有不少教程，本来没想写这个，但实际在访问量统计这个功能上遇到不少问题（仍然是需要一定开发工作的），找到的教程都挺乱，干脆自己重新梳理下了。</p>
+<h2 id="Before-配置好-Valine"><a href="#Before-配置好-Valine" class="headerlink" title="Before. 配置好 Valine"></a>Before. 配置好 Valine</h2><p>先参照 <a href="https://valine.js.org/quickstart.html" target="_blank" rel="noopener">Valine官网教程</a> 把应用配置好，不要遗漏<strong>安全域名</strong>，至此你的评论功能应该已经好了。</p>
+<p>如果你不需要评论功能，或者不需要 Valine 来实现评论功能，可以跳过引用 Valine，但仍然需要创建好 <a href="https://leancloud.cn/" target="_blank" rel="noopener">Leancloud</a> 的应用。</p>
+<h2 id="Start-访问量统计"><a href="#Start-访问量统计" class="headerlink" title="Start.访问量统计"></a>Start.访问量统计</h2><h3 id="前因"><a href="#前因" class="headerlink" title="|前因"></a>|前因</h3><p>虽然 Valine 文档中说明从 v1.2.0 版本开始支持了<strong>文章阅读量统计</strong></p>
+<blockquote>
+<p> new Valine({<br>       el:’#vcomments’,<br>       …<br>       visitor: true // 阅读量统计<br>})<br>&nbsp;<br>如果开启了阅读量统计，Valine 会自动检测 leancloud 应用中是否存在Counter类，如果不存在会自动创建，无需手动创建~<br>&nbsp;<br>Valine会自动查找页面中class值为leancloud-visitors的元素，获取其id为查询条件。并将得到的值填充到其class的值为leancloud-visitors-count的子元素里：</p>
+</blockquote>
+<p>以上为官方说明，但配置并没有软用，因为查下源码可以看见，<strong>Valine 除了在 leancloud 中创建一个 <code>Counter</code> 类什么都没有干 ！…</strong></p>
+<img src="/2019/03/17/Leancloud快速搞定网站访问量统计/1.png" width="606" height="608">
+<p>&nbsp;</p>
+<p>这里从一些其他资料看是具体逻辑是在 <code>Hexo-theme-next</code>  这个主题做了处理，也就是具体业务方做了存储和获取数据的逻辑，挺不合理的，还是应该 Valine 封装好才对。</p>
+<p>&nbsp;</p>
+<p>至此，我们只能自己动手做存储和访问的逻辑了。</p>
+<h3 id="动手"><a href="#动手" class="headerlink" title="|动手"></a>|动手</h3><h4 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h4><ol>
+<li>约定 HTML 节点用于<strong>采集</strong>和<strong>渲染</strong>统计量数据</li>
+</ol>
+<ul>
+<li><p>带有 <code>class</code> 为 <code>leancloud_visitors_count</code>  的表示需要<strong>渲染</strong>数据，节点属性 <code>data-index</code>  表示唯一索引。我这个场景是 url 为唯一索引，举例如 </p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"leancloud_visitors_count"</span> <span class="attr">data-index</span>=<span class="string">"/2019/03/12/ZRender使用记录/"</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>带有 <code>id</code> 为 <code>leancloud_visitors</code> 的表示<strong>采集</strong>数据，节点属性<code>data-index</code>  表示唯一索引。举例如 </p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"leancloud_visitors_count"</span> <span class="attr">data-index</span>=<span class="string">"/2019/03/12/计算字的宽高/"</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ol start="2">
+<li><p>JS实现方法 <code>addCount</code>  用于上传数据（指定索引访问量+1）和 <code>showTime</code> 用于渲染访问量数据</p>
+</li>
+<li><p>要渲染的所有索引批量查询一次</p>
+</li>
+<li><p>减少请求，每个页面采集只允许一次，所以采集数据约定的节点为 id 而不是 class</p>
+</li>
+</ol>
+<p>&nbsp;</p>
+<h4 id="S1-Leancloud-建-Counter-类"><a href="#S1-Leancloud-建-Counter-类" class="headerlink" title="S1. Leancloud 建 Counter 类"></a>S1. Leancloud 建 Counter 类</h4><img src="/2019/03/17/Leancloud快速搞定网站访问量统计/2.png" width="718" height="751">
+<h4 id="S2-JS-代码实现"><a href="#S2-JS-代码实现" class="headerlink" title="S2. JS 代码实现"></a>S2. JS 代码实现</h4><p>同 Hexo 的用户，把这段代码单独存文件 <code>_partials/lean-analytics.swig</code>，在对应主题目录下 <code>./layout/javascript.swing</code> 中引用这份文件即可</p>
+<p>以下代码根据你的实际场景做些处理，你要存储哪些字段、你的 Leancloud 的 appId 和 appKey、你的节点约定规则等。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这段代码依赖 jquery，请检查下是否有引用</span></span><br><span class="line"><span class="comment">// 具体的HTML节点约定你可以根据你的需要更改</span></span><br><span class="line">&lt;script src=<span class="string">"https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"</span>&gt;&lt;<span class="regexp">/script&gt;</span></span><br><span class="line"><span class="regexp">&lt;script&gt;</span></span><br><span class="line"><span class="regexp">function showTime(Counter) &#123;</span></span><br><span class="line"><span class="regexp">  var query = new AV.Query(Counter);</span></span><br><span class="line"><span class="regexp">  var $doms = $(".leancloud_visitors_count")</span></span><br><span class="line"><span class="regexp">  if (!$doms.length) return</span></span><br><span class="line"><span class="regexp">  /</span><span class="regexp">/ var urls = $doms.map(function()&#123;return $(this).attr('data-index')&#125;) || [];</span></span><br><span class="line"><span class="regexp">  var urls = []</span></span><br><span class="line"><span class="regexp">  for (var i = 0; i &lt; $doms.length; i++) &#123;</span></span><br><span class="line"><span class="regexp">    urls.push($($doms[i]).attr('data-index'))</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">  query.containedIn("url", urls);</span></span><br><span class="line"><span class="regexp">  query.find(&#123;</span></span><br><span class="line"><span class="regexp">    success: function(rst) &#123;</span></span><br><span class="line"><span class="regexp">      /</span><span class="regexp">/ 初始化</span></span><br><span class="line"><span class="regexp">      $doms.each(function(i) &#123;</span></span><br><span class="line"><span class="regexp">        $(this).text(0)</span></span><br><span class="line"><span class="regexp">      &#125;)</span></span><br><span class="line"><span class="regexp">      /</span><span class="regexp">/ 渲染数据</span></span><br><span class="line"><span class="regexp">      for (var i in rst) &#123;</span></span><br><span class="line"><span class="regexp">        var item = rst[i]</span></span><br><span class="line"><span class="regexp">        $('.leancloud_visitors_count[data-index="'+ item.get('url') +'"]').text(item.get('time'))</span></span><br><span class="line"><span class="regexp">      &#125;</span></span><br><span class="line"><span class="regexp">    &#125;,</span></span><br><span class="line"><span class="regexp">    error: function (obj, e) &#123;</span></span><br><span class="line"><span class="regexp">      console.warn(obj, e)</span></span><br><span class="line"><span class="regexp">    &#125;</span></span><br><span class="line"><span class="regexp">  &#125;)</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp">function addCount(Counter) &#123;</span></span><br><span class="line"><span class="regexp">  var Counter = AV.Object.extend("Counter");</span></span><br><span class="line"><span class="regexp">  var $dom = $("#leancloud_visitors")</span></span><br><span class="line"><span class="regexp">  if (!$dom.length) return</span></span><br><span class="line"><span class="regexp">  url = $dom.attr('data-index').trim(); </span></span><br><span class="line"><span class="regexp">  var query = new AV.Query(Counter);</span></span><br><span class="line"><span class="regexp">  query.equalTo("url", url); /</span><span class="regexp">/ 我的需求以存储的url为唯一索引</span></span><br><span class="line"><span class="regexp">  /</span><span class="regexp">/ Case 有这条数据则time字段+1</span></span><br><span class="line"><span class="regexp">  query.find(&#123;</span></span><br><span class="line"><span class="regexp">    success: function(results) &#123;</span></span><br><span class="line"><span class="regexp">      if (results.length &gt; 0) &#123;</span></span><br><span class="line"><span class="regexp">        var counter = results[0];</span></span><br><span class="line"><span class="regexp">        counter.fetchWhenSave(true);</span></span><br><span class="line"><span class="regexp">        counter.increment("time");</span></span><br><span class="line"><span class="regexp">        counter.save(null, &#123;</span></span><br><span class="line"><span class="regexp">          success: function(counter) &#123;</span></span><br><span class="line"><span class="regexp">          &#125;,</span></span><br><span class="line"><span class="regexp">          error: function(counter, e) &#123;</span></span><br><span class="line"><span class="regexp">            console.warn(counter, e)</span></span><br><span class="line"><span class="regexp">          &#125;</span></span><br><span class="line"><span class="regexp">        &#125;);</span></span><br><span class="line"><span class="regexp">      &#125; </span></span><br><span class="line"><span class="regexp">      /</span><span class="regexp">/ Case 没有这条数据则新增一行数据</span></span><br><span class="line"><span class="regexp">      else &#123; </span></span><br><span class="line"><span class="regexp">        var newcounter = new Counter();</span></span><br><span class="line"><span class="regexp">        var acl = new AV.ACL();</span></span><br><span class="line"><span class="regexp">        acl.setPublicReadAccess(true);</span></span><br><span class="line"><span class="regexp">      /</span><span class="regexp">/ acl.setWriteAccess(AV.User.current(),true);</span></span><br><span class="line"><span class="regexp">        acl.setWriteAccess('*', true);</span></span><br><span class="line"><span class="regexp">        newcounter.setACL(acl)</span></span><br><span class="line"><span class="regexp">        /</span><span class="regexp">/ 这里是你想存储的数据</span></span><br><span class="line"><span class="regexp">        newcounter.set("title", title);</span></span><br><span class="line"><span class="regexp">        newcounter.set("url", url); /</span><span class="regexp">/ 我的需求以存储的url为唯一索引</span></span><br><span class="line"><span class="regexp">        newcounter.set("time", 1);</span></span><br><span class="line"><span class="regexp">        newcounter.save(null, &#123;</span></span><br><span class="line"><span class="regexp">          success: function(newcounter) &#123;</span></span><br><span class="line"><span class="regexp">          &#125;,</span></span><br><span class="line"><span class="regexp">          error: function(newcounter, error) &#123;</span></span><br><span class="line"><span class="regexp">            console.log('Failed to create');</span></span><br><span class="line"><span class="regexp">          &#125;</span></span><br><span class="line"><span class="regexp">        &#125;);</span></span><br><span class="line"><span class="regexp">      &#125;</span></span><br><span class="line"><span class="regexp">    &#125;,</span></span><br><span class="line"><span class="regexp">    error: function(e) &#123;</span></span><br><span class="line"><span class="regexp">      console.warn(e)</span></span><br><span class="line"><span class="regexp">    &#125;</span></span><br><span class="line"><span class="regexp">  &#125;);</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp">$(function() &#123;</span></span><br><span class="line"><span class="regexp">  /</span><span class="regexp">/ @TODO </span></span><br><span class="line"><span class="regexp">  /</span><span class="regexp">/ appId 和 appKey 在 Leancloud 应用的设置内可以找到，</span></span><br><span class="line"><span class="regexp">  /</span><span class="regexp">/ 具体可参考上面 Valine 的官方引导吧。</span></span><br><span class="line"><span class="regexp">  AV.initialize(appId, appKey); </span></span><br><span class="line"><span class="regexp">  var Counter = AV.Object.extend("Counter");</span></span><br><span class="line"><span class="regexp">  addCount(Counter);</span></span><br><span class="line"><span class="regexp">  showTime(Counter);</span></span><br><span class="line"><span class="regexp">&#125;);</span></span><br><span class="line"><span class="regexp">&lt;/</span>script&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="S3-HTML-节点添加"><a href="#S3-HTML-节点添加" class="headerlink" title="S3. HTML 节点添加"></a>S3. HTML 节点添加</h4><p>这是我在文章列表的访问量渲染节点<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"reading-time"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"leancloud_visitors_count"</span> <span class="attr">data-index</span>=<span class="string">"&#123;&#123; url_for(post.path) &#125;&#125;"</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">    read</span><br><span class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>这是我在每个文章页面的采集节点</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"leancloud_visitors"</span> <span class="attr">data-index</span>=<span class="string">"&#123;&#123; url_for(page.path) &#125;&#125;"</span> <span class="attr">data-title</span>=<span class="string">"&#123;&#123; page.title &#125;&#125;"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="问题集"><a href="#问题集" class="headerlink" title="问题集"></a>问题集</h2><h3 id="ACL-权限问题"><a href="#ACL-权限问题" class="headerlink" title="ACL 权限问题"></a>ACL 权限问题</h3><p>出现报错 ACL 权限问题，是因为创建 Counter 类的时候选择了<strong>限制写入</strong>作为ACL的默认设置。</p>
+<img src="/2019/03/17/Leancloud快速搞定网站访问量统计/3.png" width="1039" height="498">
+<p>参考<a href="https://leancloud.cn/docs/acl-guide.html#hash1012861166" target="_blank" rel="noopener"> ACL 权限管理开发指南</a>]，可以通过创建数据行时声明 ACL 权限解决</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 新建一个帖子对象</span></span><br><span class="line"><span class="keyword">var</span> Post = AV.Object.extend(<span class="string">'Post'</span>);</span><br><span class="line"><span class="keyword">var</span> post = <span class="keyword">new</span> Post();</span><br><span class="line">post.set(<span class="string">'title'</span>, <span class="string">'大家好，我是新人'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 新建一个 ACL 实例</span></span><br><span class="line"><span class="keyword">var</span> acl = <span class="keyword">new</span> AV.ACL();</span><br><span class="line">acl.setPublicReadAccess(<span class="literal">true</span>);</span><br><span class="line">acl.setWriteAccess(AV.User.current(),<span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将 ACL 实例赋予 Post 对象</span></span><br><span class="line">post.setACL(acl);</span><br><span class="line">post.save().then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 保存成功</span></span><br><span class="line">&#125;).catch(<span class="function"><span class="keyword">function</span>(<span class="params">error</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(error);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>临时处理上，可以在后台直接编辑修改</p>
+<img src="/2019/03/17/Leancloud快速搞定网站访问量统计/4.png" width="595" height="478">
+
+                </div>
+            </section>
+        </article>
+        
+        <div class="post-full-content">
+            <ul class="post-copyright">
+            <li class="post-copyright-author">
+                <strong>本文作者： </strong>芦荟</li>
+            <li class="post-copyright-link">
+                <strong>本文链接：</strong>
+                <a href="https://blog.liluhui.cn/2019/03/17/Leancloud快速搞定网站访问量统计/" title="Leancloud 快速搞定网站访问量统计">https://blog.liluhui.cn/2019/03/17/Leancloud快速搞定网站访问量统计/</a>
+            </li>
+            <li class="post-copyright-license">
+                <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div style="height: 4vw;width: 100%"></div>
+    <nav id="gobottom" class="pagination">
+        
+        <a class="prev-post" title="Number.EPSILON" href="/2019/03/19/Number-EPSILON/">
+            ← Number.EPSILON
+        </a>
+        
+        <span class="prev-next-post">•</span>
+        
+        <a class="next-post" title="ZRender 使用记录" href="/2019/03/12/ZRender使用记录/">
+            ZRender 使用记录 →
+        </a>
+        
+    </nav>
+
+    
+
+    
+    <div id="leancloud_visitors" data-index="/2019/03/17/Leancloud快速搞定网站访问量统计/" data-title="Leancloud 快速搞定网站访问量统计"></div>
+
+</main>
+
+
+
+	</div>
+	
+	
+
+
+	
+	
+
+
+
+
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<div>
+				<a href="/" title="李璐慧的个人网站 - Aloe's Personal Website">李璐慧的个人网站 - Aloe's Personal Website</a>
+				&copy; 2021
+			</div>
+			<div>
+				<a href="https://beian.miit.gov.cn" target="_blank">浙ICP备19010836号-1</a>
+			</div>
+		</section>
+		<nav class="site-footer-nav">
+			
+			<div>
+				<span>访问量统计: </span>
+				<span class="leancloud_visitors_count" data-index="home"></span>
+			</div>
+			
+        </nav>
+    </div>
+</footer>
+	
+
+
+<script>
+    if(window.navigator && navigator.serviceWorker) {
+        navigator.serviceWorker.getRegistrations()
+        .then(function(registrations) {
+            for(let registration of registrations) {
+                registration.unregister();
+            }
+        });
+    }
+</script>
+
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="李璐慧的个人网站 - Aloe's Personal Website">
+			
+            <span>李璐慧的个人网站 - Aloe's Personal Website</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">Leancloud 快速搞定网站访问量统计</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+
+
+
+
+
+
+<script src="/js/post.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("", "");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	var $doms = $(".leancloud_visitors_count")
+	if (!$doms.length) return
+	// var urls = $doms.map(function(){return $(this).attr('data-index')}) || [];
+	var urls = []
+	for (var i = 0; i < $doms.length; i++) {
+		urls.push($($doms[i]).attr('data-index'))
+	}
+	query.containedIn("url", urls);
+	query.find({
+		success: function(rst) {
+			// 初始化
+			$doms.each(function(i) {
+				$(this).text(0)
+			})
+			// 渲染数据
+			for (var i in rst) {
+				var item = rst[i]
+				$('.leancloud_visitors_count[data-index="'+ item.get('url') +'"]').text(item.get('time'))
+			}
+		},
+		error: function (obj, e) {
+			console.warn(obj, e)
+		}
+	})
+}
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	var $dom = $("#leancloud_visitors")
+	if (!$dom.length) return
+	url = $dom.attr('data-index').trim();
+	title = $dom.attr('data-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+					},
+					error: function(counter, e) {
+						console.warn(counter, e)
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				var acl = new AV.ACL();
+				acl.setPublicReadAccess(true);
+  			// acl.setWriteAccess(AV.User.current(),true);
+  			acl.setWriteAccess('*', true);
+				newcounter.setACL(acl)
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(e) {
+			console.warn(e)
+		}
+	});
+}
+$(function() {
+	try {
+		var Counter = AV.Object.extend("Counter");
+		addCount(Counter);
+		showTime(Counter);
+	} catch (e) {
+		console.log(e)
+	}
+}); 
+</script>
+</body>
+</html>

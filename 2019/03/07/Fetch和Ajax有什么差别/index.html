@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css">
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	
+
+	<title>Fetch 和 Ajax 有什么差别 | 李璐慧的个人网站 - Aloe's Personal Website</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="芦荟">
+	<meta name="description" content="">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="李璐慧的个人网站 - Aloe's Personal Website">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="Fetch 和 Ajax 有什么差别 | 李璐慧的个人网站 - Aloe's Personal Website">
+	<meta property="og:description" content="">
+	<meta property="og:url" content="https://blog.liluhui.cn/2019/03/07/Fetch和Ajax有什么差别/">
+
+	
+	<meta property="article:published_time" content="2019-03-07T00:03:00+08:00"/> 
+	<meta property="article:author" content="芦荟">
+	<meta property="article:published_first" content="李璐慧的个人网站 - Aloe's Personal Website, /2019/03/07/Fetch和Ajax有什么差别/" />
+	
+</head>
+<body class="post-template">
+	<script>
+	!(function(c,b,d,a){c[a]||(c[a]={});c[a].config={pid:"ik1fdt7jh9@eae4827960753c5",appType:"web",imgUrl:"https://arms-retcode.aliyuncs.com/r.png?",sendResource:true,enableLinkTrace:true,behavior:true,useFmp:true};
+	with(b)with(body)with(insertBefore(createElement("script"),firstChild))setAttribute("crossorigin","",src=d)
+	})(window,document,"https://retcode.alicdn.com/retcode/bl.js","__bl");
+	</script>
+	<div class="site-wrapper">
+		
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">首页</a>
+                
+            </li>
+            
+        </ul> 
+    </div>
+     
+    <div class="site-nav-right">
+         
+        
+<div class="social-links" >
+    
+    
+    
+    
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2019-03-06T16:00:00.000Z" itemprop="datePublished">
+                    2019-03-7
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/HTTP/">HTTP</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">Fetch 和 Ajax 有什么差别</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <p>首先让我们来现清理下概念</p>
+<p><strong>Ajax</strong> 最正确的概念应该是 <code>异步 JavaScript 和 XML (Asynchronous Javascript And XML)</code> ，是指通过核心对象 <code>XHR (XMLHTTPRequest)</code> 达到一种向服务器提出请求并处理响应而不阻塞用户的技术，为Web交互方向打开了新的大门。<br>再后来，由于很多框架都封装了对应的 Ajax 方法，比如大名鼎鼎的 jQuery 中的 <code>$.ajax(url, func)</code>，很多开发者开始直接称呼这类对 XHR (XMLHTTPRequest) 对象进行方法封装的方法为 <code>Ajax</code> 。</p>
+<p>而 <strong>Fetch</strong> 这种新方法提供了一种简单，合理的方式来跨网络异步获取资源。</p>
+<img src="/2019/03/07/Fetch和Ajax有什么差别/1.png" width="1035" height="394">
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>下面来了解下 Fetch 在使用中和 Ajax 的差别~</p>
+<h2 id="一、Promise标准"><a href="#一、Promise标准" class="headerlink" title="一、Promise标准"></a>一、Promise标准</h2><p>提到 Fetch 和 Ajax 最大的不同，应该是 Fetch 是基于标准 Promise 实现，支持 async/await</p>
+<p>试试这个简单的请求</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">fetch(<span class="string">'http://example.com/movies.json'</span>)</span><br><span class="line">  .then(<span class="function"><span class="keyword">function</span>(<span class="params">response</span>) </span>&#123; <span class="comment">// resolve</span></span><br><span class="line">    <span class="keyword">return</span> response.json();</span><br><span class="line">  &#125;)</span><br><span class="line">  .then(<span class="function"><span class="keyword">function</span>(<span class="params">myJson</span>) </span>&#123; <span class="comment">// reject</span></span><br><span class="line">    <span class="built_in">console</span>.log(myJson);</span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="二、跨域-CORS-并携带-cookie-的实现"><a href="#二、跨域-CORS-并携带-cookie-的实现" class="headerlink" title="二、跨域 ( CORS ) 并携带 cookie 的实现"></a>二、跨域 ( CORS ) 并携带 cookie 的实现</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">fetch(<span class="string">'https://example.com'</span>, &#123;</span><br><span class="line">    mode: <span class="string">'cors'</span>,</span><br><span class="line">    credentials: <span class="string">'include'</span>  </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>&nbsp;</p>
+<p>完整的配置项如下（摘自MDN）</p>
+<ul>
+<li><strong>method</strong>: 请求使用的方法，如 GET、POST。</li>
+<li><strong>headers</strong>: 请求的头信息，形式为 Headers 的对象或包含 ByteString 值的对象字面量。</li>
+<li><strong>body</strong>: 请求的 body 信息：可能是一个 Blob、BufferSource、FormData、URLSearchParams 或者 USVString 对象。注意 GET 或 HEAD 方法的请求不能包含 body 信息。</li>
+<li><strong>mode</strong>: 请求的模式，如 cors、 no-cors 或者 same-origin。</li>
+<li><strong>credentials</strong>: 请求的 credentials，如 omit、same-origin 或者 include。为了在当前域名内自动发送 cookie ， 必须提供这个选项， 从 Chrome 50 开始， 这个属性也可以接受 FederatedCredential 实例或是一个PasswordCredential 实例。</li>
+<li><strong>cache</strong>:  请求的 cache 模式: default 、 no-store 、 reload 、 no-cache 、 force-cache 或者 only-if-cached 。</li>
+<li><strong>redirect</strong>: 可用的 redirect 模式: follow (自动重定向), error (如果产生重定向将自动终止并且抛出一个错误), 或者 manual (手动处理重定向). 在Chrome中，Chrome 47之前的默认值是 follow，从 Chrome 47开始是 manual。</li>
+<li><strong>referrer</strong>: 一个 USVString 可以是 no-referrer、client或一个 URL。默认是 client。</li>
+<li><strong>referrerPolicy</strong>: Specifies the value of the referer HTTP header. May be one of no-referrer、 no-referrer-when-downgrade、 origin、 origin-when-cross-origin、 unsafe-url 。</li>
+<li><strong>integrity</strong>: 包括请求的  subresource integrity 值 （ 例如： sha256-BpfBw7ivV8q2jLiT13fxDYAe2tJllusRSZ273h2nFSE=）。</li>
+</ul>
+<h2 id="三、Request-类、Response-类、Header-类"><a href="#三、Request-类、Response-类、Header-类" class="headerlink" title="三、Request 类、Response 类、Header 类"></a>三、Request 类、Response 类、Header 类</h2><p>Fetch 可以搭配这些类使用，并且实际上像请求返回的正是一个 <code>Response</code> 实例</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myImage = <span class="built_in">document</span>.querySelector(<span class="string">'img'</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> myHeaders = <span class="keyword">new</span> Headers();</span><br><span class="line">myHeaders.append(<span class="string">'Content-Type'</span>, <span class="string">'image/jpeg'</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> myInit = &#123; <span class="attr">method</span>: <span class="string">'GET'</span>,</span><br><span class="line">               headers: myHeaders,</span><br><span class="line">               mode: <span class="string">'cors'</span>,</span><br><span class="line">               cache: <span class="string">'default'</span> &#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> myRequest = <span class="keyword">new</span> Request(<span class="string">'flowers.jpg'</span>,myInit);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">fetch(myRequest).then(<span class="function"><span class="keyword">function</span>(<span class="params">response</span>) </span>&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="Fetch-常见问题"><a href="#Fetch-常见问题" class="headerlink" title="Fetch 常见问题"></a>Fetch 常见问题</h2><ul>
+<li>Fetch 请求默认不带 cookie</li>
+<li>服务器返回400、500错误码不会 reject ，只有网路错误请求不能完成时才会 reject </li>
+<li>目前还没有提供可以中断请求的解决方案</li>
+<li>不能获取进度</li>
+<li>不能设置超时（可以通过简单的封装来模拟实现）</li>
+</ul>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>附带一个补丁，兼容方案哦  <a href="https://github.com/github/fetch" target="_blank" rel="noopener">https://github.com/github/fetch</a></p>
+
+                </div>
+            </section>
+        </article>
+        
+        <div class="post-full-content">
+            <ul class="post-copyright">
+            <li class="post-copyright-author">
+                <strong>本文作者： </strong>芦荟</li>
+            <li class="post-copyright-link">
+                <strong>本文链接：</strong>
+                <a href="https://blog.liluhui.cn/2019/03/07/Fetch和Ajax有什么差别/" title="Fetch 和 Ajax 有什么差别">https://blog.liluhui.cn/2019/03/07/Fetch和Ajax有什么差别/</a>
+            </li>
+            <li class="post-copyright-license">
+                <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div style="height: 4vw;width: 100%"></div>
+    <nav id="gobottom" class="pagination">
+        
+        <a class="prev-post" title="同源策略(CORS)探究" href="/2019/03/08/同源策略探究/">
+            ← 同源策略(CORS)探究
+        </a>
+        
+        <span class="prev-next-post">•</span>
+        
+        <a class="next-post" title="VPS出事的又一天" href="/2019/03/06/VPS出事的又一天/">
+            VPS出事的又一天 →
+        </a>
+        
+    </nav>
+
+    
+
+    
+    <div id="leancloud_visitors" data-index="/2019/03/07/Fetch和Ajax有什么差别/" data-title="Fetch 和 Ajax 有什么差别"></div>
+
+</main>
+
+
+
+	</div>
+	
+	
+
+
+	
+	
+
+
+
+
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<div>
+				<a href="/" title="李璐慧的个人网站 - Aloe's Personal Website">李璐慧的个人网站 - Aloe's Personal Website</a>
+				&copy; 2021
+			</div>
+			<div>
+				<a href="https://beian.miit.gov.cn" target="_blank">浙ICP备19010836号-1</a>
+			</div>
+		</section>
+		<nav class="site-footer-nav">
+			
+			<div>
+				<span>访问量统计: </span>
+				<span class="leancloud_visitors_count" data-index="home"></span>
+			</div>
+			
+        </nav>
+    </div>
+</footer>
+	
+
+
+<script>
+    if(window.navigator && navigator.serviceWorker) {
+        navigator.serviceWorker.getRegistrations()
+        .then(function(registrations) {
+            for(let registration of registrations) {
+                registration.unregister();
+            }
+        });
+    }
+</script>
+
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="李璐慧的个人网站 - Aloe's Personal Website">
+			
+            <span>李璐慧的个人网站 - Aloe's Personal Website</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">Fetch 和 Ajax 有什么差别</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+
+
+
+
+
+
+<script src="/js/post.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("", "");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	var $doms = $(".leancloud_visitors_count")
+	if (!$doms.length) return
+	// var urls = $doms.map(function(){return $(this).attr('data-index')}) || [];
+	var urls = []
+	for (var i = 0; i < $doms.length; i++) {
+		urls.push($($doms[i]).attr('data-index'))
+	}
+	query.containedIn("url", urls);
+	query.find({
+		success: function(rst) {
+			// 初始化
+			$doms.each(function(i) {
+				$(this).text(0)
+			})
+			// 渲染数据
+			for (var i in rst) {
+				var item = rst[i]
+				$('.leancloud_visitors_count[data-index="'+ item.get('url') +'"]').text(item.get('time'))
+			}
+		},
+		error: function (obj, e) {
+			console.warn(obj, e)
+		}
+	})
+}
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	var $dom = $("#leancloud_visitors")
+	if (!$dom.length) return
+	url = $dom.attr('data-index').trim();
+	title = $dom.attr('data-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+					},
+					error: function(counter, e) {
+						console.warn(counter, e)
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				var acl = new AV.ACL();
+				acl.setPublicReadAccess(true);
+  			// acl.setWriteAccess(AV.User.current(),true);
+  			acl.setWriteAccess('*', true);
+				newcounter.setACL(acl)
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(e) {
+			console.warn(e)
+		}
+	});
+}
+$(function() {
+	try {
+		var Counter = AV.Object.extend("Counter");
+		addCount(Counter);
+		showTime(Counter);
+	} catch (e) {
+		console.log(e)
+	}
+}); 
+</script>
+</body>
+</html>
