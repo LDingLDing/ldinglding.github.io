@@ -1,0 +1,285 @@
+<!DOCTYPE html><html lang="zh-cn" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>UE实时渲染基础3 - 反射 | 芦荟的个人网站 - Aloea's Personal Website</title><meta name="author" content="芦荟"><meta name="copyright" content="芦荟"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="前言关键词：  Reflections Captures 反射捕获 Planar Reflections 平面反射 Screen Space Reflections   SSR 平面空间反射  看完本篇内容你将对以下概念心中有数：  UE4 有哪些反射技术，我们如何选择和组合 反射系统下的性能优化      反射的实现思路首先，对象能产生反射的前提是材质具有一定的光泽度。在UE4中，我们调整材质的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UE实时渲染基础3 - 反射">
+<meta property="og:url" content="https://blog.liluhui.cn/2022/07/24/%E5%8F%8D%E5%B0%84/index.html">
+<meta property="og:site_name" content="芦荟的个人网站 - Aloea&#39;s Personal Website">
+<meta property="og:description" content="前言关键词：  Reflections Captures 反射捕获 Planar Reflections 平面反射 Screen Space Reflections   SSR 平面空间反射  看完本篇内容你将对以下概念心中有数：  UE4 有哪些反射技术，我们如何选择和组合 反射系统下的性能优化      反射的实现思路首先，对象能产生反射的前提是材质具有一定的光泽度。在UE4中，我们调整材质的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/p2873051741.jpg">
+<meta property="article:published_time" content="2022-07-24T03:45:43.000Z">
+<meta property="article:modified_time" content="2023-09-01T14:36:56.556Z">
+<meta property="article:author" content="芦荟">
+<meta property="article:tag" content="UnrealEngine">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/p2873051741.jpg"><link rel="shortcut icon" href="https://i.loli.net/2017/11/26/5a19c0b50432e.png"><link rel="canonical" href="https://blog.liluhui.cn/2022/07/24/%E5%8F%8D%E5%B0%84/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-8Z2NNDYTL9"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8Z2NNDYTL9');
+</script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'UE实时渲染基础3 - 反射',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-09-01 22:36:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/rss2.xml" title="芦荟的个人网站 - Aloea's Personal Website" type="application/rss+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">53</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">7</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" href="/process"><span> 建站历程</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/p2873051741.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="芦荟的个人网站 - Aloea's Personal Website"><span class="site-name">芦荟的个人网站 - Aloea's Personal Website</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" href="/process"><span> 建站历程</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">UE实时渲染基础3 - 反射</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2022-07-24T03:45:43.000Z" title="Created 2022-07-24 11:45:43">2022-07-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2023-09-01T14:36:56.556Z" title="Updated 2023-09-01 22:36:56">2023-09-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%B8%B2%E6%9F%93/">渲染</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="UE实时渲染基础3 - 反射"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>关键词：</p>
+<ul>
+<li>Reflections Captures 反射捕获</li>
+<li>Planar Reflections 平面反射</li>
+<li>Screen Space Reflections   SSR 平面空间反射</li>
+</ul>
+<p>看完本篇内容你将对以下概念心中有数：</p>
+<ul>
+<li>UE4 有哪些反射技术，我们如何选择和组合</li>
+<li>反射系统下的性能优化</li>
+</ul>
+<img src="/2022/07/24/%E5%8F%8D%E5%B0%84/1.png" class="" title="img">
+
+<br/>
+
+<h2 id="反射的实现思路"><a href="#反射的实现思路" class="headerlink" title="反射的实现思路"></a>反射的实现思路</h2><p>首先，对象能产生反射的前提是材质具有一定的光泽度。在UE4中，我们调整材质的 Metallic（金属感）、Specular（高光度）、Roughness（粗糙度）三个维度的参数来调整对象的光泽度，具体材质调整查看 <a target="_blank" rel="noopener" href="https://docs.unrealengine.com/4.27/zh-CN/RenderingAndGraphics/Materials/HowTo/ShinyMaterials/">此文档</a>。</p>
+<p>真实世界里的反射是很难实现的，想象一下每个点产生的反射，整个世界都需要重新进行一次计算，即使只是两个反射对象和一束光，也会产生无数反射光，重复计算量非常之大，这对于现代硬件来说成本太大了，所以渲染引擎实际是通过一种 hack 的方式实现的，而不是像真实世界一样那么复杂。这意味着，很多时候渲染出的反射是不精准的，我们需要通过组合方案和调整参数达到适当的效果，也意味着可以脱离真实世界的“正确”去做艺术性的表达。</p>
+<p>UE中所有的反射方式大致归为两类，第一类是实时计算，通过屏幕的深度和颜色缓存来计算；第二类是预计算，通过提前捕获计算出一个360°的图片，在实时渲染中再混合图像。<br />第一个就是我们常听说的 <code>SSR 屏幕空间反射</code>，第二种就是我们在 actor 中会看到的反射工具们，下面我们将展开讲讲。<br /></p>
+<img src="/2022/07/24/%E5%8F%8D%E5%B0%84/2.png" class="" width="200">
+
+<br/>
+
+<h2 id="SSR-屏幕空间反射"><a href="#SSR-屏幕空间反射" class="headerlink" title="SSR 屏幕空间反射"></a>SSR 屏幕空间反射</h2><p>这是UE4 默认启用的反射，在后期处理体积（PostprocessVolume）内可以调节参数<br /></p>
+<img src="/2022/07/24/%E5%8F%8D%E5%B0%84/3.png" class="" title="img">
+
+<p>屏幕空间反射正如它的名字一样，它是采集屏幕范围内可见对象进行计算，而不是整个世界的信息，这就导致它会出现一些视觉错误。</p>
+<p>比如在我们现在这个场景内，我们能看到圆锥体上捕获的反射有地上的蓝字和人物，但当我们走进，篮字超出屏幕范围时，这部分反射就丢失了。<br /></p>
+<img src="/2022/07/24/%E5%8F%8D%E5%B0%84/4.png" class="" title="img">
+
+<img src="/2022/07/24/%E5%8F%8D%E5%B0%84/5.png" class="" title="img">
+
+<img src="/2022/07/24/%E5%8F%8D%E5%B0%84/6.png" class="" title="img">
+
+
+<p>这就意味着 SSR 只能反射当前可见的内容。另外 SSR 的问题是反射产生的画面噪点也很多，尤其是反射区和空白区之间的过渡。</p>
+<p>总的来说，SSR 是相对昂贵的，只要不在提前捕获反射的区域内，这部分就会采用 SSR 来实现反射。当然，SSR 也有优点，它不需要像反射捕获去调节位置避免混合出的图像偏离常识，它的计算是精准的，位置关系始终正确。</p>
+<p>我们应该将 SSR 作为全局的兜底，保证始终有反射的保底质量，通过下文的各种反射捕获手段调节出效果更好、性能也更好的反射。</p>
+<br/>
+
+<h2 id="反射捕获"><a href="#反射捕获" class="headerlink" title="反射捕获"></a>反射捕获</h2><p>包括 球体反射捕获 Actor（Sphere Reflection Capture Actor）和 立方体反射捕获 Actor（Box Reflection Capture Actor）。</p>
+<p>这两者本质上都是通过在摆放 actor 的位置捕获一张 360°的图像记录这个点的反射信息。区别是大多数场景使用球体都是合适的，但在一些方正的空间例如房子下，角落的投影会产生一些畸变，这时候换成立方体捕获出来的画面更合理。</p>
+<p>这里需要关注几点，</p>
+<ol>
+<li>捕获是由范围的。你可以通过一个个小的范围做出效果，也可以采用大的范围做出效果，也可以混合使用。<ul>
+<li>在捕获效果的呈现上，包含关系的捕获点会被子节点接管，意思是如果有一个很大范围的捕获球，其中又包含了一个小捕获球，那么小捕获球范围内的反射是完全被小范围捕获球接管的；</li>
+<li>而如果有两个捕获球产生了交集，在交集的范围内，则会同时混合两个捕获结果。 —— 需要关注不要重叠太多太多，实时渲染的混合过程就会比较损耗了，最佳实践是不要超过8个，当到达20-40个的数量左右重叠计算压力很大。</li>
+</ul>
+</li>
+</ol>
+<img src="/2022/07/24/%E5%8F%8D%E5%B0%84/7.png" class="" title="img">
+
+
+<ol start="2">
+<li>捕获球的摆放位置会影响效果。因为最终是混合这个拜访点采集的反射画面信息，在混合的时候是可能出现不符合物理常识的位置错位的。<ul>
+<li>需要反复检查呈现效果调节，大多数时候都是摆放在视口的高度，就是摄像机&#x2F;玩家视角的高度上。</li>
+</ul>
+</li>
+</ol>
+<br/>
+
+<h2 id="平面反射"><a href="#平面反射" class="headerlink" title="平面反射"></a>平面反射</h2><p>平面反射并不常用，它对应着 平面反射 Actor （Planar Refloction Actor），适用于需要精准反射效果的平滑表面，但又不适用于特别大范围的情况。具体来说，它很适合镜子、局部的水面，但不适合大片的海面。</p>
+<p>第一张是采用默认的 SSR 产生的反射效果，第二张是用平面反射处理的反射效果，第二张的细节很真实性明显要更好。<br /></p>
+<img src="/2022/07/24/%E5%8F%8D%E5%B0%84/8.jpg" class="" title="img">
+
+<img src="/2022/07/24/%E5%8F%8D%E5%B0%84/9.jpg" class="" title="img">
+
+
+<p>另外，平面反射与实时捕获不同，它是支持实时捕获的。</p>
+<br/>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>调节全局 SSR 屏幕空间反射作为保下限，利用反射捕获等工具来增强反射效果。</li>
+<li>对于移动应用、VR应用等性能吃紧的设备场景，合理减少反射分别率，甚至关闭复杂反射计算以提高性能。<ul>
+<li>调整 UE4 反射分辨率在项目设置中，搜索 <code>反射/Reflection</code>可以看到</li>
+<li>反射分辨率多少合适， 64-128 都是相对高性能的，通常为了效果可以调到 1024，甚至 2048</li>
+</ul>
+</li>
+<li>减少过多的反射捕获重叠，最佳实践不超过 8个，超过 20-40 个会有明显的影响 </li>
+<li>即使把所有反射关闭，也会发现还有一些反射，这是因为 UE4 中 skylight 也具备反射捕获的能力，相当于为整个场景提供了低成本的备用反射捕获。</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="https://blog.liluhui.cn">芦荟</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://blog.liluhui.cn/2022/07/24/%E5%8F%8D%E5%B0%84/">https://blog.liluhui.cn/2022/07/24/%E5%8F%8D%E5%B0%84/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/UnrealEngine/">UnrealEngine</a></div><div class="post_share"><div class="social-share" data-image="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/p2873051741.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/07/26/%E5%85%89%E7%85%A7/" title="UE实时渲染基础4 - 光照"><img class="cover" src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/p28699747652.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">UE实时渲染基础4 - 光照</div></div></a></div><div class="next-post pull-right"><a href="/2022/07/18/%E7%9D%80%E8%89%B2%E5%99%A8%E5%92%8C%E7%BB%98%E5%88%B6%E8%B0%83%E7%94%A8/" title="UE实时渲染基础2 - 着色器和绘制调用"><img class="cover" src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/p2718427180.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">UE实时渲染基础2 - 着色器和绘制调用</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2022/07/26/%E5%85%89%E7%85%A7/" title="UE实时渲染基础4 - 光照"><img class="cover" src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/p28699747652.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-07-26</div><div class="title">UE实时渲染基础4 - 光照</div></div></a></div><div><a href="/2022/07/10/%E5%BB%B6%E8%BF%9F%E6%B8%B2%E6%9F%93%E8%BF%87%E7%A8%8B/" title="UE实时渲染基础1 - 延迟渲染过程"><img class="cover" src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/p2718426594.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-07-10</div><div class="title">UE实时渲染基础1 - 延迟渲染过程</div></div></a></div><div><a href="/2022/07/18/%E7%9D%80%E8%89%B2%E5%99%A8%E5%92%8C%E7%BB%98%E5%88%B6%E8%B0%83%E7%94%A8/" title="UE实时渲染基础2 - 着色器和绘制调用"><img class="cover" src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/p2718427180.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-07-18</div><div class="title">UE实时渲染基础2 - 着色器和绘制调用</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comment</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">芦荟</div><div class="author-info__description">关于生活、学习、工作</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">53</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">7</div></a></div><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/LDingLDing" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="https://www.weibo.com/2316403983/profile" target="_blank" title="Weibo"><i class="fab fa-weibo"></i></a><a class="social-icon" href="mailto:liluhuizj@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%80%9D%E8%B7%AF"><span class="toc-number">2.</span> <span class="toc-text">反射的实现思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SSR-%E5%B1%8F%E5%B9%95%E7%A9%BA%E9%97%B4%E5%8F%8D%E5%B0%84"><span class="toc-number">3.</span> <span class="toc-text">SSR 屏幕空间反射</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E6%8D%95%E8%8E%B7"><span class="toc-number">4.</span> <span class="toc-text">反射捕获</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B9%B3%E9%9D%A2%E5%8F%8D%E5%B0%84"><span class="toc-number">5.</span> <span class="toc-text">平面反射</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text">总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/09/01/202308/" title="202308"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2023/09/01/IMG_20230819_183732.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="202308"/></a><div class="content"><a class="title" href="/2023/09/01/202308/" title="202308">202308</a><time datetime="2023-09-01T14:57:19.000Z" title="Created 2023-09-01 22:57:19">2023-09-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/08/04/202307/" title="2023年7月总结"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2023/08/04/mmexport1688373999931.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2023年7月总结"/></a><div class="content"><a class="title" href="/2023/08/04/202307/" title="2023年7月总结">2023年7月总结</a><time datetime="2023-08-04T14:56:29.000Z" title="Created 2023-08-04 22:56:29">2023-08-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/04/27/%E6%AF%8F%E4%B8%AA%E4%BA%BA%E9%83%BD%E5%BA%94%E8%AF%A5%E6%9C%89%E7%82%B9%E4%BA%BA%E7%94%9F%E5%93%B2%E5%AD%A6%EF%BC%88%E4%B8%8A%EF%BC%89/" title="每个人都应该有点人生哲学（上）"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2023/04/27/7788.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="每个人都应该有点人生哲学（上）"/></a><div class="content"><a class="title" href="/2023/04/27/%E6%AF%8F%E4%B8%AA%E4%BA%BA%E9%83%BD%E5%BA%94%E8%AF%A5%E6%9C%89%E7%82%B9%E4%BA%BA%E7%94%9F%E5%93%B2%E5%AD%A6%EF%BC%88%E4%B8%8A%EF%BC%89/" title="每个人都应该有点人生哲学（上）">每个人都应该有点人生哲学（上）</a><time datetime="2023-04-27T15:32:42.000Z" title="Created 2023-04-27 23:32:42">2023-04-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/04/12/github-copilot/" title="Github Copilot 实用上手指南"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2023/04/12/p2881462532.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Github Copilot 实用上手指南"/></a><div class="content"><a class="title" href="/2023/04/12/github-copilot/" title="Github Copilot 实用上手指南">Github Copilot 实用上手指南</a><time datetime="2023-04-12T13:56:36.000Z" title="Created 2023-04-12 21:56:36">2023-04-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/03/31/Shader%E5%85%A5%E9%97%A807/" title="Shader入门-07"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/20230331/c.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Shader入门-07"/></a><div class="content"><a class="title" href="/2023/03/31/Shader%E5%85%A5%E9%97%A807/" title="Shader入门-07">Shader入门-07</a><time datetime="2023-03-31T15:11:51.000Z" title="Created 2023-03-31 23:11:51">2023-03-31</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By 芦荟</div><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn">浙ICP备19010836号-1</a></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll To Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '4987f0fb0a509fb9f0af',
+      clientSecret: '7e264967a3ea557003aacdf795b9e57e36a56382',
+      repo: 'ldinglding.github.io',
+      owner: 'LDingLDing',
+      admin: ['LDingLDing'],
+      id: 'd326f96e0cad42d08a340a3bcce5c291',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
