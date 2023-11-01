@@ -15,8 +15,35 @@
     <atom:link href="https://blog.liluhui.cn/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>关于生活、学习、工作</description>
-    <pubDate>Sun, 01 Oct 2023 14:50:53 GMT</pubDate>
+    <pubDate>Wed, 01 Nov 2023 14:56:37 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>2023年10月总结</title>
+      <link>https://blog.liluhui.cn/2023/11/01/202310/</link>
+      <guid>https://blog.liluhui.cn/2023/11/01/202310/</guid>
+      <pubDate>Wed, 01 Nov 2023 14:46:53 GMT</pubDate>
+      
+        
+        
+      <description>&lt;p&gt;兄弟，这是纸糊的英雄主义！&lt;br&gt;放弃，这是每个傻瓜随时随地都会做的，这是摆脱困境最胆怯最浮躁的手段！&lt;/p&gt;
+&lt;br/&gt;
+
+&lt;h1 id=&quot;学习与成长&quot;&gt;&lt;a href=&quot;#学习与成长&quot; class=&quot;headerlink&quot; title=&quot;学习与成长&quot;&gt;&lt;/a&gt;学习与成长</description>
+        
+      
+      
+      
+      <content:encoded><![CDATA[<p>兄弟，这是纸糊的英雄主义！<br>放弃，这是每个傻瓜随时随地都会做的，这是摆脱困境最胆怯最浮躁的手段！</p><br/><h1 id="学习与成长"><a href="#学习与成长" class="headerlink" title="学习与成长"></a>学习与成长</h1><p>01<br>越来越喜欢与书籍交谈，越来越看淡人际交往，有点遗憾，不应该是这样的。在木心博物馆看到一些手稿很受触动，自省自己的傲慢，自省自己的理性，自省所谓的”有用之学“。有点想了解看不上的文学了，但还是会忙碌于各种各样的优先级里，我想可能每个十年都有它的使命，现在，坚定有用吧！我不擅长的且想要成长的，是试着和更厉害的人对话。</p><p>02<br>在用Langchain搞小项目，进度有点慢，也是工作和杂事太满，总是规划不出整片的时间来处理，下个月估计能完成个七八十的初版，干起来嘎嘎。</p><br/><h1 id="工作"><a href="#工作" class="headerlink" title="工作"></a>工作</h1><p>01<br>折腾unity数字化项目、折腾新媒体体系数据监控分析、折腾AI脚本和视频切片。杂七杂八做了些事，心底还是想做 unity 或是渲染那一块的，可是环境变了，总有能做的事情，但并不会总是最想做的事情。不能总是归因于个体意愿，很多时候环境不见得提供得了支持，相互施压没有帮助，土壤和树苗本就是相互成就的。</p><p>02<br>时代变了，面试者的质量每况愈下，AI选手也逐渐变多，面试流程和方式方法得做一些变革了，谁来扛起这面被压着的大旗呢。</p><br/><h1 id="娱乐与生活"><a href="#娱乐与生活" class="headerlink" title="娱乐与生活"></a>娱乐与生活</h1><p>01<br>在明媚又恰当的季节里，摆满鲜花，心情愉悦。</p><p>02<br>赶早去了乌镇戏剧节，刺眼又强烈的阳光，搞怪又认真的演员，席地而坐着看演出，拥挤的人群从眼前就慢慢消失了，我喜欢认真的人们，这里充满善意。</p><p>03<br>每周瑜伽和慢跑，倒立在这两个多月的持续小锻炼下有了重大的突破，对于肩背的感受从无到有，开始能感受到上背和臂膀发力的细节，开始能完全脱离墙面有控制的上下，感谢自己的持续习练，每天倒个立，提神醒脑。下个月，要开启瑜伽的新研学课堂啦 💪</p><br/><h1 id="理财"><a href="#理财" class="headerlink" title="理财"></a>理财</h1><p>01<br>又来到了3000点保卫战，这些年看起来点数没变，性价比确实越来越高了，指数越来越有价值了，汇金也下场了，这个点位已经很有政策态度了。<br>担心全球利率水平的风险，担心这已经不是一个短期的问题，0%-2%的低利率发展红利还能持续吗，经济周期的拐点真的到了吗。<br>整体小加了一点仓位，目前现金筹码还有40%上下，谨慎乐观。</p><p>02<br>长线投资者和短线投资者玩的是两种截然不同的游戏。<br>不要贸然从那些与你不同的人身上学习理财经验。</p><p>尽可能努力明确自己玩得是什么游戏。</p><br/>]]></content:encoded>
+      
+      
+      <category domain="https://blog.liluhui.cn/categories/%E7%94%9F%E6%B4%BB/">生活</category>
+      
+      
+      
+      <comments>https://blog.liluhui.cn/2023/11/01/202310/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>2023年9月总结</title>
@@ -518,32 +545,6 @@
       
       
       <comments>https://blog.liluhui.cn/2022/07/18/%E7%9D%80%E8%89%B2%E5%99%A8%E5%92%8C%E7%BB%98%E5%88%B6%E8%B0%83%E7%94%A8/#disqus_thread</comments>
-      
-    </item>
-    
-    <item>
-      <title>UE实时渲染基础1 - 延迟渲染过程</title>
-      <link>https://blog.liluhui.cn/2022/07/10/%E5%BB%B6%E8%BF%9F%E6%B8%B2%E6%9F%93%E8%BF%87%E7%A8%8B/</link>
-      <guid>https://blog.liluhui.cn/2022/07/10/%E5%BB%B6%E8%BF%9F%E6%B8%B2%E6%9F%93%E8%BF%87%E7%A8%8B/</guid>
-      <pubDate>Sun, 10 Jul 2022 04:31:48 GMT</pubDate>
-      
-        
-        
-      <description>&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;关键词：&lt;br /&gt;Deferred Rendering 延迟渲染&lt;br /&gt;Frame 帧&lt;br /&gt;Occlusion Culling </description>
-        
-      
-      
-      
-      <content:encoded><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>关键词：<br />Deferred Rendering 延迟渲染<br />Frame 帧<br />Occlusion Culling 遮挡剔除<br><br /></p><p>看完本篇内容你将对以下概念心中有数：</p><ol><li>实时渲染分为 <code>前向渲染 Forward Rendering</code>  和 <code>延迟渲染 Deferred Rendering</code> ，如何认识这两个概念</li><li><code>延迟渲染 Deferred</code> 过程中每一帧在计算什么</li><li><code>遮挡剔除 Occlusion Culling</code> 为什么重要，如何结合实际情况组合解决方案</li></ol><br /><h2 id="01-前向渲染-or-延迟渲染"><a href="#01-前向渲染-or-延迟渲染" class="headerlink" title="01 前向渲染 or 延迟渲染?"></a>01 前向渲染 or 延迟渲染?</h2><img src="/2022/07/10/%E5%BB%B6%E8%BF%9F%E6%B8%B2%E6%9F%93%E8%BF%87%E7%A8%8B/luhui22071000.png" class="" title="img"><p>首先重要的是需要理解这么一个过程，每一帧画面的渲染，其中包含对几何体本身的计算，它的形状、位置，还包含受复杂影响的计算，它受光照后的着色和材质。对于前向渲染来说，这两大块在同一环节计算，而对于延迟渲染来说，先进行几何体计算，再进行渲染光照结果混合的计算。</p><p>所有的特性都围绕一根本区别产生，具体来说，</p><p><strong>前向渲染  Forward Rendering  ：着色&#x2F;光照渲染和几何体在同一环节计算</strong></p><ol><li>在如何计算光照和材质上更多的自由度，但在混合各种功能时会受限。<ul><li>因为在同一环节处理，几何体的对象信息是完全的，不像延后渲染在处理光照时只有有限存储下来的几何体的信息数据。</li><li>渲染引擎的很多功能是在后期处理的，采用前向渲染后只能在这一结果基础上进行，而延后渲染的几何体信息和光照信息是分开的，混合功能兼容性和效果都会相对好一些。</li></ul></li><li>适合半透明的渲染</li><li>对于简单应用要快得多<ul><li>对于延后处理来说，一帧画面从发出信号到输出到屏幕要慢于同一环节处理的前向渲染</li><li>比如很多移动 App 都会采用前向渲染以提高效果</li></ul></li><li>采用动态光照会对性能有很大影响<ul><li>动态光照对于每一个对象又要重新计算混合</li><li>看到 UE 方说目前的新技术效果可以达到基本同延迟渲染了</li></ul></li><li>可以采用 MSAA（多重采样抗锯齿） 和 TAA（时间性抗锯齿） 方案抗锯齿</li></ol><p><strong>延后渲染 Deferred Rendering ：着色&#x2F;光照渲染发生在延迟环节中，通过 Gbuffer 缓存图像计算</strong></p><ol><li>对动态光照友好&#x2F;性能更好<br>*. 本身就是延后处理，光照&#x2F;着色前的计算都缓存下来了</li><li>在涉及几何体表面相关处理时相对受限，但在混合各种功能是更灵活。<br>*. 几何体对象信息不完全，对于几何体表面的复杂处理受限于描述信息<br>*. 各种后期处理，类似动态光照的处理过程会有很有。</li><li>应用表现稳定可预测，适合大型应用性能稳定</li><li>不能采用 MSAA（多重采样抗锯齿） 方案，只能采用 TAA（时间性抗锯齿） 方案抗锯齿</li></ol><p>对于 UE4 来说，默认采用的是 Deffered Rendering，修改渲染模式在项目设置中</p><img src="/2022/07/10/%E5%BB%B6%E8%BF%9F%E6%B8%B2%E6%9F%93%E8%BF%87%E7%A8%8B/luhui22071001.png" class="" title="img"><br /><h2 id="02-计算过程"><a href="#02-计算过程" class="headerlink" title="02 计算过程"></a>02 计算过程</h2><p>整个计算过程中有三个众所周知的重要角色:  CPU、DRAW(CPU+GPU)、GPU</p><img src="/2022/07/10/%E5%BB%B6%E8%BF%9F%E6%B8%B2%E6%9F%93%E8%BF%87%E7%A8%8B/luhui22071002.png" class="" width="350"><p>请对照图中的橙色色块，将其简单理解为一个画面</p><p>以 30帧率的模型为例，每一帧是33.33ms，对于一个要处理的画面，在第一帧会在 CPU 处理，第二帧在 渲染线程 处理，第三帧 66.66ms 才由 GPU 绘制画面。（实际过程更复杂，这里简化模型理解<code>延迟</code>)</p><p><strong>在 Frame0 时，CPU 会进行大量的逻辑计算，目标是得到世界有哪些对象、这些对象在世界哪里的信息</strong><br />涉及到</p><ol><li>动画</li><li>模型和对象的位置</li><li>物理 </li><li>人工智能 </li><li>生成和销毁、显示和隐藏</li></ol><p>就是计算所有可能影响对象的位置变化、存在与否、显示与否的功能模块</p><br /><p><strong>在 Frame1 时，渲染线程会进行大量的计算，目标是得到屏幕可见部分渲染对象的信息</strong><br />重要概念是，在这个过程会进行遮挡计算，也就是我们透过<code>屏幕/视口</code>看不到或者不希望看到的对象进行剔除，只渲染眼见的对象，而不是渲染整个世界。<br />涉及到</p><ol><li>距离剔除 Distance Occlusion</li><li>视椎体剔除 Frustum Occlusion</li><li>预计算可见性 Precomputed Visibility</li><li>遮挡剔除 Olccusion Culling</li></ol><p>最终得到一份需要渲染的对象列表，至于这些遮挡计算到底是什么、又怎么使，我们将在下文继续展开。</p><br /><h2 id="03-遮挡计算"><a href="#03-遮挡计算" class="headerlink" title="03 遮挡计算"></a>03 遮挡计算</h2><p>遮挡计算看似是个简单的问题，无非是，我现在<code>屏幕/视口</code>要展示的就这么块区域，为了节省开销，我看不见的就不要给我渲染了，引擎你反正把能显示的算出来展示上就是了。</p><p>但现实总是更加复杂，比如</p><ol><li>遮挡计算到底是按照对象来计算、还是面来计算呢？如果按照对象计算，这个对象很大很大但只是在视口中露出一点点，那么不是很浪费渲染；同时考虑如果按面计算，要遍历的数量就成几何倍上涨，计算开销瞬间增大。</li><li>有些物体离得很远，要不要剔除？怎么界定？ 现在桌面上有一个杯子，摄像机来到窗户外杯子变得很小了，再把摄像机放到楼房全景，杯子几乎小到看不见了，对于引擎来说，不论多小多大，它都会渲染，我们怎么节省这些消耗，尤其是在一些大全景的画面下。</li></ol><br /><p>好了，我们来聊聊 UE 给出的方案</p><p>首先，UE 采用的是逐对象的遮挡计算，注意是逐对象不是逐面。对于我们上面提到的第一点问题是无法避免的，那么优化的思路就是，在审视和检查性能时有必要将一些大对象拆分成小对象，这里就是需要根据场景情况不断测试和平衡。</p><p>然后，记得上文提到的 4 种剔除计算过程吧，它们是逐次进行的，但它们不都是默认开启的，这意味在 UE 中遮挡计算是一个由开发者定义的组合招式，只能根据场景情况做适合的方案。</p><ol><li>距离剔除 Distance Occlusion —— <strong>默认不开启</strong></li><li>视椎体剔除 Frustum Occlusion —— 默认开启，无法关闭</li><li>预计算可见性 Precomputed Visibility —— <strong>默认不开启</strong></li><li>遮挡剔除 Olccusion Culling —— 默认开启</li></ol><br /><p>顺序1<br /><strong>距离剔除</strong> 是效率最高的，为 单个actor 或 创建 Cull Distance Volumes 块指定可视的距离</p><img src="/2022/07/10/%E5%BB%B6%E8%BF%9F%E6%B8%B2%E6%9F%93%E8%BF%87%E7%A8%8B/luhui22071003.png" class="" title="img"><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">最小绘制距离（Minimum Draw Distance）: 这是在不再渲染Actor之前能够接近Actor的最近距离。</span><br><span class="line">最大绘制距离（Maximum Draw Distance）: 这是在不再渲染Actor之前能够远离Actor的最远距离。</span><br><span class="line">当前最大绘制距离（Current Maximum Draw Distance）:它显示剔除距离体积（如果存在）设置的已存储剔除距离。</span><br></pre></td></tr></table></figure><p>顺序2<br /><strong>视椎体剔除</strong> 是默认开启的，计算摄像机视角内的对象。</p><p>如下图，黄色区域内有包含的对象都属于可见，之外的对象则不会进入要处理的对象列表。（但这幅图是二维的，还不够直观）</p><img src="/2022/07/10/%E5%BB%B6%E8%BF%9F%E6%B8%B2%E6%9F%93%E8%BF%87%E7%A8%8B/luhui22071004.png" class="" title="img"><p>如下图，紫色的椎体内有包含的对象都属于可见</p><img src="/2022/07/10/%E5%BB%B6%E8%BF%9F%E6%B8%B2%E6%9F%93%E8%BF%87%E7%A8%8B/luhui22071005.png" class="" title="img"><p>顺序3<br /><strong>预计算可见性</strong> 是对可见进行预处理。<br />在最后的剔除遮挡过程中，实际是基于前几个步骤得到的对象列表，在当前摄像机视口逐个对象去询问是否可见，而摄像机很可能是高速移动的，这一询问剔除的过程很容易由于问询对象过多而遭到性能压迫。<br />而预见性处理是建立一个体积，在这体积内划出一个个的立方格（通常我们叫它小蓝格），每个立方体都会预先计算这个立方体下有哪些可见对象并缓存下来。<br />这意味着，基于这种处理后，最后的动态剔除的问询对象很有可能大量减少。比如在某个三面墙的位置，必要有大量对象是被遮挡看不见的，那么就不会进入可见对象列表；而不做这个可预见处理，摄像机每移动一下，就需要去遍历询问上一步得到的所有可见对象，哪怕我们显而易见是被遮挡了的对象。</p><p><a href="https://docs.unrealengine.com/4.27/zh-CN/RenderingAndGraphics/VisibilityCulling/PrecomputedVisibilityVolume/">使用教程</a>：简述重点，布置<code>预计算可视性体积 Precomputed Visibility Volume</code>到场景中进行预计算，根据场景情况调节单元立方格的尺寸<br /></p><img src="/2022/07/10/%E5%BB%B6%E8%BF%9F%E6%B8%B2%E6%9F%93%E8%BF%87%E7%A8%8B/luhui22071006.png" class="" width="200"><p>顺序4<br /><strong>遮挡剔除</strong> 这是最精准，也是剔除计算里开销最大的部分。会轮询基于上一步得到的可视对象列表，逐一发起检查是否可见，并筛选出最后的可见对象列表。</p><p>我们通过控制台可以查看遮挡相关的数据，指令 <code>stat initviews</code></p><img src="/2022/07/10/%E5%BB%B6%E8%BF%9F%E6%B8%B2%E6%9F%93%E8%BF%87%E7%A8%8B/luhui22071007.png" class="" title="img"><p>上半部分 <strong>Cycle Counters</strong> 是统计计算花费的循环数量，就是帧时间量<br />View Visbility  整个可见性计算<br />Occlusion Cull 遮挡计算<br />View Relevance 其他视图相关计算<br />Frustum Cull 视椎体剔除计算<br />Decompress Occlusion 加载预计算可见性的数据</p><p>下半部分 <strong>Counters</strong> 是统计每一帧各过程的对象数量<br />Processed primitives 场景中剔除后最终被处理的对象总数<br />Frustum Culled primitives 视椎体剔除的对象总数（视椎体外）<br />Occluded primitives 遮挡剔除的对象总数<br />Occlusion queries 遮挡剔除一轮要查询的对象数量<br />Visible static mesh elements  场景中移动性为“静止”的可见网格体数量<br />Visible dynamic primitives 场景中移动性为“动态”的可见网格体数量</p><p>另外还有 <code>Freezerendering</code> 冻结当前的遮挡，<code>stat RHI</code>查看绘制帧的三角面数，<code>stat unit</code>现实帧时间、绘制时间等等，充分挖掘和发挥检测工具的效用吧~</p><br /><h2 id="04-优化总结"><a href="#04-优化总结" class="headerlink" title="04 优化总结"></a>04 优化总结</h2><ol><li>检测渲染之前的预处理计算，充分利用检测工具得到量化数据，再开始抓重点优化；</li><li>平衡 CPU 和 GPU 的消耗，这两个互为瓶颈；</li><li>控制对象数量，场景内有 1w~1.5w 的对象数量是很难优化到正常性能的；</li><li>管理设置上距离剔除，针对高频访问区域也设置好可见性与计算。</li></ol><br /><h2 id="100-相关参考"><a href="#100-相关参考" class="headerlink" title="100 相关参考"></a>100 相关参考</h2><ul><li><a href="https://docs.unrealengine.com/4.27/en-US/TestingAndOptimization/PerformanceAndProfiling/ForwardRenderer/">Forward Shading Renderer</a></li><li><a href="https://docs.unrealengine.com/4.27/en-US/RenderingAndGraphics/VisibilityCulling/">Visibility and Occlusion Culling</a></li></ul>]]></content:encoded>
-      
-      
-      <category domain="https://blog.liluhui.cn/categories/%E6%B8%B2%E6%9F%93/">渲染</category>
-      
-      
-      <category domain="https://blog.liluhui.cn/tags/UnrealEngine/">UnrealEngine</category>
-      
-      
-      <comments>https://blog.liluhui.cn/2022/07/10/%E5%BB%B6%E8%BF%9F%E6%B8%B2%E6%9F%93%E8%BF%87%E7%A8%8B/#disqus_thread</comments>
       
     </item>
     
