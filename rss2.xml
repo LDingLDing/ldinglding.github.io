@@ -15,8 +15,35 @@
     <atom:link href="https://blog.liluhui.cn/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>关于生活、学习、工作</description>
-    <pubDate>Wed, 01 Nov 2023 14:56:37 GMT</pubDate>
+    <pubDate>Sat, 02 Dec 2023 14:25:20 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>2023年11月总结</title>
+      <link>https://blog.liluhui.cn/2023/12/02/202311/</link>
+      <guid>https://blog.liluhui.cn/2023/12/02/202311/</guid>
+      <pubDate>Sat, 02 Dec 2023 14:13:34 GMT</pubDate>
+      
+        
+        
+      <description>&lt;p&gt;一种脑力和体力充分燃烧的轻盈感&lt;/p&gt;
+&lt;p&gt;恋爱反而让人混沌又沉重啊&lt;/p&gt;
+&lt;h1 id=&quot;学习与成长&quot;&gt;&lt;a href=&quot;#学习与成长&quot; class=&quot;headerlink&quot; title=&quot;学习与成长&quot;&gt;&lt;/a&gt;学习与成长&lt;/h1&gt;&lt;p&gt;01&lt;/p&gt;
+&lt;p&gt;疯狂大量地</description>
+        
+      
+      
+      
+      <content:encoded><![CDATA[<p>一种脑力和体力充分燃烧的轻盈感</p><p>恋爱反而让人混沌又沉重啊</p><h1 id="学习与成长"><a href="#学习与成长" class="headerlink" title="学习与成长"></a>学习与成长</h1><p>01</p><p>疯狂大量地学习提示工程，把之前零碎地只是又系统化理了遍，实用角度来说目前水也不是很深 .. 上个月自己折腾的langchian项目被我停了，做了一半发现做出来也没啥用，当时还是没想明白。</p><p>02<br>在看一些瑜伽的书，11月回到我最初带我入门的老师身边学习，越来越确定这是可以践行一生的事情，它幸苦又有趣，丰富且复杂，冲突又求真， 回看自己这几年的变化，自己在习练中的局限和成长。</p><br /><h1 id="工作"><a href="#工作" class="headerlink" title="工作"></a>工作</h1><p>01</p><p>投入做一个AI小程序，为各种接龙问题提供智能订单解析及打印。目前核心流程都都开发完成了，界面还比较粗糙，12月开始运营验证。</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2023/12/02/Pasted%20image%2020231202214923.png" alt="image.png"></p><p>02<br>unity 项目阶段收工，下一波等年度总结再规划了。忙碌又有些错乱的节奏，好在也是阶段性的吧。个人角度还是希望继续拓展这块的，可惜公司内能投入的非常有限。</p><br /><h1 id="娱乐与生活"><a href="#娱乐与生活" class="headerlink" title="娱乐与生活"></a>娱乐与生活</h1><p>01<br>这个月确实非常忙碌，只有工作日和学习日，仅有的娱乐一本书《太白金星有点烦》.. 哦对，还有工作日和同事们一起去看了魔术表演，逗了看上去很肥美的昂贵鸟儿们 😄</p><p>02<br>疯狂运动，除了工作和睡觉都在运动（一点没瘦）。也不是瞎运动，确实最近进步很大，就是那种刚迈上一个新台阶的欣喜，呼吸变得更加深长了，肩背发力开始有细节了。当然这个月也不是那么顺利，没控住练废了几次 .. </p><p>03<br>因为瑜伽认识了很多新朋友，来自不同年龄和经历的朋友，双休的正午一起晒着太阳聊体式、聊困惑、聊经历，下午又随着太阳一起一次次的拜日，真的如《瑜伽经》中所说的那种燃烧能量后的轻盈感。</p><br /><h1 id="理财"><a href="#理财" class="headerlink" title="理财"></a>理财</h1><p>没有什么大动作，保持在场。<br>接近年度复盘了，看了下22年和23年都是亏着的，大环境如此，仓位依然非常安心，反而产生担心是不是太安心了涨起来仓位不够重。但严守策略，不贪，保证活着。下个月要做年度复盘了，目前看至少回撤控制我非常满意，当然能不能跟住上涨依然存疑。</p><br /><br /><br /><br /><br /><br />]]></content:encoded>
+      
+      
+      <category domain="https://blog.liluhui.cn/categories/%E7%94%9F%E6%B4%BB/">生活</category>
+      
+      
+      
+      <comments>https://blog.liluhui.cn/2023/12/02/202311/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>2023年10月总结</title>
@@ -518,33 +545,6 @@
       
       
       <comments>https://blog.liluhui.cn/2022/07/24/%E5%8F%8D%E5%B0%84/#disqus_thread</comments>
-      
-    </item>
-    
-    <item>
-      <title>UE实时渲染基础2 - 着色器和绘制调用</title>
-      <link>https://blog.liluhui.cn/2022/07/18/%E7%9D%80%E8%89%B2%E5%99%A8%E5%92%8C%E7%BB%98%E5%88%B6%E8%B0%83%E7%94%A8/</link>
-      <guid>https://blog.liluhui.cn/2022/07/18/%E7%9D%80%E8%89%B2%E5%99%A8%E5%92%8C%E7%BB%98%E5%88%B6%E8%B0%83%E7%94%A8/</guid>
-      <pubDate>Mon, 18 Jul 2022 15:06:06 GMT</pubDate>
-      
-        
-        
-      <description>&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;在上一篇中我们详细介绍了实时渲染中计算渲染对象的位置信息的过程，在这一篇中，我们将进入实时渲染的重要环节 —— 着色器和绘制调用&lt;/p&gt;
-&lt;</description>
-        
-      
-      
-      
-      <content:encoded><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在上一篇中我们详细介绍了实时渲染中计算渲染对象的位置信息的过程，在这一篇中，我们将进入实时渲染的重要环节 —— 着色器和绘制调用</p><p>请检查以下概念是否了解，可以回顾上一篇的内容</p><ul><li>渲染过程是如何把整个世界的对象识别出来的</li><li>渲染过程是如何计算视口&#x2F;屏幕上应该显示哪些对象的</li></ul><p>关键词</p><ul><li>Prepass &#x2F; Early Z pass  预通道&#x2F;前期深度Z通道</li><li>Vertex ShaderS 顶点着色器</li><li>Pixel ShaderS 像素着色器</li><li>DrawcallS 绘制调用</li></ul><p>看完本篇内容你将对以下概念心中有数：</p><ul><li>什么是 Shaders&#x2F;着色器，怎么理解这个概念</li><li>考虑顶点着色器的性能优化</li><li>考虑像素着色器的性能优化</li></ul><br/><img src="/2022/07/18/%E7%9D%80%E8%89%B2%E5%99%A8%E5%92%8C%E7%BB%98%E5%88%B6%E8%B0%83%E7%94%A8/1.png" class="" title="img"><br/><h2 id="01-Shaders-着色器"><a href="#01-Shaders-着色器" class="headerlink" title="01 Shaders 着色器"></a>01 Shaders 着色器</h2><p>着色器是渲染领域的专有技术，总之它是一种针对渲染的代码段，告诉GPU怎么去绘制每一个像素。</p><p>着色器目前主流的有三种语言：</p><ol><li>基于 OpenGL 的 OpenGL Shading Language ，简称 GLSL</li><li>基于 DirectX 的 High Level Shading Language , 简称HLSL</li><li>NVIDIA 公司的 C for Graphic ，简称 Cg</li></ol><br/><p>着色器根据在整个渲染管线中位置和功能不同，又大体区分了几块。包括</p><ol><li>顶点着色器，用于修改顶点位置；</li><li>像素着色器，用于计算单个像素的颜色；</li><li>几何着色器，基于第四代显卡更为先进的计算位置。</li></ol><p>我们将在下文展开顶点着色器和像素着色器。</p><p>在UE中，我们在材质编辑中的修改很大部分都是对 Shader 代码段的修改。</p><br/><h2 id="02-Prepass-预通道计算"><a href="#02-Prepass-预通道计算" class="headerlink" title="02 Prepass 预通道计算"></a>02 Prepass 预通道计算</h2><p>在渲染过程中确定当前视口需要包含哪些对象后，我们还会遇到一个问题：渲染是逐对象进行的，但在一个像素点上，可能存在不同深度的对象，它们在这个像素点上都需要重新计算，而最终真正显示给用户的，只有最前面的一个，这样的重复计算是很浪费的。</p><img src="/2022/07/18/%E7%9D%80%E8%89%B2%E5%99%A8%E5%92%8C%E7%BB%98%E5%88%B6%E8%B0%83%E7%94%A8/2.png" class="" title="img"><p>这张图的中央两个人覆盖了一部分的汽车，也覆盖了更后面的建筑部分。按照我们之前将的渲染的处理逻辑，可视范围的对象列表会逐一渲染，它是”逐对象“渲染，这很重要。那么在渲染的过程中，让我们简化一下这张图的场景，一个背后的房子、马路中间的车、最前方的两个人。先渲染了后面的整个房子，然后渲染了整个车子，再然后是最前面人，他们之间是重叠的，中间有很多像素点在人物渲染前的那几次渲染都是没有必要的计算消耗。</p><p>预通道正是为了优化这一消耗的方案，它会计算出在深度上基于最终呈现需要渲染哪些像素点，渲染后面的像素点时会镂空掉被覆盖的部分，大大减少浪费。我们可以在 RenderDoc 监控中直观的看到每一步的计算。这样在后面的逐对象渲染计算过程中，就不会重复计算不涉及透明的像素点。</p><img src="/2022/07/18/%E7%9D%80%E8%89%B2%E5%99%A8%E5%92%8C%E7%BB%98%E5%88%B6%E8%B0%83%E7%94%A8/3.png" class="" title="img"><br/><h2 id="03-Vertex-Shaders-顶点着色器"><a href="#03-Vertex-Shaders-顶点着色器" class="headerlink" title="03 Vertex Shaders 顶点着色器"></a>03 Vertex Shaders 顶点着色器</h2><p>顶点着色器的目标是将对象的本地坐标转化为世界坐标，通过一系列的计算得出对象最终对应显示在哪些像素点上。</p><img src="/2022/07/18/%E7%9D%80%E8%89%B2%E5%99%A8%E5%92%8C%E7%BB%98%E5%88%B6%E8%B0%83%E7%94%A8/4.png" class="" title="img"><p>利用顶点着色器，可以处理边缘的柔化程度、颜色，处理出平滑过渡的效果；我们也会用顶点着色器来实现一些无干涉的位移，我的意思是，又顶点着色器处理的位移由于步骤在 cpu 计算之后，这个位移信息是 cpu 不知道的，这意味着不会影响前面步骤计算出的碰撞之类的效果，非常适合用来布料、水面、植被的物理波动效果。</p><p>针对顶点着色器的性能优化需要关注面数，</p><ul><li>优化面数，针对模型优化不同距离的 LOD</li><li>越是面数多的模型，越要设计简单的顶点着色器</li><li>在远距离上禁用掉顶点着色的相关动画</li></ul><br/><h2 id="04-Pixel-Shaders-像素着色器"><a href="#04-Pixel-Shaders-像素着色器" class="headerlink" title="04 Pixel Shaders 像素着色器"></a>04 Pixel Shaders 像素着色器</h2><p>像素着色器是整个渲染管线中至关重要的过程，在渲染的每一步计算中都会使用到，实现了包括材质系统、光照、雾、反射、后期处理、颜色矫正等等计算效果。</p><img src="/2022/07/18/%E7%9D%80%E8%89%B2%E5%99%A8%E5%92%8C%E7%BB%98%E5%88%B6%E8%B0%83%E7%94%A8/5.png" class="" title="img"><p>在 GPU 计算像素位的过程中，是按照 2x2 像素点为单位进行遍历的（参考上图的橙色块），对于每一个像素点来说最终只会呈现一个色块，这里就会遇到冲突的问题。比如图中的左侧的三角形通过计算需要占绿色位的三个点，有右上、右下、左下 三个2x2的单位被计算，右侧的三角形则占据包括绿色块的四个点，有右上和右下两个2x2的单位被计算，这里右上和右下的2x2被反复计算了，这就是过度着色的问题。如果很多面的着色点重叠，对于性能是很不必要的消耗，完全可以进行优化。</p><p>可以在引擎中进行检查，越接近红色的地方过度着色越严重。一个比较好的状况是，只有涉及半透明、动态光照等吃性能计算的物体到红色程度，全局没有超过深红色的情况，尽量减少红色占据画面太大。</p><img src="/2022/07/18/%E7%9D%80%E8%89%B2%E5%99%A8%E5%92%8C%E7%BB%98%E5%88%B6%E8%B0%83%E7%94%A8/6.png" class="" title="img"><p>优化点，</p><ol><li>检查多边形的密集程度，按照目标和情况减少模型面数</li><li>远距离上减少模型面数，否则距离越远密度会不断增加</li><li>减少初始着色器的复杂程度，也就减少了过度着色开销 （对前向渲染有用，对延迟渲染影响不大）</li></ol><br/><h2 id="05-Drawcalls-绘制调用"><a href="#05-Drawcalls-绘制调用" class="headerlink" title="05 Drawcalls 绘制调用"></a>05 Drawcalls 绘制调用</h2><p>在 UE4 中，绘制调用是逐材质逐对象进行的，绘制调用是性能损耗的大头，想象有 1w 个对象材质，我们要达到60帧率，就需要每秒绘制 60w 次才能不掉帧 … </p><p>我们来看一下什么叫逐材质逐对象进行，<br>如下图有三根柱子，一共两种材质，白色的部分和红色部分，来算一下有几次 drawcall </p><img src="/2022/07/18/%E7%9D%80%E8%89%B2%E5%99%A8%E5%92%8C%E7%BB%98%E5%88%B6%E8%B0%83%E7%94%A8/7.png" class="" title="img"><ol><li>第一张和最后一张是场景背景（这里我们先不在意它）</li><li>第二张是第三柱子的白色材质部分</li><li>第三张和第四张是第一柱子和第二柱子的白色部分</li><li>第五张是第三柱子的红色部分</li></ol><img src="/2022/07/18/%E7%9D%80%E8%89%B2%E5%99%A8%E5%92%8C%E7%BB%98%E5%88%B6%E8%B0%83%E7%94%A8/8.png" class="" title="img"><p>三根柱子绘制的发生了 4次 drawcall，这个过程中每个材质每个对象都需要一次 drawcall。</p><p>从这个案例出发引出一个点 —— 对于渲染来说，切换的停顿才是性能损耗的关键。<br>这就是为什么引擎会逐个遍历引用材质这个”大”数据后，再遍历对象这个”小”数据，而不是逐个对象渲染一遍材质。对于 drawcall 的过程来说，就像拷贝文件一样，一个 1GB 的文件拷贝只需要几分钟，但是 100w 万个 1kb 的文件可能需要一整天。 —— drawcalls 是昂贵的。</p><br/><p>我们通过指令 <code>stat RHI</code> 可以检查，<br>这个画面 <code>draw primitive calls</code>平均有 2k ~ 3k 次。<br>官方给出的建议是 2 ~ 3k 是合理的，超过 5k 有点高了，超过 1w 很可能会产生一些问题。如果是移动端或者 vr 标准就更严苛了，控制在 1k 以内才合理。</p><img src="/2022/07/18/%E7%9D%80%E8%89%B2%E5%99%A8%E5%92%8C%E7%BB%98%E5%88%B6%E8%B0%83%E7%94%A8/9.png" class="" title="img"><p>优化点，</p><ol><li>剔除检查，减少不必要的对象渲染</li><li>检查使用多层渐进纹理，减少远距离模型面数</li><li>材质检查，近似材质是否可替换统一</li><li>合并模型，减少对象数 （这是一个平衡艺术）</li></ol><br/><h2 id="06-总结"><a href="#06-总结" class="headerlink" title="06 总结"></a>06 总结</h2><p>渲染性能的四大杀手：绘制调用次数、像素着色器、半透明、动态阴影。本篇文章重点描述了绘制调用和着色器的了解和性能关注点，总体来说，我们始终需要做的是</p><ol><li>以目标帧率为导向，不是追求一味的高性能，要平衡呈现效果、性能和可维护性</li><li>减少渲染对象、渲染面数的浪费，采取的手段包括距离剔除、多层渐进纹理等</li><li>优化渲染对象、渲染面数，在效果和性能之间做平衡，采取的手段包括合并&#x2F;拆分模型对象、纹理优化等</li><li>优化着色性能，包括减少着色器的计算复杂度、减少过度计算等</li></ol><br/><br/>]]></content:encoded>
-      
-      
-      <category domain="https://blog.liluhui.cn/categories/%E6%B8%B2%E6%9F%93/">渲染</category>
-      
-      
-      <category domain="https://blog.liluhui.cn/tags/UnrealEngine/">UnrealEngine</category>
-      
-      
-      <comments>https://blog.liluhui.cn/2022/07/18/%E7%9D%80%E8%89%B2%E5%99%A8%E5%92%8C%E7%BB%98%E5%88%B6%E8%B0%83%E7%94%A8/#disqus_thread</comments>
       
     </item>
     
