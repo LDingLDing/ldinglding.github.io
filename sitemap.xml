@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.liluhui.cn/2024/03/01/202402/</loc>
+    
+    <lastmod>2024-04-01</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.liluhui.cn/2024/04/01/202403/</loc>
     
     <lastmod>2024-04-01</lastmod>
@@ -12,15 +21,6 @@
   
   <url>
     <loc>https://blog.liluhui.cn/about/index.html</loc>
-    
-    <lastmod>2024-04-01</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.liluhui.cn/2024/03/01/202402/</loc>
     
     <lastmod>2024-04-01</lastmod>
     
