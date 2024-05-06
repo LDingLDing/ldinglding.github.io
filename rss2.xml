@@ -15,8 +15,30 @@
     <atom:link href="https://blog.liluhui.cn/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>关于生活、学习、工作</description>
-    <pubDate>Fri, 03 May 2024 03:37:22 GMT</pubDate>
+    <pubDate>Mon, 06 May 2024 14:44:00 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>Node process.on 事件监听整理</title>
+      <link>https://blog.liluhui.cn/2024/05/06/node-process-on/</link>
+      <guid>https://blog.liluhui.cn/2024/05/06/node-process-on/</guid>
+      <pubDate>Mon, 06 May 2024 14:13:59 GMT</pubDate>
+      
+        
+        
+      <description>&lt;figure class=&quot;highlight javascript&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span </description>
+        
+      
+      
+      
+      <content:encoded><![CDATA[<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Begin reading from stdin so the process does not exit.</span></span><br><span class="line">process.<span class="property">stdin</span>.<span class="title function_">resume</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// only works when there is no task running</span></span><br><span class="line"><span class="comment">// because we have a server always listening port, this handler will NEVER execute</span></span><br><span class="line">process.<span class="title function_">on</span>(<span class="string">&quot;beforeExit&quot;</span>, <span class="function">(<span class="params">code</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Process beforeExit event with code: &quot;</span>, code);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// only works when the process normally exits</span></span><br><span class="line"><span class="comment">// on windows, ctrl-c will not trigger this handler (it is unnormal)</span></span><br><span class="line"><span class="comment">// unless you listen on &#x27;SIGINT&#x27;</span></span><br><span class="line">process.<span class="title function_">on</span>(<span class="string">&quot;exit&quot;</span>, <span class="function">(<span class="params">code</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Process exit event with code: &quot;</span>, code);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// can usually be generated with Ctrl+C (though this may be configurable). It is not generated when terminal raw mode is enabled and Ctrl+C is used.</span></span><br><span class="line">process.<span class="title function_">on</span>(<span class="string">&quot;SIGINT&quot;</span>, <span class="function">(<span class="params">signal</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Process <span class="subst">$&#123;process.pid&#125;</span> has been interrupted`</span>);</span><br><span class="line">  process.<span class="title function_">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// reserved by Node.js to start the debugger. It&#x27;s possible to install a listener but doing so might interfere with the debugger.</span></span><br><span class="line">process.<span class="title function_">on</span>(<span class="string">&#x27;SIGUSR1&#x27;</span>, <span class="function">(<span class="params">signal</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Process <span class="subst">$&#123;process.pid&#125;</span> received a SIGUSR1 signal`</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// on Windows when the console window is closed, and on other platforms under various similar conditions. </span></span><br><span class="line">process.<span class="title function_">on</span>(<span class="string">&#x27;SIGHUP&#x27;</span>, <span class="function">(<span class="params">signal</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Process <span class="subst">$&#123;process.pid&#125;</span> received a SIGHUP signal`</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// when the console has been resized. On Windows, this will only happen on write to the console when the cursor is being moved, or when a readable tty is used in raw mode.</span></span><br><span class="line">process.<span class="title function_">on</span>(<span class="string">&#x27;SIGWINCH&#x27;</span>, <span class="function">(<span class="params">signal</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Process <span class="subst">$&#123;process.pid&#125;</span> received a SIGWINCH signal`</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// cannot have a listener installed, it will unconditionally terminate Node.js on all platforms.</span></span><br><span class="line">process.<span class="title function_">on</span>(<span class="string">&#x27;SIGKILL&#x27;</span>, <span class="function">(<span class="params">signal</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Process <span class="subst">$&#123;process.pid&#125;</span> received a SIGKILL signal`</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// what about errors</span></span><br><span class="line"><span class="comment">// try remove/comment this handler, &#x27;exit&#x27; event still works</span></span><br><span class="line">process.<span class="title function_">on</span>(<span class="string">&quot;uncaughtException&quot;</span>, <span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Uncaught Exception: <span class="subst">$&#123;err.message&#125;</span>`</span>);</span><br><span class="line">  process.<span class="title function_">exit</span>(<span class="number">1</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content:encoded>
+      
+      
+      
+      
+      <comments>https://blog.liluhui.cn/2024/05/06/node-process-on/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>2024 年 4 月总结</title>
@@ -508,36 +530,6 @@
       
       
       <comments>https://blog.liluhui.cn/2023/03/01/Shader%E5%85%A5%E9%97%A801/#disqus_thread</comments>
-      
-    </item>
-    
-    <item>
-      <title>害怕不够精进，又不敢远离人群</title>
-      <link>https://blog.liluhui.cn/2022/11/24/%E5%AE%B3%E6%80%95%E4%B8%8D%E5%A4%9F%E7%B2%BE%E8%BF%9B%EF%BC%8C%E5%8F%88%E4%B8%8D%E6%95%A2%E8%BF%9C%E7%A6%BB%E4%BA%BA%E7%BE%A4/</link>
-      <guid>https://blog.liluhui.cn/2022/11/24/%E5%AE%B3%E6%80%95%E4%B8%8D%E5%A4%9F%E7%B2%BE%E8%BF%9B%EF%BC%8C%E5%8F%88%E4%B8%8D%E6%95%A2%E8%BF%9C%E7%A6%BB%E4%BA%BA%E7%BE%A4/</guid>
-      <pubDate>Thu, 24 Nov 2022 11:59:29 GMT</pubDate>
-      
-        
-        
-      <description>&lt;h2 id=&quot;00&quot;&gt;&lt;a href=&quot;#00&quot; class=&quot;headerlink&quot; title=&quot;00&quot;&gt;&lt;/a&gt;00&lt;/h2&gt;&lt;p&gt;作为掌握几门高级技术的职场人，我有一个持续处于纠结状态，或者换个好听的说法也叫持续在动态平衡的状态。就是一边想死磕一些东西，一些又被纷繁杂乱</description>
-        
-      
-      
-      
-      <content:encoded><![CDATA[<h2 id="00"><a href="#00" class="headerlink" title="00"></a>00</h2><p>作为掌握几门高级技术的职场人，我有一个持续处于纠结状态，或者换个好听的说法也叫持续在动态平衡的状态。就是一边想死磕一些东西，一些又被纷繁杂乱的信息扰动着；一边罗列着要深入探索的课题，一边是即将要开展的规划和讨论；一边是带上耳机的沉浸式工作，一边是开放碰撞想法的大办公区。我们好像免不了要面临一个问题，一方面我们的工作是基于协同的、我们的文化是基于思维碰撞的，另一方面，我们需要沉浸式地进行高脑力工作、我们需要沉浸式地深入下去而不是浮桥地“绕过”问题。</p><p>很多时候远远看着优秀的前辈，觉得怎么别人就又能钻研又能指点江山，一边对很多技术有过实践，一边参与在各种形形色色的事务之中。我知道这大概就是一种错觉，但这也非常清晰的展露出 —— 我也在这么期待我自己。</p><p>我们在害怕，害怕自己完全投入于技术细节中，害怕自己变成脚不着地的人，但不深入钻下去，又对自己感到不满，就好像，自己的爱好被自己耽误了。于此同时，我们又在渴望权力，渴望一种不可言状的被认可、被连接，那些有所成就的项目应该有我的参与，不敢错过，想要始终站在权力的中心圈的欲望。</p><p>但这个担忧又显得有点可笑，难道我们不能一边深入技术，一边思考战略、一边管理和执行细节吗？</p><p><strong>太难了</strong><br /><strong>也太贪心了</strong></p><p>这是我最近的结论，从我更多的观察和实践中，这件事在变得越来越难，它那么的完美，却越来越清晰的不可达。</p><p>这里的每一项，都需要深度投入，而深度投入其实有一个很客观的指标，就是 —— 时间，我们为一件事长期投入了多少时间，在这些事件中我们又有多深度。我们在某些方面达到真正的深度工作时，另一些工作就必然是浮浅工作。</p><p>要做好真正重要的事情，更先要面对的是，如何尊重我们的时间。</p><h2 id="02"><a href="#02" class="headerlink" title="02"></a>02</h2><p><strong>尊重时间的第一步，是敢于去客观认识我们的时间。</strong>我们总是在凭感觉判断我应该去做什么了，这么多事情，我觉得投入在A上挺多的，但真的不量化一下，你不会发现自己存在这么多谬误。比如我的这个月其实投入在x的时间不过20小时，我感觉很多其实是因为有一周死磕在了这，后面每天都是杂乱的事情日子一晃就过完了。</p><p>要客观认识时间的背后是因为每个领域深度工作的能力都不是一簇而就的，不是我给自己安排了这个时间段，这个时间段我就能深入工作。或许，开个玩笑，能工作就不错了。</p><p>我们在任何工作的前期都可能会经常受挫、会逃避、会摸鱼、深入不进去，但这些都会随着持续投入而慢慢变化，我们要相信这种积累的力量，相信失败后可以继续的力量。</p><h2 id="03"><a href="#03" class="headerlink" title="03"></a>03</h2><p><strong>尊重时间的第二步，是敢于拒绝和孤立</strong>。职场人，我们都受过“靠谱”的规训，做个靠谱的人的文化，比如消息要第一时间回复、帮助团队的开展工作。有时候，我觉得这种靠谱或许过了点头，或许我们就是可以建立自己的勿扰时段，我们可以建立自己的连接方式，我们可以拒绝过多的时间消耗和精力消耗，将深度工作和浮浅工作错开。</p><p>这里背后的原因是，我们总是过于乐观地觉得自己可以灵活切换于分散思维的状态和聚焦专注的状态，但不论从生物学理论还是心理学理论来说，这都是个糟糕的选择。我们的大脑在进入聚焦专注状态（心流）时是不断聚集髓磷脂的过程，这个过程帮助大脑形成封闭高效的区域神经回路，而分散于多种事情中则是一个区域髓磷脂此消彼长的状态，这就像肌肉训练时，特定部分的力量训练帮助我们持续募集肌肉神经，我们肌肉才能得以不断生长。</p><p>所以不能为了职场靠谱而靠谱，要做个有原则的人，这个原则是为了帮助我们更好的成长，同时匹配组织内的文化。但这或许也不那么容易，如果做不到也不用自责，事实上这一定会发生，就像看看多少老板发话领导也会丧失原则，这背后需要对自我的信心不断建立的过程。</p><h2 id="04"><a href="#04" class="headerlink" title="04"></a>04</h2><p><strong>尊重时间的第三步，是觉察度量的黑洞、觉察平庸的忙碌。</strong>我感觉，大家都挺忙的，如果谁不忙，我下意识地也还会觉得ta是不是挺闲的，即使我知道一个人的价值绝对不是以忙碌来衡量，但我也需要进行一下思维的转化；如果一个人多年没有什么成绩也没有什么麻烦，并且ta始终忙碌，我下意识也会觉得干得还挺好的，即使我知道一个人的价值绝对不是以忙碌来衡量，我也还是需要进行一下思维的转化。我觉得这样的思维转化拿来要求所有人，也挺难的，它确实反人性了，那么背后究竟是什么原因？—— 度量的黑洞。</p><p>忙碌是一个有效的指标，一个人干一件活，两个人干两件活，一个人能两件活，挺好的。可到互联网这，这个度量失效了，在外界看来非常有道理的逻辑，在这里变成了有“聪明“的方法一天能解决，有常规的方法一周能解决，知道一个事这事就不需要时间，不知道一个事情就需要一个团队去磨出结论，度量，变成了一件很难的事。</p><p>所以，根本问题还是不能忽略度量，即使无法定义到绝对的一致，组织和个人也要持续去打磨这一度量标准，度量标准就是一个组织和个人如何定义自己目标的思考。如果不进行这一持续的思考，就会很自然且惰性地陷入平庸之中，变成大量忙碌之上的成果，变得没有竞争力。</p><p>警惕，警惕那些工作中奇怪的感觉，是不是自己正在下意识地按照最简单最熟悉的方式工作，隐约的感觉里挖掘那些真正有效但逃避的方式，敢不敢拿出来思考一下。</p><h2 id="05"><a href="#05" class="headerlink" title="05"></a>05</h2><p>最后，摘录一段《深度工作》书中的话，共勉 ~</p><p><strong>在事业中拥抱深度工作，通过深度工作培养个人技能，知识工作开始从令人心烦意乱、心力绞碎的责任变成一件令人满意的事情 —— 开启一扇通往新世界的大门，在那里万物闪耀。</strong></p>]]></content:encoded>
-      
-      
-      <category domain="https://blog.liluhui.cn/categories/%E7%94%9F%E6%B4%BB/">生活</category>
-      
-      <category domain="https://blog.liluhui.cn/categories/%E6%80%9D%E8%80%83/">思考</category>
-      
-      
-      <category domain="https://blog.liluhui.cn/tags/%E5%86%85%E5%9C%A8%E5%8A%9B%E9%87%8F/">内在力量</category>
-      
-      <category domain="https://blog.liluhui.cn/tags/%E4%B8%AA%E4%BA%BA%E6%88%90%E9%95%BF/">个人成长</category>
-      
-      
-      <comments>https://blog.liluhui.cn/2022/11/24/%E5%AE%B3%E6%80%95%E4%B8%8D%E5%A4%9F%E7%B2%BE%E8%BF%9B%EF%BC%8C%E5%8F%88%E4%B8%8D%E6%95%A2%E8%BF%9C%E7%A6%BB%E4%BA%BA%E7%BE%A4/#disqus_thread</comments>
       
     </item>
     
