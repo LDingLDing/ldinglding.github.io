@@ -1,0 +1,445 @@
+<!DOCTYPE html><html lang="zh-cn" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>语音端点检测技术（VAD） | 李璐慧的个人网站 - Aloea's Personal Website</title><meta name="author" content="芦荟Aloea"><meta name="copyright" content="芦荟Aloea"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="又名 “语音活性检测” 概述新开发的教育应用需要做语音化交互，基于目前机器学习发展，期望有一个部署在用户本地端上性能兼具效果都不错的方案来做语音活动识别。 本文主要收集整理了目前VAD技术的评价标准、可用的部署方案。 语音活动识别主要目的是以静音端作为分割点，得到有效的语音片段。本文不讨论多人语音的情况，即一个片段包含不同的声纹，那是需要进一步处理的技术部分。      关注指标 准确率：  正确">
+<meta property="og:type" content="article">
+<meta property="og:title" content="语音端点检测技术（VAD）">
+<meta property="og:url" content="https://blog.liluhui.cn/2024/08/15/vad/index.html">
+<meta property="og:site_name" content="李璐慧的个人网站 - Aloea&#39;s Personal Website">
+<meta property="og:description" content="又名 “语音活性检测” 概述新开发的教育应用需要做语音化交互，基于目前机器学习发展，期望有一个部署在用户本地端上性能兼具效果都不错的方案来做语音活动识别。 本文主要收集整理了目前VAD技术的评价标准、可用的部署方案。 语音活动识别主要目的是以静音端作为分割点，得到有效的语音片段。本文不讨论多人语音的情况，即一个片段包含不同的声纹，那是需要进一步处理的技术部分。      关注指标 准确率：  正确">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/08/15/vad.jpg">
+<meta property="article:published_time" content="2024-08-15T13:12:22.000Z">
+<meta property="article:modified_time" content="2024-08-15T13:22:01.686Z">
+<meta property="article:author" content="芦荟Aloea">
+<meta property="article:tag" content="李璐慧,芦荟,Aloea,技术博客,前端,Node">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/08/15/vad.jpg"><link rel="shortcut icon" href="https://i.loli.net/2017/11/26/5a19c0b50432e.png"><link rel="canonical" href="https://blog.liluhui.cn/2024/08/15/vad/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-8Z2NNDYTL9"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8Z2NNDYTL9');
+</script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '语音端点检测技术（VAD）',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-08-15 21:22:01'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/rss2.xml" title="李璐慧的个人网站 - Aloea's Personal Website" type="application/rss+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">68</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">7</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" href="/process"><span> 建站历程</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/08/15/vad.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="李璐慧的个人网站 - Aloea's Personal Website"><span class="site-name">李璐慧的个人网站 - Aloea's Personal Website</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" href="/process"><span> 建站历程</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">语音端点检测技术（VAD）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2024-08-15T13:12:22.000Z" title="Created 2024-08-15 21:12:22">2024-08-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2024-08-15T13:22:01.686Z" title="Updated 2024-08-15 21:22:01">2024-08-15</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="语音端点检测技术（VAD）"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>又名 “语音活性检测”</p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a><strong>概述</strong></h2><p>新开发的教育应用需要做语音化交互，基于目前机器学习发展，期望有一个部署在用户本地端上性能兼具效果都不错的方案来做语音活动识别。</p>
+<p>本文主要收集整理了目前VAD技术的评价标准、可用的部署方案。</p>
+<p>语音活动识别主要目的是以静音端作为分割点，得到有效的语音片段。本文不讨论多人语音的情况，即一个片段包含不同的声纹，那是需要进一步处理的技术部分。</p>
+<br/>
+<br/>
+
+
+
+<h2 id="关注指标"><a href="#关注指标" class="headerlink" title="关注指标"></a><strong>关注指标</strong></h2><ol>
+<li><p>准确率：</p>
+<ul>
+<li><p>正确检测出语音段的比例（命中率&#x2F;精确率）</p>
+</li>
+<li><p>正确检测为非语音段的比例（漏检率&#x2F;召回率）</p>
+</li>
+<li><p>总体的<a target="_blank" rel="noopener" href="https://www.v7labs.com/blog/f1-score-guide">F1-score</a>或准确率等综合指标</p>
+</li>
+</ul>
+</li>
+<li><p>噪音抑制能力：</p>
+<ul>
+<li><p>在不同信噪比（SNR）条件下的检测表现</p>
+</li>
+<li><p>对于<a target="_blank" rel="noopener" href="https://app.heptabase.com/99d6fa13-9df8-4139-912d-a2e123899b40/card/c8fcabbc-2e0f-42d3-8891-4c149efda38f#203a8808-3ba5-46a5-b2b2-366fa0df0467">不同类型背景噪音</a>的鲁棒性</p>
+</li>
+</ul>
+</li>
+<li><p>响应速度：</p>
+<ul>
+<li><p>检测延迟时间</p>
+</li>
+<li><p>从语音开始到检测到的时间差</p>
+</li>
+<li><p>能否实时进行检测</p>
+</li>
+</ul>
+</li>
+<li><p>计算复杂度：</p>
+<ul>
+<li><p>CPU&#x2F;内存占用情况</p>
+</li>
+<li><p>是否适合嵌入式设备等受限环境</p>
+</li>
+</ul>
+</li>
+<li><p>适应性和可配置性：</p>
+<ul>
+<li><p>是否支持动态调整参数和阈值</p>
+</li>
+<li><p>能否适应不同应用场景的需求</p>
+</li>
+</ul>
+</li>
+<li><p>实际应用效果：</p>
+<ul>
+<li><p>在真实应用中的最终效果如何</p>
+</li>
+<li><p>对上层应用（如语音识别）的影响</p>
+</li>
+</ul>
+</li>
+</ol>
+<br/>
+<br/>
+
+<h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a><strong>方案</strong></h2><ol>
+<li><p>基于能量检测:</p>
+<ul>
+<li><p>主要通过检测语音信号的短时能量来判断是否存在语音活动。</p>
+</li>
+<li><p>通常会设置一个能量阈值,超过该阈值则认为是语音段。</p>
+</li>
+<li><p>优点是实现简单,计算量小;缺点是在噪音环境下容易出错。</p>
+</li>
+</ul>
+</li>
+<li><p>基于频域特征:</p>
+<ul>
+<li><p>利用语音和非语音在频谱上的差异来判断。</p>
+</li>
+<li><p>常用特征包括过零率、谱熵、谱质心等。</p>
+</li>
+<li><p>可以更好地区分语音和背景噪音,适用于复杂噪音环境。</p>
+</li>
+</ul>
+</li>
+<li><p>基于统计模型:</p>
+<ul>
+<li><p>构建语音和非语音的概率密度模型,如高斯混合模型(GMM)。</p>
+</li>
+<li><p>根据输入信号属于哪种模型的后验概率来判断是否为语音。</p>
+</li>
+<li><p>可以自适应地更新模型参数,适应不同的噪音环境。</p>
+</li>
+</ul>
+</li>
+<li><p>基于深度学习 ⭐:</p>
+<ul>
+<li><p>利用深度神经网络对语音和非语音的特征进行学习和建模。</p>
+</li>
+<li><p>可以自动学习特征,无需手工设计,性能优于传统方法。</p>
+</li>
+<li><p>需要大量的训练数据,计算复杂度较高。</p>
+</li>
+</ul>
+</li>
+<li><p>混合方案 ⭐:</p>
+<ul>
+<li><p>结合以上多种方法,利用各自的优势。</p>
+</li>
+<li><p>如先用简单的能量检测,再辅以频域特征和统计模型判断。</p>
+</li>
+<li><p>可以在准确性和计算复杂度之间达到平衡。</p>
+</li>
+</ul>
+</li>
+</ol>
+<br/>
+<br/>
+
+
+<h2 id="端上方案-x2F-可部署方案"><a href="#端上方案-x2F-可部署方案" class="headerlink" title="端上方案&#x2F;可部署方案"></a><strong>端上方案&#x2F;可部署方案</strong></h2><h3 id="Google-WebRTC-VAD"><a href="#Google-WebRTC-VAD" class="headerlink" title="Google WebRTC VAD"></a><strong>Google WebRTC VAD</strong></h3><h4 id="优势"><a href="#优势" class="headerlink" title="优势"></a><strong>优势</strong></h4><ul>
+<li><p>算法复杂度相对较低，适合嵌入式设备应用</p>
+</li>
+<li><p>能较好地抑制背景噪音的影响</p>
+</li>
+<li><p>自适应能力强，可以适应不同环境</p>
+</li>
+<li><p>已经过大规模实际应用验证，具有较高的可靠性</p>
+</li>
+</ul>
+<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a><strong>原理</strong></h4><ul>
+<li><p>WebRTC VAD 采用了基于统计模型的方法，主要使用高斯混合模型（GMM）来建模语音和非语音信号。</p>
+</li>
+<li><p>通过计算输入信号属于语音&#x2F;非语音的后验概率， 包括频谱熵、过零率等，这些特征能较好地区分语音和背景噪音。</p>
+</li>
+</ul>
+<h4 id="H5-javascript-测试示例"><a href="#H5-javascript-测试示例" class="headerlink" title="H5 javascript 测试示例"></a><strong>H5 javascript 测试示例</strong></h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建音频上下文和分析器</span></span><br><span class="line"><span class="keyword">const</span> audioContext = <span class="keyword">new</span> (<span class="variable language_">window</span>.<span class="property">AudioContext</span> || <span class="variable language_">window</span>.<span class="property">webkitAudioContext</span>)();</span><br><span class="line"><span class="keyword">const</span> analyser = audioContext.<span class="title function_">createAnalyser</span>();</span><br><span class="line">analyser.<span class="property">fftSize</span> = <span class="number">1024</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建VAD处理器</span></span><br><span class="line"><span class="keyword">const</span> vadProcessor = audioContext.<span class="title function_">createScriptProcessor</span>(<span class="number">512</span>, <span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置VAD参数</span></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">VAD_THRESHOLD</span> = -<span class="number">50</span>; <span class="comment">// 声音阈值，可以根据需要调整</span></span><br><span class="line"><span class="keyword">let</span> isSpeaking = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取麦克风输入</span></span><br><span class="line">navigator.<span class="property">mediaDevices</span>.<span class="title function_">getUserMedia</span>(&#123; <span class="attr">audio</span>: <span class="literal">true</span>, <span class="attr">video</span>: <span class="literal">false</span> &#125;)</span><br><span class="line"> .<span class="title function_">then</span>(<span class="function"><span class="params">stream</span> =&gt;</span> &#123;</span><br><span class="line">   <span class="keyword">const</span> source = audioContext.<span class="title function_">createMediaStreamSource</span>(stream);</span><br><span class="line">   source.<span class="title function_">connect</span>(analyser);</span><br><span class="line">   analyser.<span class="title function_">connect</span>(vadProcessor);</span><br><span class="line">   vadProcessor.<span class="title function_">connect</span>(audioContext.<span class="property">destination</span>);</span><br><span class="line"></span><br><span class="line">   vadProcessor.<span class="property">onaudioprocess</span> = <span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">     <span class="keyword">const</span> input = event.<span class="property">inputBuffer</span>.<span class="title function_">getChannelData</span>(<span class="number">0</span>);</span><br><span class="line">     <span class="keyword">const</span> sum = input.<span class="title function_">reduce</span>(<span class="function">(<span class="params">acc, val</span>) =&gt;</span> acc + <span class="title class_">Math</span>.<span class="title function_">abs</span>(val), <span class="number">0</span>);</span><br><span class="line">     <span class="keyword">const</span> average = sum / input.<span class="property">length</span>;</span><br><span class="line">     <span class="keyword">const</span> decibels = <span class="number">20</span> * <span class="title class_">Math</span>.<span class="title function_">log10</span>(average);</span><br><span class="line"></span><br><span class="line">     <span class="keyword">if</span> (decibels &gt; <span class="variable constant_">VAD_THRESHOLD</span>) &#123;</span><br><span class="line">       <span class="keyword">if</span> (!isSpeaking) &#123;</span><br><span class="line">         isSpeaking = <span class="literal">true</span>;</span><br><span class="line">         <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Speech started&quot;</span>);</span><br><span class="line">         <span class="comment">// 在这里添加语音开始的处理逻辑</span></span><br><span class="line">       &#125;</span><br><span class="line">     &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">       <span class="keyword">if</span> (isSpeaking) &#123;</span><br><span class="line">         isSpeaking = <span class="literal">false</span>;</span><br><span class="line">         <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Speech ended&quot;</span>);</span><br><span class="line">         <span class="comment">// 在这里添加语音结束的处理逻辑</span></span><br><span class="line">       &#125;</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;;</span><br><span class="line"> &#125;)</span><br><span class="line"> .<span class="title function_">catch</span>(<span class="function"><span class="params">error</span> =&gt;</span> &#123;</span><br><span class="line">   <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&#x27;Error accessing microphone:&#x27;</span>, error);</span><br><span class="line"> &#125;);</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>VAD_THRESHOLD（语音活动检测阈值）的调整是一个重要的参数设置，它直接影响到语音检测的灵敏度和准确性。关于这个阈值，有以下几点需要理解：</p>
+<ol>
+<li><p>数值含义：<br>VAD_THRESHOLD 通常以分贝（dB）为单位。</p>
+<p>这个值越大（越接近 0），意味着检测语音所需的音量越大；值越小（越接近负无穷），则意味着检测语音所需的音量越小。</p>
+</li>
+<li><p>数值范围：<br>通常，VAD_THRESHOLD 的值会在 -60 dB 到 -20 dB 之间。但这个范围可能会根据具体的应用场景和环境而有所不同。</p>
+</li>
+<li><p>调整原则：</p>
+<ul>
+<li><p>如果阈值设置得太高，可能会错过一些较轻的语音。</p>
+</li>
+<li><p>如果阈值设置得太低，可能会将背景噪音误判为语音。</p>
+</li>
+</ul>
+</li>
+<li><p>参考标准：<br>虽然没有一个统一的标准值，但以下可以作为参考：</p>
+<ul>
+<li><p>安静环境：-50 dB 到 -40 dB</p>
+</li>
+<li><p>普通办公环境：-40 dB 到 -30 dB</p>
+</li>
+<li><p>嘈杂环境：-30 dB 到 -20 dB</p>
+</li>
+</ul>
+</li>
+</ol>
+<p>在一些高级实现中，可能会使用动态阈值。这意味着系统会根据环境噪音水平自动调整阈值，以适应不同的环境条件。</p>
+<ol>
+<li>其他考虑因素：</li>
+</ol>
+<ul>
+<li><p>麦克风质量和位置</p>
+</li>
+<li><p>房间声学特性</p>
+</li>
+<li><p>说话者的音量和距离</p>
+</li>
+</ul>
+<br/>
+<br/>
+
+
+<h3 id="Pyannote-VAD"><a href="#Pyannote-VAD" class="headerlink" title="Pyannote VAD"></a><strong>Pyannote VAD</strong></h3><p><a target="_blank" rel="noopener" href="https://huggingface.co/pyannote/voice-activity-detection">https://huggingface.co/pyannote/voice-activity-detection</a></p>
+<h4 id="优势-1"><a href="#优势-1" class="headerlink" title="优势"></a><strong>优势</strong></h4><ul>
+<li><p>无需人工设计特征，模型可以自动学习语音的特征表示</p>
+</li>
+<li><p>在复杂噪音环境下表现更优秀</p>
+</li>
+<li><p>通过大规模数据训练，具有更好的泛化性能</p>
+</li>
+<li><p>基于端到端深度学习的语音活动检测</p>
+</li>
+<li><p>pyannote VAD 可以应用于语音交互、音频分析等场景，提供实时的语音活动检测。</p>
+</li>
+</ul>
+<h4 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a><strong>原理</strong></h4><ul>
+<li><p>pyannote VAD 采用了基于卷积神经网络（CNN）和循环神经网络（RNN）的端到端深度学习模型，这种模型能够自动学习语音和非语音的特征表示。</p>
+</li>
+<li><p>pyannote VAD 是在大规模的语音数据集上进行训练的，包括多种语言和复杂噪音条件。</p>
+</li>
+<li><p>pyannote VAD 输出每一时刻的语音活动概率，用于判断语音的起始和结束时间。</p>
+</li>
+</ul>
+<h4 id="Python示例"><a href="#Python示例" class="headerlink" title="Python示例"></a><strong>Python示例</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> io</span><br><span class="line"><span class="keyword">from</span> pyannote.audio <span class="keyword">import</span> Pipeline</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">process_audio</span>(<span class="params">self, audio_file</span>):</span><br><span class="line">   <span class="comment"># 使用 pyannote.audio 的 Pipeline 进行 VAD</span></span><br><span class="line">   pipeline = Pipeline.from_pretrained(<span class="string">&quot;pyannote/voice-activity-detection&quot;</span>)</span><br><span class="line">   </span><br><span class="line">   <span class="comment"># 将 BytesIO 对象转换为文件路径</span></span><br><span class="line">   <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;temp.wav&quot;</span>, <span class="string">&quot;wb&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">       f.write(audio_file.read())</span><br><span class="line">   </span><br><span class="line">   <span class="comment"># 使用 pipeline 进行 VAD</span></span><br><span class="line">   vad_result = pipeline(<span class="string">&quot;temp.wav&quot;</span>)</span><br><span class="line">   </span><br><span class="line">   <span class="comment"># 解析 VAD 结果</span></span><br><span class="line">   result_str = <span class="string">&quot;&quot;</span></span><br><span class="line">   <span class="keyword">for</span> speech <span class="keyword">in</span> vad_result.get_timeline():</span><br><span class="line">       result_str += <span class="string">f&quot;Speech from <span class="subst">&#123;speech.start:<span class="number">.1</span>f&#125;</span>s to <span class="subst">&#123;speech.end:<span class="number">.1</span>f&#125;</span>s\n&quot;</span></span><br><span class="line">   </span><br><span class="line">   <span class="keyword">return</span> result_str</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<br/>
+<br/>
+
+
+<h3 id="FSMN-Monophone-VAD-（推荐）"><a href="#FSMN-Monophone-VAD-（推荐）" class="headerlink" title="FSMN-Monophone VAD （推荐）"></a><strong>FSMN-Monophone VAD （推荐）</strong></h3><p><a target="_blank" rel="noopener" href="https://modelscope.cn/models/iic/speech_fsmn_vad_zh-cn-16k-common-pytorch/">https://modelscope.cn/models/iic/speech_fsmn_vad_zh-cn-16k-common-pytorch/</a></p>
+<h4 id="优势-2"><a href="#优势-2" class="headerlink" title="优势"></a><strong>优势</strong></h4><ul>
+<li><p>基于FSMN的架构的深度学习，参数量较少，计算复杂度相对较低。</p>
+</li>
+<li><p>经过大规模语音数据预训练，具有较强的泛化性和健壮性。</p>
+</li>
+</ul>
+<h4 id="原理-2"><a href="#原理-2" class="headerlink" title="原理"></a><strong>原理</strong></h4><ul>
+<li>FSMN-Monophone VAD 的核心在于 FSMN 网络结构。FSMN 是一种特殊的循环神经网络，它通过引入有监督的记忆网络单元，能够有效捕捉时间序列数据中的长距离依赖关系。</li>
+</ul>
+<h4 id="Python-示例"><a href="#Python-示例" class="headerlink" title="Python 示例"></a><strong>Python 示例</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> funasr <span class="keyword">import</span> AutoModel</span><br><span class="line"></span><br><span class="line">model = AutoModel(model=<span class="string">&quot;fsmn-vad&quot;</span>, model_revision=<span class="string">&quot;v2.0.4&quot;</span>)</span><br><span class="line"></span><br><span class="line">wav_file = <span class="string">f&quot;<span class="subst">&#123;model.model_path&#125;</span>/example/asr_example.wav&quot;</span></span><br><span class="line">res = model.generate(<span class="built_in">input</span>=wav_file)</span><br><span class="line"><span class="built_in">print</span>(res)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>VAD常用参数调整说明（参考：vad.yaml文件）：</p>
+<ul>
+<li><p>取值越趋于 -1，噪音被误判定为语音的概率越大，FA 越高</p>
+</li>
+<li><p>取值越趋于 +1，语音被误判定为噪音的概率越大，Pmiss 越高</p>
+</li>
+<li><p>通常情况下，该值会根据当前模型在长语音测试集上的效果取最佳平衡</p>
+</li>
+<li><p>max_end_silence_time：尾部连续检测到多长时间静音进行尾点判停，参数范围500𝑚,6000𝑚𝑠500<em>m</em>,6000<em>ms</em>，默认值 800ms，该值过低容易出现语音提前截断的情况。</p>
+</li>
+<li><p>speech_noise_thres：speech 与 noise 偏差数值大于此值则判断为 speech，参数范围：(-1,1)</p>
+</li>
+</ul>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="https://blog.liluhui.cn">芦荟Aloea</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://blog.liluhui.cn/2024/08/15/vad/">https://blog.liluhui.cn/2024/08/15/vad/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/08/15/vad.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2024/07/30/202407/" title="2024 年 7 月总结"><img class="cover" src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/07/30/IMG_20240718_1455571.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">2024 年 7 月总结</div></div></a></div></nav><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comment</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">芦荟Aloea</div><div class="author-info__description">关于生活、学习、工作</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">68</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">7</div></a></div><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/LDingLDing" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="https://www.weibo.com/2316403983/profile" target="_blank" title="Weibo"><i class="fab fa-weibo"></i></a><a class="social-icon" href="mailto:liluhuizj@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E6%B3%A8%E6%8C%87%E6%A0%87"><span class="toc-number">2.</span> <span class="toc-text">关注指标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%A1%88"><span class="toc-number">3.</span> <span class="toc-text">方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AB%AF%E4%B8%8A%E6%96%B9%E6%A1%88-x2F-%E5%8F%AF%E9%83%A8%E7%BD%B2%E6%96%B9%E6%A1%88"><span class="toc-number">4.</span> <span class="toc-text">端上方案&#x2F;可部署方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Google-WebRTC-VAD"><span class="toc-number">4.1.</span> <span class="toc-text">Google WebRTC VAD</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF"><span class="toc-number">4.1.1.</span> <span class="toc-text">优势</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">4.1.2.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#H5-javascript-%E6%B5%8B%E8%AF%95%E7%A4%BA%E4%BE%8B"><span class="toc-number">4.1.3.</span> <span class="toc-text">H5 javascript 测试示例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pyannote-VAD"><span class="toc-number">4.2.</span> <span class="toc-text">Pyannote VAD</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF-1"><span class="toc-number">4.2.1.</span> <span class="toc-text">优势</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%9F%E7%90%86-1"><span class="toc-number">4.2.2.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Python%E7%A4%BA%E4%BE%8B"><span class="toc-number">4.2.3.</span> <span class="toc-text">Python示例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FSMN-Monophone-VAD-%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="toc-number">4.3.</span> <span class="toc-text">FSMN-Monophone VAD （推荐）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF-2"><span class="toc-number">4.3.1.</span> <span class="toc-text">优势</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%9F%E7%90%86-2"><span class="toc-number">4.3.2.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Python-%E7%A4%BA%E4%BE%8B"><span class="toc-number">4.3.3.</span> <span class="toc-text">Python 示例</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/08/15/vad/" title="语音端点检测技术（VAD）"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/08/15/vad.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="语音端点检测技术（VAD）"/></a><div class="content"><a class="title" href="/2024/08/15/vad/" title="语音端点检测技术（VAD）">语音端点检测技术（VAD）</a><time datetime="2024-08-15T13:12:22.000Z" title="Created 2024-08-15 21:12:22">2024-08-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/07/30/202407/" title="2024 年 7 月总结"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/07/30/IMG_20240718_1455571.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2024 年 7 月总结"/></a><div class="content"><a class="title" href="/2024/07/30/202407/" title="2024 年 7 月总结">2024 年 7 月总结</a><time datetime="2024-07-30T14:52:43.000Z" title="Created 2024-07-30 22:52:43">2024-07-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/07/24/codegpt/" title="超强编程助手 CodeGPT！自用"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/07/24/dgasgez.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="超强编程助手 CodeGPT！自用"/></a><div class="content"><a class="title" href="/2024/07/24/codegpt/" title="超强编程助手 CodeGPT！自用">超强编程助手 CodeGPT！自用</a><time datetime="2024-07-24T14:10:43.000Z" title="Created 2024-07-24 22:10:43">2024-07-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/07/12/Test-Time-Training-layers/" title="Test-Time-Training layers （TTT）"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/07/12/3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Test-Time-Training layers （TTT）"/></a><div class="content"><a class="title" href="/2024/07/12/Test-Time-Training-layers/" title="Test-Time-Training layers （TTT）">Test-Time-Training layers （TTT）</a><time datetime="2024-07-12T10:28:05.000Z" title="Created 2024-07-12 18:28:05">2024-07-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/07/02/202406/" title="2024 年 6 月总结"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/07/02/20240702211410.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2024 年 6 月总结"/></a><div class="content"><a class="title" href="/2024/07/02/202406/" title="2024 年 6 月总结">2024 年 6 月总结</a><time datetime="2024-07-02T13:50:48.000Z" title="Created 2024-07-02 21:50:48">2024-07-02</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By 芦荟Aloea</div><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn">浙ICP备19010836号-1</a></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll To Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '4987f0fb0a509fb9f0af',
+      clientSecret: '7e264967a3ea557003aacdf795b9e57e36a56382',
+      repo: 'ldinglding.github.io',
+      owner: 'LDingLDing',
+      admin: ['LDingLDing'],
+      id: 'dd1955d6c1319afd46018bd17a155ccf',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
