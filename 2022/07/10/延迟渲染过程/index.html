@@ -1,0 +1,356 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>UE实时渲染基础1 - 延迟渲染过程 | 李璐慧的个人网站 - Aloea's Personal Website</title><meta name="author" content="芦荟Aloea"><meta name="copyright" content="芦荟Aloea"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="前言关键词：Deferred Rendering 延迟渲染Frame 帧Occlusion Culling 遮挡剔除 看完本篇内容你将对以下概念心中有数：  实时渲染分为 前向渲染 Forward Rendering  和 延迟渲染 Deferred Rendering ，如何认识这两个概念 延迟渲染 Deferred 过程中每一帧在计算什么 遮挡剔除 Occlusion Culling 为什么重">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UE实时渲染基础1 - 延迟渲染过程">
+<meta property="og:url" content="https://blog.liluhui.cn/2022/07/10/%E5%BB%B6%E8%BF%9F%E6%B8%B2%E6%9F%93%E8%BF%87%E7%A8%8B/index.html">
+<meta property="og:site_name" content="李璐慧的个人网站 - Aloea&#39;s Personal Website">
+<meta property="og:description" content="前言关键词：Deferred Rendering 延迟渲染Frame 帧Occlusion Culling 遮挡剔除 看完本篇内容你将对以下概念心中有数：  实时渲染分为 前向渲染 Forward Rendering  和 延迟渲染 Deferred Rendering ，如何认识这两个概念 延迟渲染 Deferred 过程中每一帧在计算什么 遮挡剔除 Occlusion Culling 为什么重">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/p2718426594.jpg">
+<meta property="article:published_time" content="2022-07-10T04:31:48.000Z">
+<meta property="article:modified_time" content="2023-09-01T14:36:56.583Z">
+<meta property="article:author" content="芦荟Aloea">
+<meta property="article:tag" content="UnrealEngine">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/p2718426594.jpg"><link rel="shortcut icon" href="https://i.loli.net/2017/11/26/5a19c0b50432e.png"><link rel="canonical" href="https://blog.liluhui.cn/2022/07/10/%E5%BB%B6%E8%BF%9F%E6%B8%B2%E6%9F%93%E8%BF%87%E7%A8%8B/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>(()=>{
+      const saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+      
+      window.btf = {
+        saveToLocal: saveToLocal,
+        getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+          script.src = url
+          script.async = true
+          script.onerror = reject
+          script.onload = script.onreadystatechange = function() {
+            const loadState = this.readyState
+            if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+            script.onload = script.onreadystatechange = null
+            resolve()
+          }
+
+          Object.keys(attr).forEach(key => {
+            script.setAttribute(key, attr[key])
+          })
+
+          document.head.appendChild(script)
+        }),
+
+        getCSS: (url, id = false) => new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+          link.rel = 'stylesheet'
+          link.href = url
+          if (id) link.id = id
+          link.onerror = reject
+          link.onload = link.onreadystatechange = function() {
+            const loadState = this.readyState
+            if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+            link.onload = link.onreadystatechange = null
+            resolve()
+          }
+          document.head.appendChild(link)
+        }),
+
+        addGlobalFn: (key, fn, name = false, parent = window) => {
+          const pjaxEnable = false
+          if (!pjaxEnable && key.startsWith('pjax')) return
+
+          const globalFn = parent.globalFn || {}
+          const keyObj = globalFn[key] || {}
+    
+          if (name && keyObj[name]) return
+    
+          name = name || Object.keys(keyObj).length
+          keyObj[name] = fn
+          globalFn[key] = keyObj
+          parent.globalFn = globalFn
+        }
+      }
+    
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+      
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })()</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=8Z2NNDYTL9"></script><script>window.dataLayer = window.dataLayer || []
+function gtag(){dataLayer.push(arguments)}
+gtag('js', new Date())
+gtag('config', '8Z2NNDYTL9')
+btf.addGlobalFn('pjaxComplete', () => {
+  gtag('config', '8Z2NNDYTL9', {'page_path': window.location.pathname})
+}, 'google_analytics')
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":true,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'UE实时渲染基础1 - 延迟渲染过程',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-09-01 22:36:56'
+}</script><meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/rss2.xml" title="李璐慧的个人网站 - Aloea's Personal Website" type="application/rss+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">69</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" href="/process"><span> 建站历程</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/p2718426594.jpg);"><nav id="nav"><span id="blog-info"><a href="/" title="李璐慧的个人网站 - Aloea's Personal Website"><span class="site-name">李璐慧的个人网站 - Aloea's Personal Website</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" href="/process"><span> 建站历程</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">UE实时渲染基础1 - 延迟渲染过程</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-07-10T04:31:48.000Z" title="发表于 2022-07-10 12:31:48">2022-07-10</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-09-01T14:36:56.583Z" title="更新于 2023-09-01 22:36:56">2023-09-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%B8%B2%E6%9F%93/">渲染</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="UE实时渲染基础1 - 延迟渲染过程"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>关键词：<br />Deferred Rendering 延迟渲染<br />Frame 帧<br />Occlusion Culling 遮挡剔除<br><br /></p>
+<p>看完本篇内容你将对以下概念心中有数：</p>
+<ol>
+<li>实时渲染分为 <code>前向渲染 Forward Rendering</code>  和 <code>延迟渲染 Deferred Rendering</code> ，如何认识这两个概念</li>
+<li><code>延迟渲染 Deferred</code> 过程中每一帧在计算什么</li>
+<li><code>遮挡剔除 Occlusion Culling</code> 为什么重要，如何结合实际情况组合解决方案</li>
+</ol>
+<br />
+
+<h2 id="01-前向渲染-or-延迟渲染"><a href="#01-前向渲染-or-延迟渲染" class="headerlink" title="01 前向渲染 or 延迟渲染?"></a>01 前向渲染 or 延迟渲染?</h2><img src="/2022/07/10/%E5%BB%B6%E8%BF%9F%E6%B8%B2%E6%9F%93%E8%BF%87%E7%A8%8B/luhui22071000.png" class="" title="img">
+
+<p>首先重要的是需要理解这么一个过程，每一帧画面的渲染，其中包含对几何体本身的计算，它的形状、位置，还包含受复杂影响的计算，它受光照后的着色和材质。对于前向渲染来说，这两大块在同一环节计算，而对于延迟渲染来说，先进行几何体计算，再进行渲染光照结果混合的计算。</p>
+<p>所有的特性都围绕一根本区别产生，具体来说，</p>
+<p><strong>前向渲染  Forward Rendering  ：着色&#x2F;光照渲染和几何体在同一环节计算</strong></p>
+<ol>
+<li>在如何计算光照和材质上更多的自由度，但在混合各种功能时会受限。<ul>
+<li>因为在同一环节处理，几何体的对象信息是完全的，不像延后渲染在处理光照时只有有限存储下来的几何体的信息数据。</li>
+<li>渲染引擎的很多功能是在后期处理的，采用前向渲染后只能在这一结果基础上进行，而延后渲染的几何体信息和光照信息是分开的，混合功能兼容性和效果都会相对好一些。</li>
+</ul>
+</li>
+<li>适合半透明的渲染</li>
+<li>对于简单应用要快得多<ul>
+<li>对于延后处理来说，一帧画面从发出信号到输出到屏幕要慢于同一环节处理的前向渲染</li>
+<li>比如很多移动 App 都会采用前向渲染以提高效果</li>
+</ul>
+</li>
+<li>采用动态光照会对性能有很大影响<ul>
+<li>动态光照对于每一个对象又要重新计算混合</li>
+<li>看到 UE 方说目前的新技术效果可以达到基本同延迟渲染了</li>
+</ul>
+</li>
+<li>可以采用 MSAA（多重采样抗锯齿） 和 TAA（时间性抗锯齿） 方案抗锯齿</li>
+</ol>
+<p><strong>延后渲染 Deferred Rendering ：着色&#x2F;光照渲染发生在延迟环节中，通过 Gbuffer 缓存图像计算</strong></p>
+<ol>
+<li>对动态光照友好&#x2F;性能更好<br>*. 本身就是延后处理，光照&#x2F;着色前的计算都缓存下来了</li>
+<li>在涉及几何体表面相关处理时相对受限，但在混合各种功能是更灵活。<br>*. 几何体对象信息不完全，对于几何体表面的复杂处理受限于描述信息<br>*. 各种后期处理，类似动态光照的处理过程会有很有。</li>
+<li>应用表现稳定可预测，适合大型应用性能稳定</li>
+<li>不能采用 MSAA（多重采样抗锯齿） 方案，只能采用 TAA（时间性抗锯齿） 方案抗锯齿</li>
+</ol>
+<p>对于 UE4 来说，默认采用的是 Deffered Rendering，修改渲染模式在项目设置中</p>
+<img src="/2022/07/10/%E5%BB%B6%E8%BF%9F%E6%B8%B2%E6%9F%93%E8%BF%87%E7%A8%8B/luhui22071001.png" class="" title="img">
+
+<br />
+
+<h2 id="02-计算过程"><a href="#02-计算过程" class="headerlink" title="02 计算过程"></a>02 计算过程</h2><p>整个计算过程中有三个众所周知的重要角色:  CPU、DRAW(CPU+GPU)、GPU</p>
+<img src="/2022/07/10/%E5%BB%B6%E8%BF%9F%E6%B8%B2%E6%9F%93%E8%BF%87%E7%A8%8B/luhui22071002.png" class="" width="350">
+
+<p>请对照图中的橙色色块，将其简单理解为一个画面</p>
+<p>以 30帧率的模型为例，每一帧是33.33ms，对于一个要处理的画面，在第一帧会在 CPU 处理，第二帧在 渲染线程 处理，第三帧 66.66ms 才由 GPU 绘制画面。（实际过程更复杂，这里简化模型理解<code>延迟</code>)</p>
+<p><strong>在 Frame0 时，CPU 会进行大量的逻辑计算，目标是得到世界有哪些对象、这些对象在世界哪里的信息</strong><br />涉及到</p>
+<ol>
+<li>动画</li>
+<li>模型和对象的位置</li>
+<li>物理 </li>
+<li>人工智能 </li>
+<li>生成和销毁、显示和隐藏</li>
+</ol>
+<p>就是计算所有可能影响对象的位置变化、存在与否、显示与否的功能模块</p>
+<br />
+
+<p><strong>在 Frame1 时，渲染线程会进行大量的计算，目标是得到屏幕可见部分渲染对象的信息</strong><br />重要概念是，在这个过程会进行遮挡计算，也就是我们透过<code>屏幕/视口</code>看不到或者不希望看到的对象进行剔除，只渲染眼见的对象，而不是渲染整个世界。<br />涉及到</p>
+<ol>
+<li>距离剔除 Distance Occlusion</li>
+<li>视椎体剔除 Frustum Occlusion</li>
+<li>预计算可见性 Precomputed Visibility</li>
+<li>遮挡剔除 Olccusion Culling</li>
+</ol>
+<p>最终得到一份需要渲染的对象列表，至于这些遮挡计算到底是什么、又怎么使，我们将在下文继续展开。</p>
+<br />
+
+<h2 id="03-遮挡计算"><a href="#03-遮挡计算" class="headerlink" title="03 遮挡计算"></a>03 遮挡计算</h2><p>遮挡计算看似是个简单的问题，无非是，我现在<code>屏幕/视口</code>要展示的就这么块区域，为了节省开销，我看不见的就不要给我渲染了，引擎你反正把能显示的算出来展示上就是了。</p>
+<p>但现实总是更加复杂，比如</p>
+<ol>
+<li>遮挡计算到底是按照对象来计算、还是面来计算呢？如果按照对象计算，这个对象很大很大但只是在视口中露出一点点，那么不是很浪费渲染；同时考虑如果按面计算，要遍历的数量就成几何倍上涨，计算开销瞬间增大。</li>
+<li>有些物体离得很远，要不要剔除？怎么界定？ 现在桌面上有一个杯子，摄像机来到窗户外杯子变得很小了，再把摄像机放到楼房全景，杯子几乎小到看不见了，对于引擎来说，不论多小多大，它都会渲染，我们怎么节省这些消耗，尤其是在一些大全景的画面下。</li>
+</ol>
+<br />
+
+<p>好了，我们来聊聊 UE 给出的方案</p>
+<p>首先，UE 采用的是逐对象的遮挡计算，注意是逐对象不是逐面。对于我们上面提到的第一点问题是无法避免的，那么优化的思路就是，在审视和检查性能时有必要将一些大对象拆分成小对象，这里就是需要根据场景情况不断测试和平衡。</p>
+<p>然后，记得上文提到的 4 种剔除计算过程吧，它们是逐次进行的，但它们不都是默认开启的，这意味在 UE 中遮挡计算是一个由开发者定义的组合招式，只能根据场景情况做适合的方案。</p>
+<ol>
+<li>距离剔除 Distance Occlusion —— <strong>默认不开启</strong></li>
+<li>视椎体剔除 Frustum Occlusion —— 默认开启，无法关闭</li>
+<li>预计算可见性 Precomputed Visibility —— <strong>默认不开启</strong></li>
+<li>遮挡剔除 Olccusion Culling —— 默认开启</li>
+</ol>
+<br />
+
+<p>顺序1<br /><strong>距离剔除</strong> 是效率最高的，为 单个actor 或 创建 Cull Distance Volumes 块指定可视的距离</p>
+<img src="/2022/07/10/%E5%BB%B6%E8%BF%9F%E6%B8%B2%E6%9F%93%E8%BF%87%E7%A8%8B/luhui22071003.png" class="" title="img">
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">最小绘制距离（Minimum Draw Distance）: 这是在不再渲染Actor之前能够接近Actor的最近距离。</span><br><span class="line">最大绘制距离（Maximum Draw Distance）: 这是在不再渲染Actor之前能够远离Actor的最远距离。</span><br><span class="line">当前最大绘制距离（Current Maximum Draw Distance）:它显示剔除距离体积（如果存在）设置的已存储剔除距离。</span><br></pre></td></tr></table></figure>
+
+<p>顺序2<br /><strong>视椎体剔除</strong> 是默认开启的，计算摄像机视角内的对象。</p>
+<p>如下图，黄色区域内有包含的对象都属于可见，之外的对象则不会进入要处理的对象列表。（但这幅图是二维的，还不够直观）</p>
+<img src="/2022/07/10/%E5%BB%B6%E8%BF%9F%E6%B8%B2%E6%9F%93%E8%BF%87%E7%A8%8B/luhui22071004.png" class="" title="img">
+
+
+<p>如下图，紫色的椎体内有包含的对象都属于可见</p>
+<img src="/2022/07/10/%E5%BB%B6%E8%BF%9F%E6%B8%B2%E6%9F%93%E8%BF%87%E7%A8%8B/luhui22071005.png" class="" title="img">
+
+
+<p>顺序3<br /><strong>预计算可见性</strong> 是对可见进行预处理。<br />在最后的剔除遮挡过程中，实际是基于前几个步骤得到的对象列表，在当前摄像机视口逐个对象去询问是否可见，而摄像机很可能是高速移动的，这一询问剔除的过程很容易由于问询对象过多而遭到性能压迫。<br />而预见性处理是建立一个体积，在这体积内划出一个个的立方格（通常我们叫它小蓝格），每个立方体都会预先计算这个立方体下有哪些可见对象并缓存下来。<br />这意味着，基于这种处理后，最后的动态剔除的问询对象很有可能大量减少。比如在某个三面墙的位置，必要有大量对象是被遮挡看不见的，那么就不会进入可见对象列表；而不做这个可预见处理，摄像机每移动一下，就需要去遍历询问上一步得到的所有可见对象，哪怕我们显而易见是被遮挡了的对象。</p>
+<p><a target="_blank" rel="noopener" href="https://docs.unrealengine.com/4.27/zh-CN/RenderingAndGraphics/VisibilityCulling/PrecomputedVisibilityVolume/">使用教程</a>：简述重点，布置<code>预计算可视性体积 Precomputed Visibility Volume</code>到场景中进行预计算，根据场景情况调节单元立方格的尺寸<br /></p>
+<img src="/2022/07/10/%E5%BB%B6%E8%BF%9F%E6%B8%B2%E6%9F%93%E8%BF%87%E7%A8%8B/luhui22071006.png" class="" width="200">
+
+
+
+<p>顺序4<br /><strong>遮挡剔除</strong> 这是最精准，也是剔除计算里开销最大的部分。会轮询基于上一步得到的可视对象列表，逐一发起检查是否可见，并筛选出最后的可见对象列表。</p>
+<p>我们通过控制台可以查看遮挡相关的数据，指令 <code>stat initviews</code></p>
+<img src="/2022/07/10/%E5%BB%B6%E8%BF%9F%E6%B8%B2%E6%9F%93%E8%BF%87%E7%A8%8B/luhui22071007.png" class="" title="img">
+
+
+<p>上半部分 <strong>Cycle Counters</strong> 是统计计算花费的循环数量，就是帧时间量<br />View Visbility  整个可见性计算<br />Occlusion Cull 遮挡计算<br />View Relevance 其他视图相关计算<br />Frustum Cull 视椎体剔除计算<br />Decompress Occlusion 加载预计算可见性的数据</p>
+<p>下半部分 <strong>Counters</strong> 是统计每一帧各过程的对象数量<br />Processed primitives 场景中剔除后最终被处理的对象总数<br />Frustum Culled primitives 视椎体剔除的对象总数（视椎体外）<br />Occluded primitives 遮挡剔除的对象总数<br />Occlusion queries 遮挡剔除一轮要查询的对象数量<br />Visible static mesh elements  场景中移动性为“静止”的可见网格体数量<br />Visible dynamic primitives 场景中移动性为“动态”的可见网格体数量</p>
+<p>另外还有 <code>Freezerendering</code> 冻结当前的遮挡，<code>stat RHI</code>查看绘制帧的三角面数，<code>stat unit</code>现实帧时间、绘制时间等等，充分挖掘和发挥检测工具的效用吧~</p>
+<br />
+
+<h2 id="04-优化总结"><a href="#04-优化总结" class="headerlink" title="04 优化总结"></a>04 优化总结</h2><ol>
+<li>检测渲染之前的预处理计算，充分利用检测工具得到量化数据，再开始抓重点优化；</li>
+<li>平衡 CPU 和 GPU 的消耗，这两个互为瓶颈；</li>
+<li>控制对象数量，场景内有 1w~1.5w 的对象数量是很难优化到正常性能的；</li>
+<li>管理设置上距离剔除，针对高频访问区域也设置好可见性与计算。</li>
+</ol>
+<br />
+
+
+<h2 id="100-相关参考"><a href="#100-相关参考" class="headerlink" title="100 相关参考"></a>100 相关参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://docs.unrealengine.com/4.27/en-US/TestingAndOptimization/PerformanceAndProfiling/ForwardRenderer/">Forward Shading Renderer</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.unrealengine.com/4.27/en-US/RenderingAndGraphics/VisibilityCulling/">Visibility and Occlusion Culling</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.liluhui.cn">芦荟Aloea</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.liluhui.cn/2022/07/10/%E5%BB%B6%E8%BF%9F%E6%B8%B2%E6%9F%93%E8%BF%87%E7%A8%8B/">https://blog.liluhui.cn/2022/07/10/%E5%BB%B6%E8%BF%9F%E6%B8%B2%E6%9F%93%E8%BF%87%E7%A8%8B/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.liluhui.cn" target="_blank">李璐慧的个人网站 - Aloea's Personal Website</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/UnrealEngine/">UnrealEngine</a></div><div class="post-share"><div class="social-share" data-image="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/p2718426594.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="prev-post pull-left" href="/2022/07/18/%E7%9D%80%E8%89%B2%E5%99%A8%E5%92%8C%E7%BB%98%E5%88%B6%E8%B0%83%E7%94%A8/" title="UE实时渲染基础2 - 着色器和绘制调用"><img class="cover" src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/p2718427180.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">UE实时渲染基础2 - 着色器和绘制调用</div></div></a><a class="next-post pull-right" href="/2022/02/20/%E4%BD%A0%E4%B8%8E%E9%92%B1%E7%9A%84%E5%85%B3%E7%B3%BB%EF%BC%8C%E6%80%8E%E4%B9%88%E6%A0%B7%E9%83%BD%E5%8F%AF%E4%BB%A5/" title="你与钱的关系，怎么样都可以"><img class="cover" src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/p2709963850%20%281%29.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">你与钱的关系，怎么样都可以</div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a href="/2022/07/26/%E5%85%89%E7%85%A7/" title="UE实时渲染基础4 - 光照"><img class="cover" src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/p28699747652.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-07-26</div><div class="title">UE实时渲染基础4 - 光照</div></div></a><a href="/2022/07/24/%E5%8F%8D%E5%B0%84/" title="UE实时渲染基础3 - 反射"><img class="cover" src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/p2873051741.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-07-24</div><div class="title">UE实时渲染基础3 - 反射</div></div></a><a href="/2022/07/18/%E7%9D%80%E8%89%B2%E5%99%A8%E5%92%8C%E7%BB%98%E5%88%B6%E8%B0%83%E7%94%A8/" title="UE实时渲染基础2 - 着色器和绘制调用"><img class="cover" src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/p2718427180.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-07-18</div><div class="title">UE实时渲染基础2 - 着色器和绘制调用</div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">芦荟Aloea</div><div class="author-info-description">关于生活、学习、工作</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">69</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="/rss2.xml" target="_blank" title="RSS"><i class="fas fa-rss"></i></a><a class="social-icon" href="https://github.com/LDingLDing" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:liluhuizj@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#01-%E5%89%8D%E5%90%91%E6%B8%B2%E6%9F%93-or-%E5%BB%B6%E8%BF%9F%E6%B8%B2%E6%9F%93"><span class="toc-number">2.</span> <span class="toc-text">01 前向渲染 or 延迟渲染?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#02-%E8%AE%A1%E7%AE%97%E8%BF%87%E7%A8%8B"><span class="toc-number">3.</span> <span class="toc-text">02 计算过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#03-%E9%81%AE%E6%8C%A1%E8%AE%A1%E7%AE%97"><span class="toc-number">4.</span> <span class="toc-text">03 遮挡计算</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#04-%E4%BC%98%E5%8C%96%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text">04 优化总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#100-%E7%9B%B8%E5%85%B3%E5%8F%82%E8%80%83"><span class="toc-number">6.</span> <span class="toc-text">100 相关参考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/08/25/book-NotWorkingInCafe/" title="生命是旷野，但职业发展是网格，尽量每次只移动一步"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/08/25/sdadfve.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="生命是旷野，但职业发展是网格，尽量每次只移动一步"/></a><div class="content"><a class="title" href="/2024/08/25/book-NotWorkingInCafe/" title="生命是旷野，但职业发展是网格，尽量每次只移动一步">生命是旷野，但职业发展是网格，尽量每次只移动一步</a><time datetime="2024-08-25T14:35:55.000Z" title="发表于 2024-08-25 22:35:55">2024-08-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/08/15/vad/" title="语音端点检测技术（VAD）"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/08/15/vad.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="语音端点检测技术（VAD）"/></a><div class="content"><a class="title" href="/2024/08/15/vad/" title="语音端点检测技术（VAD）">语音端点检测技术（VAD）</a><time datetime="2024-08-15T13:12:22.000Z" title="发表于 2024-08-15 21:12:22">2024-08-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/07/30/202407/" title="2024 年 7 月总结"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/07/30/IMG_20240718_1455571.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2024 年 7 月总结"/></a><div class="content"><a class="title" href="/2024/07/30/202407/" title="2024 年 7 月总结">2024 年 7 月总结</a><time datetime="2024-07-30T14:52:43.000Z" title="发表于 2024-07-30 22:52:43">2024-07-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/07/24/codegpt/" title="超强编程助手 CodeGPT！自用"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/07/24/dgasgez.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="超强编程助手 CodeGPT！自用"/></a><div class="content"><a class="title" href="/2024/07/24/codegpt/" title="超强编程助手 CodeGPT！自用">超强编程助手 CodeGPT！自用</a><time datetime="2024-07-24T14:10:43.000Z" title="发表于 2024-07-24 22:10:43">2024-07-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/07/12/Test-Time-Training-layers/" title="Test-Time-Training layers （TTT）"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/07/12/3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Test-Time-Training layers （TTT）"/></a><div class="content"><a class="title" href="/2024/07/12/Test-Time-Training-layers/" title="Test-Time-Training layers （TTT）">Test-Time-Training layers （TTT）</a><time datetime="2024-07-12T10:28:05.000Z" title="发表于 2024-07-12 18:28:05">2024-07-12</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By 芦荟Aloea</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn">浙ICP备19010836号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const initGitalk = () => {
+    const gitalk = new Gitalk(Object.assign({
+      clientID: '4987f0fb0a509fb9f0af',
+      clientSecret: '7e264967a3ea557003aacdf795b9e57e36a56382',
+      repo: 'ldinglding.github.io',
+      owner: 'LDingLDing',
+      admin: ['LDingLDing'],
+      id: '8f785aecf41067b2ee72a54a6eb6029a',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  const loadGitalk = async() => {
+    if (typeof Gitalk === 'function') initGitalk()
+    else {
+      await btf.getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+      await btf.getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js')
+      initGitalk()
+    }
+  }
+  
+  const commentCount = n => {
+    const isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+    if (isCommentCount) {
+      isCommentCount.textContent= n
+    }
+  }
+
+  if ('Gitalk' === 'Gitalk' || !false) {
+    if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+    else loadGitalk()
+  } else {
+    window.loadOtherComment = loadGitalk
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
