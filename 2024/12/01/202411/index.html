@@ -1,0 +1,298 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>2024/11 Review | 李璐慧的个人网站 - Aloea's Personal Website</title><meta name="author" content="芦荟Aloea"><meta name="copyright" content="芦荟Aloea"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="自体永远在寻找客体，我永远在寻找你，人永远需要在关系中认识自己。被人在乎的感觉很好。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2024&#x2F;11 Review">
+<meta property="og:url" content="https://blog.liluhui.cn/2024/12/01/202411/index.html">
+<meta property="og:site_name" content="李璐慧的个人网站 - Aloea&#39;s Personal Website">
+<meta property="og:description" content="自体永远在寻找客体，我永远在寻找你，人永远需要在关系中认识自己。被人在乎的感觉很好。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/12/01/1730348616084.png">
+<meta property="article:published_time" content="2024-12-01T11:38:10.000Z">
+<meta property="article:modified_time" content="2024-12-01T11:44:03.665Z">
+<meta property="article:author" content="芦荟Aloea">
+<meta property="article:tag" content="李璐慧,芦荟,Aloea,技术博客,前端,Node">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/12/01/1730348616084.png"><link rel="shortcut icon" href="https://i.loli.net/2017/11/26/5a19c0b50432e.png"><link rel="canonical" href="https://blog.liluhui.cn/2024/12/01/202411/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>(()=>{
+      const saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+      
+      window.btf = {
+        saveToLocal: saveToLocal,
+        getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+          script.src = url
+          script.async = true
+          script.onerror = reject
+          script.onload = script.onreadystatechange = function() {
+            const loadState = this.readyState
+            if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+            script.onload = script.onreadystatechange = null
+            resolve()
+          }
+
+          Object.keys(attr).forEach(key => {
+            script.setAttribute(key, attr[key])
+          })
+
+          document.head.appendChild(script)
+        }),
+
+        getCSS: (url, id = false) => new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+          link.rel = 'stylesheet'
+          link.href = url
+          if (id) link.id = id
+          link.onerror = reject
+          link.onload = link.onreadystatechange = function() {
+            const loadState = this.readyState
+            if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+            link.onload = link.onreadystatechange = null
+            resolve()
+          }
+          document.head.appendChild(link)
+        }),
+
+        addGlobalFn: (key, fn, name = false, parent = window) => {
+          const pjaxEnable = false
+          if (!pjaxEnable && key.startsWith('pjax')) return
+
+          const globalFn = parent.globalFn || {}
+          const keyObj = globalFn[key] || {}
+    
+          if (name && keyObj[name]) return
+    
+          name = name || Object.keys(keyObj).length
+          keyObj[name] = fn
+          globalFn[key] = keyObj
+          parent.globalFn = globalFn
+        }
+      }
+    
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+      
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })()</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=8Z2NNDYTL9"></script><script>window.dataLayer = window.dataLayer || []
+function gtag(){dataLayer.push(arguments)}
+gtag('js', new Date())
+gtag('config', '8Z2NNDYTL9')
+btf.addGlobalFn('pjaxComplete', () => {
+  gtag('config', '8Z2NNDYTL9', {'page_path': window.location.pathname})
+}, 'google_analytics')
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":true,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '2024/11 Review',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-12-01 19:44:03'
+}</script><meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/rss2.xml" title="李璐慧的个人网站 - Aloea's Personal Website" type="application/rss+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">75</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" href="/process"><span> 建站历程</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/12/01/1730348616084.png);"><nav id="nav"><span id="blog-info"><a href="/" title="李璐慧的个人网站 - Aloea's Personal Website"><span class="site-name">李璐慧的个人网站 - Aloea's Personal Website</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" href="/process"><span> 建站历程</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">2024/11 Review</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-12-01T11:38:10.000Z" title="发表于 2024-12-01 19:38:10">2024-12-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-12-01T11:44:03.665Z" title="更新于 2024-12-01 19:44:03">2024-12-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%94%9F%E6%B4%BB/">生活</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="2024/11 Review"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>自体永远在寻找客体，<br>我永远在寻找你，<br>人永远需要在关系中认识自己。<br>被人在乎的感觉很好。</p>
+<br/>
+
+<h2 id="这个月发生了什么？"><a href="#这个月发生了什么？" class="headerlink" title="这个月发生了什么？"></a>这个月发生了什么？</h2><ol>
+<li>到处找人聊AI落地的一个月，个体独立做项目的可行性越来越高了。同步开始考虑远程工作的可行性了，被蛊惑去做数字游民，还没想明白。</li>
+<li>团队在做的项目目前进度delay，作为数学教学方向的AI产品目前搞得有点不尴不尬的，时间窗口还在，但效率太慢了，规划也没梳理明白地瞎干着。总之，我这边是跟进AI相关领域的落地实践，调整优化教学＋AI的流程，不过迟迟没有数据也很难办。</li>
+<li>整体资产配置调整中，十月这波仓位推高太多，搞得心也比较浮躁，拿回一定的筹码，静待机会了。现在的局势也看不清，经济数据能否好转得等到明年三四月份的数据了，依然是谨慎乐观吧。</li>
+<li>这个月回看了黑塞的两本书，还有武老师的新书，接受自我人性中的恶，构建完满，充分体验，勇敢试错。</li>
+<li>看了电影《完美的日子》《好东西》和《某种物质》这个月三个片子都很不错，想和女孩子过养老的日子了 （思想开始危险起来哈哈。</li>
+</ol>
+<br/>
+<br/>
+
+
+<h2 id="所见与所想"><a href="#所见与所想" class="headerlink" title="所见与所想"></a>所见与所想</h2><p>01<br>教育太难做了，人们需要的是教训。真金白银的教训、皮卡肉绽的教训。<br>人们不会因为那些糟糕的故事而停下脚步，警惕的思维不如身边暴富的人来得刺激，贪婪，再贪婪一些，不做把控的贪婪有一天会变成极端的恐惧。<br>就像运动锻炼中的进步一样迷人，直到受伤的那天。<br>就像学习竞赛中的排名一样迷人，直到淘汰的那天。<br>承认自己不行？<br>撞了南墙再说。<br>什么都还没做就知足常乐的人，不知道是永远正确的理性派，还是接受无能的逃避者。</p>
+<br/>
+
+<p>02<br>这天的唱诵中，感受到的被包裹的爱，小小的教室里10个人的共振，自己的身体和头脑都淹没在这个空间里，这个集体之中，这声音充满杂质，胆怯的，洪亮的，偏离的，但是共振出的却是如此美好，显而易见它并不完美，但很幸福。  </p>
+<p>我必须参与，才能共振。<br>我现在充满了想要创作的冲动。</p>
+<p><strong>We are all antennae for creative thought.</strong><br>Some transmissions come on strong, others are more faint.<br>If your antenna isn’t sensitively tuned, you’re likely to lose the data in the noise.<br>Particularly since the signals coming through are often more subtle than the content we collect through sensory awareness.<br>They are energetic more than tactile, intuitively perceived more than consciously recorded.</p>
+<br/>
+
+<p>03<br><strong>这个世界向我们承诺，我的生命中有美好的事物，不是因为我值得，甚至不是因为我为之努力，而是因为这些美好的事物，与破坏和失去一样，是这个世界混乱的一部分。</strong>  </p>
+<p>生命的展开满是混沌，但也充满力量 💗</p>
+<br/>
+
+<p>04<br>很多女性一生都走不出的谎言，就是去一味经营婚姻和家庭。女性在自我感动中，也以为这样就能得到救赎。当付出足够多的沉没成本后，女性失去了最美年华，也丧失飞翔力量后，悲哀地发现：试图沉浸于经营单一亲密关系，而谋取幸福，是个伪命题。因为幸福，无法假借他人之手。唯有自己一开始就像鸟儿那样，展翅飞往自己的山，爱与自由、钱与尊重，都会随之而来。  </p>
+<p><strong>梁永安老师的这段话不就是诗人鲁米所说的“万物生而有翼”。而我们的身边却总是有人希望我们如虫蚁一般匍匐前进，围绕着他人的意志而活。</strong></p>
+<br/>
+
+<p>05<br><strong>本月遇到的一些好内容推荐：</strong> </p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.xiaoyuzhoufm.com/episode/6720836fbad346ebe6399017">书籍|播客|鱼不存在</a> 从这本书出发谈论对于人生的思考，语言命名赋予我们力量也成为我们的桎梏，时刻质疑实体存在的命名依赖性，这个世界本就无限可能，在我们目之所及的每个生命体内，都藏着我们无法理解的复杂属性。</li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaoyuzhoufm.com/episode/6735a29af373fe5d4d3a2627">职业|播客|对话半佛仙人：搞懂这八个字，人生，易如反掌🤚🏻</a> 人生职业选择的成本管理和风险管理，这个时代每个人都可以把自己自媒体化。</li>
+<li><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Jx4y1s7G7/">教育|视频|这群中国教育制度下的优胜者，正在被成功学反噬｜刘云杉 一席</a> 过去在教育体系下我们问为什么龟兔赛跑非得比赛跑步，今天我们反思了这个问题，但是现状是我们不得不面对新的问题，为什么有越来越多开着宝马入场的乌龟了呢？</li>
+<li><a href="#">金融|文件|《2024 年年终回顾和 2025 年展望——对冲风险VS软着陆》——付鹏</a> 内部资料，从给出的过程和数据推导的未来很不乐观，虽然没法直说。</li>
+</ul>
+<br/>
+<br/>
+
+
+<h2 id="学习与工作"><a href="#学习与工作" class="headerlink" title="学习与工作"></a>学习与工作</h2><p>01<br>一个公司的项目、一个自己的项目，都还在保密阶段 。<br>最近都没有好好整理技术向的东西，反思反思。</p>
+<br/>
+
+<p>02<br>关注的几个项目</p>
+<ul>
+<li>阿里千问团队开源推理模型 <a target="_blank" rel="noopener" href="https://huggingface.co/Qwen/QwQ-32B-Preview">QwQ-32B-preview</a> 对标 OpenAI o1。</li>
+<li>苹果发布开源通用视觉编码器 <a target="_blank" rel="noopener" href="https://github.com/apple/ml-aim">AIMV2</a>。</li>
+<li>阿里发布基于 Flux 的 <a target="_blank" rel="noopener" href="https://ali-vilab.github.io/In-Context-LoRA-Page/">In-Context-LoRA</a>，基于 ai-toolkit 的文生图微调框架。</li>
+<li>Codeium推出的新的AI代码编辑器 —— <a target="_blank" rel="noopener" href="https://codeium.com/windsurf">Windsurf Editor</a> 用了半个月了，比 cursor 确实更好用了。</li>
+<li>Google Research 推出的基于视频扩散模型（VDM）的虚拟试穿模型 <a target="_blank" rel="noopener" href="https://johannakarras.github.io/Fashion-VDM/">Fashion-VDM</a>。</li>
+<li>谷歌推出交互式人工智能学习体验 <a target="_blank" rel="noopener" href="https://learning.google.com/experiments/learn-about">Learn About</a>。用了两天，并不顺手。</li>
+</ul>
+<br/>
+<br/>
+
+
+<h2 id="生活与社交"><a href="#生活与社交" class="headerlink" title="生活与社交"></a>生活与社交</h2><p>01<br>本月看的电影都挺不错 ~</p>
+<p>《完美的日子》非常细腻的日本片，简单的生活，每天认真做好手头的事，好好地吃饭，给可爱的花花草草浇灌，合着音乐穿梭在熙熙攘攘的街道，发呆时透过树影间看看阳光，幸福本身就简单得耀眼。</p>
+<p>《好东西》好玩的东西、好奇怪的东西，生活确实就是挺好玩的。因为自身的存在被人在乎，就可以更安心地闯荡了，这种感情像友情也像亲情，或许就如《爱的艺术》中所讲的，抛开社会语境下的爱只是我充分地看见你。</p>
+<p>《某种物质》恐怖片，血浆横飙的那种，算是人体恐怖？总之剧情很紧凑，恐怖地很猎奇，一群人看津津有味，脑袋上掉个🐻下来可太行了。至于上价值探讨的社会对青春美貌的迷恋和女性歧视，I dont care。</p>
+<br/>
+
+<p>02<br>这个月的瑜伽练习频率下来了，身体有些倦怠，可能进入了某种调整期，也或许是因为精神力被太多其他事情牵引走了。不过，我倒是蛮想发泄的，想练习打拳了。</p>
+<br/>
+
+<p>03<br>终究还是年纪大了，熬夜的功夫不如以前，连着2天就姨妈混乱了。但，和好朋友待在一起的感觉很好，深夜喝喝酒聊聊天，有一搭没一搭东扯西扯，把那些心底的恶意充分地交流，就能让人舒坦不少，更加确定自己该做什么了。多和年轻人呆在一起，感觉自己都变得更有活力了 😄。</p>
+<br/>
+
+<p>04<br>没想到这届的美国大选是压倒式胜利，世界终究还是要大动荡 …<br><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/12/01/20241201185706.png"></p>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.liluhui.cn">芦荟Aloea</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.liluhui.cn/2024/12/01/202411/">https://blog.liluhui.cn/2024/12/01/202411/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.liluhui.cn" target="_blank">李璐慧的个人网站 - Aloea's Personal Website</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/12/01/1730348616084.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="next-post pull-full" href="/2024/10/31/202410/" title="2024/10 Review"><img class="cover" src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/10/31/b460fee3a49f0c69fd570b39a9eda59.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">2024/10 Review</div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">芦荟Aloea</div><div class="author-info-description">关于生活、学习、工作</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">75</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="/rss2.xml" target="_blank" title="RSS"><i class="fas fa-rss"></i></a><a class="social-icon" href="https://github.com/LDingLDing" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:liluhuizj@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%99%E4%B8%AA%E6%9C%88%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">这个月发生了什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%80%E8%A7%81%E4%B8%8E%E6%89%80%E6%83%B3"><span class="toc-number">2.</span> <span class="toc-text">所见与所想</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E4%B8%8E%E5%B7%A5%E4%BD%9C"><span class="toc-number">3.</span> <span class="toc-text">学习与工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%9F%E6%B4%BB%E4%B8%8E%E7%A4%BE%E4%BA%A4"><span class="toc-number">4.</span> <span class="toc-text">生活与社交</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/12/01/202411/" title="2024/11 Review"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/12/01/1730348616084.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2024/11 Review"/></a><div class="content"><a class="title" href="/2024/12/01/202411/" title="2024/11 Review">2024/11 Review</a><time datetime="2024-12-01T11:38:10.000Z" title="发表于 2024-12-01 19:38:10">2024-12-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/10/31/202410/" title="2024/10 Review"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/10/31/b460fee3a49f0c69fd570b39a9eda59.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2024/10 Review"/></a><div class="content"><a class="title" href="/2024/10/31/202410/" title="2024/10 Review">2024/10 Review</a><time datetime="2024-10-30T23:30:00.000Z" title="发表于 2024-10-31 07:30:00">2024-10-31</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/10/12/202409/" title="2024/09 Review"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/10/12/5b0c0a84d8f794548a17cb2ba5117e1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2024/09 Review"/></a><div class="content"><a class="title" href="/2024/10/12/202409/" title="2024/09 Review">2024/09 Review</a><time datetime="2024-10-12T09:46:00.000Z" title="发表于 2024-10-12 17:46:00">2024-10-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/10/11/2410yoga/" title="李晓钟峨眉山瑜伽静修十日记录｜璐慧"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/10/11/image1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="李晓钟峨眉山瑜伽静修十日记录｜璐慧"/></a><div class="content"><a class="title" href="/2024/10/11/2410yoga/" title="李晓钟峨眉山瑜伽静修十日记录｜璐慧">李晓钟峨眉山瑜伽静修十日记录｜璐慧</a><time datetime="2024-10-10T23:30:36.000Z" title="发表于 2024-10-11 07:30:36">2024-10-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/09/20/openai-o1/" title="OpenAI o1 preview 一周回顾"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/09/20/1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="OpenAI o1 preview 一周回顾"/></a><div class="content"><a class="title" href="/2024/09/20/openai-o1/" title="OpenAI o1 preview 一周回顾">OpenAI o1 preview 一周回顾</a><time datetime="2024-09-20T12:38:45.000Z" title="发表于 2024-09-20 20:38:45">2024-09-20</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By 芦荟Aloea</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn">浙ICP备19010836号</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const initGitalk = () => {
+    const gitalk = new Gitalk(Object.assign({
+      clientID: '4987f0fb0a509fb9f0af',
+      clientSecret: '7e264967a3ea557003aacdf795b9e57e36a56382',
+      repo: 'ldinglding.github.io',
+      owner: 'LDingLDing',
+      admin: ['LDingLDing'],
+      id: '8df6aff21f5cc20efcfff08113e9040b',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  const loadGitalk = async() => {
+    if (typeof Gitalk === 'function') initGitalk()
+    else {
+      await btf.getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+      await btf.getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js')
+      initGitalk()
+    }
+  }
+  
+  const commentCount = n => {
+    const isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+    if (isCommentCount) {
+      isCommentCount.textContent= n
+    }
+  }
+
+  if ('Gitalk' === 'Gitalk' || !false) {
+    if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+    else loadGitalk()
+  } else {
+    window.loadOtherComment = loadGitalk
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
