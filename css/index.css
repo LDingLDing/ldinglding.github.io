@@ -3948,6 +3948,12 @@ h1.page-title + .tag-cloud-list {
   transition: filter 375ms ease-in 0.2s;
   border-radius: 6px;
 }
+#article-container img.left {
+  margin: 0 auto 0 0;
+}
+#article-container img.right {
+  margin: 0 0 0 auto;
+}
 #article-container p {
   margin: 0 0 16px;
 }
