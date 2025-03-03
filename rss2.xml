@@ -15,8 +15,29 @@
     <atom:link href="https://blog.liluhui.cn/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>关于生活、学习、工作 feedId:66855595489698816+userId:55886336755964928</description>
-    <pubDate>Sun, 02 Feb 2025 12:05:38 GMT</pubDate>
+    <pubDate>Mon, 03 Mar 2025 12:54:52 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>2025/02 Review</title>
+      <link>https://blog.liluhui.cn/2025/03/03/202502/</link>
+      <guid>https://blog.liluhui.cn/2025/03/03/202502/</guid>
+      <pubDate>Mon, 03 Mar 2025 12:27:42 GMT</pubDate>
+      
+      <description>凡是墙皆是门。</description>
+      
+      
+      
+      <content:encoded><![CDATA[<p>凡是墙皆是门。<br>所有不可能，恰恰是通往另一个新可能的大门。<br>我们需要积聚能量和能力去重构，<br>耐心，<br>静心，<br>平常心。</p><br/><br/><h2 id="这个月发生了什么？"><a href="#这个月发生了什么？" class="headerlink" title="这个月发生了什么？"></a>这个月发生了什么？</h2><ol><li>针对学生数学教学的AI+教育APP：大角讲题，接入DeepSeek 满血版上线了。</li><li>春天回暖了，开始回归加强运动安排了。</li><li>春节期间到处走走吃吃喝喝，养神，调整生活。</li></ol><br/><br/><h2 id="所见与所想"><a href="#所见与所想" class="headerlink" title="所见与所想"></a>所见与所想</h2><p>01<br>解决自己受阻的地方，解决他人受阻的地方。前置关键的一环是，深入探索受阻的地方，不是遇到了就下意识地绕过去，不是难受了就不去看它。</p><p><strong>所有不可能，恰恰是通往另一个新可能的大门。</strong><br>有些路太难，就拆开一步步走。</p><br/><p>02<br>克尔凯郭尔老师说人生有三大绝望：不知道有自己，不能够有自己，不愿意有自己。我后来又看到一种说法，克老师所说的第一种绝望不是“不知道有自己”，而是“知道有自己”。天啊，只有三十多岁的人才知道，这两种说法都血淋淋的对。</p><br/><p>03<br>南海之帝为儵（音：叔）北海之帝为忽，中央之帝为浑沌。<br>儵与忽时相与遇于浑沌之地，浑沌待之甚善。<br>儵与忽谋报浑沌之德，曰：“人皆有七窍以视听食息此独无有，尝试凿之。”<br>日凿一窍，七日而浑沌死。</p><br/><p>04<br>人们想要捕捉美好的画面，只是就这一点，心意很美好。<br>多看多想美好的，世界就会美好起来。<br>一定会吧。<br><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/03/03/20250303164057.png" alt="image"></p><br/><br/><h2 id="学习与工作"><a href="#学习与工作" class="headerlink" title="学习与工作"></a>学习与工作</h2><p>01<br>DeepSeek 的火爆和出圈远超想象，年后上来的一周，各种抓紧测试，后面又因为要找到稳定可靠的服务供应商折腾了一周，等到2月底各家云厂商才稳定运行起来，我们产品端也第一时间接入了DS的思考模型和常规模型。问题还是有不少的，实测效果在我们的数学题目交流场景下，效果要明显好于 gpt4o，但在分类器和格式转化上却远不及 gpt4o。</p><p>本月技术关注关键词：DeepSeek、Deep Reasearch</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/03/03/20250303164606.png" alt="image"></p><br/><p>02<br>把远程向日葵迁移到 Tailsacles+ WIndow Remote Desktop，Windows专业版提供的系统级别的 RDP 远控协议真好用，丝滑，优雅，省了向日葵的会员费了 b(￣▽￣)d<br>其中 tailsacles 用 NAT 穿透技术把不同网络下的设备连接到一个局域网内。RDP则直接继承在 Windows 内核上，延迟低爽歪歪。</p><br/><p>03<br>推荐两个新发现的好用工具服务</p><ul><li>开源 Mac 应用及数据清理 ：<a href="https://github.com/alienator88/Pearcleaner">Pearcleaner</a></li><li>多端文件互传工具 Win&#x2F;Mac&#x2F;Linux&#x2F;IOS&#x2F;Android：<a href="https://github.com/localsend/localsend">LocalSend</a><ul><li>LTS1.3 加密协议</li><li>千兆网络局域网内 100MB&#x2F;s 传输</li></ul></li></ul><br/><br/><h2 id="生活与社交"><a href="#生活与社交" class="headerlink" title="生活与社交"></a>生活与社交</h2><p>01<br>尝试和朋友去跳舞，是没玩过的运动，连着跳了几天只感觉自己的不协调和潦草，身体不累，但要动脑子，记动作好陌生，大家甩头起来让我怕怕，但是蹦跶起来很快乐。</p><br/><p>02<br>一个春节假期过去，身体变得僵硬了，后弯不舒畅，倒立支楞不起来，是倦怠的身体，紧张、不安，不好掌控的身体的细节。对自身的不信任感下，每个动作都在求稳，放不开也绕不过去。<br><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/03/03/mmexport1740535784238.jpg" alt="image"></p><br/><p>03<br>从朋友那学来的芝麻汤圆淋上浓缩咖啡液，咖啡的苦涩平衡了粘腻的芝麻还增加了醇厚的香气，好妙呀！<br><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/03/03/97be1561f5fd62c672e82c7a7deddf8.jpg" alt="image"></p><br/><p>04<br>月末的双休杭州忽然就30度了，春暖花开，去赏梅花！<br>人好多的，全城都复苏了。<br><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/03/03/retouch_2025030215193271.jpg" alt="image"></p><br/><p>05<br>家里的绿植们：<br>一号富贵籽，比冬天秃了但还绿绿葱葱地活着。<br>二号蓝花楹，天气回暖光秃的枝干上开始长小芽了。<br>三号常春藤，生长的非常好，一直在开出新叶片。<br>四号春雨，黄了几片叶子摘了，没啥变化。<br>五号石榴树，新来的冒名顶替来的。</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/03/03/02dca515da198211eb358c5aa727b54.jpg" alt="image"></p><br/><br/><br/><br/><br/>]]></content:encoded>
+      
+      
+      <category domain="https://blog.liluhui.cn/categories/%E7%94%9F%E6%B4%BB/">生活</category>
+      
+      
+      
+      <comments>https://blog.liluhui.cn/2025/03/03/202502/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>2025/01 Review</title>
@@ -433,32 +454,6 @@
       
       
       <comments>https://blog.liluhui.cn/2024/03/01/202402/#disqus_thread</comments>
-      
-    </item>
-    
-    <item>
-      <title>2024年1月总结</title>
-      <link>https://blog.liluhui.cn/2024/01/31/202401/</link>
-      <guid>https://blog.liluhui.cn/2024/01/31/202401/</guid>
-      <pubDate>Wed, 31 Jan 2024 13:24:28 GMT</pubDate>
-      
-        
-        
-      <description>&lt;p&gt;😷😷😷&lt;br&gt;💤💤💤&lt;/p&gt;
-&lt;h1 id=&quot;思考与探索&quot;&gt;&lt;a href=&quot;#思考与探索&quot; class=&quot;headerlink&quot; title=&quot;思考与探索&quot;&gt;&lt;/a&gt;思考与探索&lt;/h1&gt;&lt;p&gt;01&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;增长或者说发展，掩盖了很多的问题</description>
-        
-      
-      
-      
-      <content:encoded><![CDATA[<p>😷😷😷<br>💤💤💤</p><h1 id="思考与探索"><a href="#思考与探索" class="headerlink" title="思考与探索"></a>思考与探索</h1><p>01</p><p><strong>增长或者说发展，掩盖了很多的问题。</strong></p><p>对于企业内是这样，对于个人也是。有时候想转移一些问题，那就构建增长出来。如果增长将不可持续，很多问题都必须实打实地面对。</p><br/><p>02</p><p><strong>瑜伽的正位是给打破惯性的指导标准，但每一个持续习练者，早晚都会突破它。</strong></p><p>这一过程和瑜伽哲学是一致的，不断的打破执念再构建执念，从小执发展向大执，但只要还在这一轮回中我执本身就是轮回。</p><br/><br/><h1 id="生活与娱乐"><a href="#生活与娱乐" class="headerlink" title="生活与娱乐"></a>生活与娱乐</h1><p>半个多月都在生病的颓废中，在那个状态中整个人根本提不起劲，每天早上一身虚汗，起不来，没有能量动弹，一边原谅自己该好好休息，一边又因为无能事事懊恼烦躁。</p><p>这次生病来的很突然，睡眠中突然的胃痛，被饥饿感直接弄成了急性胃炎，这么多年胃部都健健康康一下都不知道该怎么办。整个人发着烧，胃部又被揪着，什么都思考不了真是糟糕。然后就是胃差不多缓过来的那几天，身体还有些虚寒，忽然又感染了什么病毒，从喉咙痒和疼变成了持续的高烧和咳嗽，总之也是难受地活着，现在还没好透。</p><p>想想虽然身体很难受，但是昏沉着窝在被窝当个废物也非常的温暖，抛开这些那些的自我约束，只是呆在活着这种状态中，欲望和期待都变得小了许多。</p><br/><br/><h1 id="学习与成长"><a href="#学习与成长" class="headerlink" title="学习与成长"></a>学习与成长</h1><p>在两次生病的中间党在公司内做了次关于AI Agent的实战分享，收获到了一些支持，也启发我在目前的技术生态下该着重去研究什么。之前提示工程也看、大模型训练也看、RAG觉得可以落地、文生图也想玩、视频生成3D生成都想了解，兜兜转转结合企业发展的落地却完全不够，这才是问题，还是得回归到目标指导动作上。</p><p>我觉得等着大模型的“推背感”多少还是让人不安心，推力来的时候大家都有动力，凭什么是我们做成，虽然说多做准备可能会是无用功，糟糕点还会成为沉没成本，但是这一过程对于构建信心是必不可少的。</p><br/><br/><p>趁着这次生病中的习练，能很明显地感受到自己对身体的觉察确实有变化，以往除非特别明显的表征，发烧、鼻涕这种，我很难关照到自己是不舒服的。但现在确实不同了，我能感受到自己的身体变得沉重一些，内脏的下垂感，呼吸的空间感减少，头脑中微妙的晕眩感，混杂着出汗的一种虚弱感。</p><p>瑜伽教培学习这个月开始进入了模拟课堂，第一次的表现还不错，对于如何去做一节课有了更具体的紧张感，不经历这段时间的反馈意识到自己的特色是能给人安稳感，来源于声音中的镇定和动作中的力量。</p><p>作为瑜伽老师，在课堂上引导学员的人，要做到</p><ol><li>声音和眼神，坚定且放松，传达积极的情绪和能量</li><li>示范动作，自己要做的标准，注意自己的惯性错误</li><li>观察学生的程度，针对性的讲解基础概念</li><li>观察学生的程度，给到体式的分层引导和目标</li><li>恰当地引导发力细节，不一味输出，恰有所需时点拨</li><li>课堂中走路轻，不能显得匆忙</li></ol><br/><br/><h1 id="投资理财"><a href="#投资理财" class="headerlink" title="投资理财"></a>投资理财</h1><p>市场非常非常惨淡，上证已经到了 2700 点的保卫战，小道消息的平准基金始终没有落地，资金抱团在中字的价值股上，科创都下 700 点了，按照我的仓位计划科创已经建仓六成了，真的是没想到这么快就快到位了。最近全靠北交所的票盈利，市场跌倒这个位置上，不知道时间窗口还会多久，但我体感割肉离场的声音还不够多，可能都是底部装死了。</p><br/><br/><br/><br/><br/>]]></content:encoded>
-      
-      
-      <category domain="https://blog.liluhui.cn/categories/%E7%94%9F%E6%B4%BB/">生活</category>
-      
-      
-      
-      <comments>https://blog.liluhui.cn/2024/01/31/202401/#disqus_thread</comments>
       
     </item>
     
