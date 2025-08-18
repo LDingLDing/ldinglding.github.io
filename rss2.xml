@@ -3,20 +3,43 @@
   xmlns:atom="http://www.w3.org/2005/Atom"
   xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>李璐慧的个人网站 - Aloea&#39;s Personal Website</title>
+    <title>Luhui&#39;s Personal Website</title>
     <link>https://blog.liluhui.cn/</link>
     
     <image>
       <url>https://blog.liluhui.cn/asset/img/logo-green.ico</url>
-      <title>李璐慧的个人网站 - Aloea&#39;s Personal Website</title>
+      <title>Luhui&#39;s Personal Website</title>
       <link>https://blog.liluhui.cn/</link>
     </image>
     
     <atom:link href="https://blog.liluhui.cn/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>关于生活、学习、工作 feedId:66855595489698816+userId:55886336755964928</description>
-    <pubDate>Sat, 02 Aug 2025 13:59:10 GMT</pubDate>
+    <pubDate>Mon, 18 Aug 2025 15:20:58 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>48 小时小工具实录：我做了个大会助手</title>
+      <link>https://blog.liluhui.cn/2025/08/18/googleio/</link>
+      <guid>https://blog.liluhui.cn/2025/08/18/googleio/</guid>
+      <pubDate>Mon, 18 Aug 2025 15:11:51 GMT</pubDate>
+      
+        
+        
+      <description>&lt;p&gt;&lt;img src=&quot;https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/18/asdaweq.png&quot; alt=&quot;image&quot;&gt;&lt;/p&gt;
+&lt;h3 id=&quot;起心动念&quot;&gt;&lt;a href=&quot;#起心动念&quot;</description>
+        
+      
+      
+      
+      <content:encoded><![CDATA[<p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/18/asdaweq.png" alt="image"></p><h3 id="起心动念"><a href="#起心动念" class="headerlink" title="起心动念"></a>起心动念</h3><p>周一晚上，本来想早点休息，结果脑子突然冒出个念头：</p><blockquote><p>“要是有个离线可用、免登录的大会日程助手就好了。”</p></blockquote><p>于是干脆一口气写了 5 个小时，把一个可用版本搞了出来。核心约束很明确：免登录、离线、轻交互。目标很单纯，就是现场能救急。</p><br/><h3 id="临时开工"><a href="#临时开工" class="headerlink" title="临时开工"></a>临时开工</h3><p>整个技术方案非常 indie：</p><ul><li>React + PWA + Vercel 一键部署</li><li>数据靠 GPT 整理的大会官网，然后导入 JSON</li><li>没有后台，没有账号，全在前端跑</li></ul><p>代码写得像夜宵拼盘，能跑就行。为什么选纯前端？为了离线和快速交付。上线第一天就接到 iOS 用户反馈打不开，着急忙慌修问题，才发现自己紧急开发没有充分测试设备的问题。那一晚边修边想：“这样上线真的有人用吗？”</p><h3 id="上线与运营"><a href="#上线与运营" class="headerlink" title="上线与运营"></a>上线与运营</h3><p>周二白天，我赶紧补了点运营内容。发到 v2ex，几乎没人理；同时小红书，反而慢慢起来了。陆陆续续有人私信问“怎么用”，我只好一边当客服一边补文案。没想到借着这件事，还面基了不少人。</p><p>这让我意识到：即便是独立开发的小工具，找到合适的分发渠道也比想象中重要。</p><h3 id="两天的数据"><a href="#两天的数据" class="headerlink" title="两天的数据"></a>两天的数据</h3><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/18/zxcqsa.png" alt="image"></p><p>结果出来后有点意外：</p><ul><li>76 位用户</li><li>841 次访问</li><li>平均使用时长 2 分 10 秒</li><li>主题页 438 次访问，详情页 93 次</li></ul><p>比我自己刷朋友圈的时长还长，说明不是点开就走人。尤其主题页访问量很高，说明用户确实想“逛全局”，不是只搜一场。</p><br/><h3 id="What-went-well"><a href="#What-went-well" class="headerlink" title="What went well"></a>What went well</h3><ul><li><strong>免登录 + 离线可用</strong>：如设想成了最大卖点。</li><li><strong>需求真实驱动</strong>：临时上线也有人用，证明确实解决了痛点。</li><li><strong>小红书意外带量</strong>：运营不是我擅长的，但确实帮我接住了用户。</li></ul><br/><h3 id="What-didn’t-go-well"><a href="#What-didn’t-go-well" class="headerlink" title="What didn’t go well"></a>What didn’t go well</h3><ul><li><strong>预热不足</strong>：要是提前一周发布，效果可能翻倍。</li><li><strong>数据采集缺失</strong>：只接了 GA4 页面浏览，没法更准确地知道预约行为。</li></ul><p>结果就是：复盘时我只能靠各个页面数据来猜激活。根因很简单：我当时的“成功定义”还停留在“能上线可用”，而不是“被看见、被采用”。</p><br/><h3 id="反思-amp-下一步"><a href="#反思-amp-下一步" class="headerlink" title="反思 &amp; 下一步"></a>反思 &amp; 下一步</h3><p>这次实验让我真正意识到，复盘在于两件事：<strong>如何更快挖掘真实需求</strong>，以及<strong>如何把运营节奏踩准</strong>。</p><ul><li><strong>需求发现</strong>：这次是自己用痛点驱动临时开发，下次应该提前去看不同社区、社交平台上用户在哪些地方吐槽过类似问题，尽早发现“隐形需求”，最好提前一周留出验证窗口。</li><li><strong>运营节奏</strong>：节奏感比功能更关键。T-72 小时就该放预热帖，T-24 小时要有“一图一文案”准备好，正式开幕当天要能推出“今日变更&#x2F;热门场次”的内容。</li><li><strong>分发优先级</strong>：这次 v2ex 没起量，小红书反而爆发，说明不同渠道效果差异巨大，下次要更明确主力渠道，少浪费子弹。</li></ul><p>下一步的方向：</p><ol><li><strong>继续验证不同类型大会</strong>：看看这个模式在学术会议、技术沙龙、大规模大会上效果是否一致。</li><li><strong>优化快速部署能力</strong>：缩短从临时起意到可上线的时间，把常用组件和脚手架打包好。</li><li><strong>打磨一套数据解析与生成工具</strong>：针对不同大会的日程结构，统一导入、解析和生成，避免重复劳动。</li></ol><br/><h3 id="收尾"><a href="#收尾" class="headerlink" title="收尾"></a>收尾</h3><p>说白了，这 76 个用户不是因为我运营厉害，而是需求实在强烈。上线前一晚还在修 bug，上线后疯狂回私信解释。典型 indie dev：<strong>边做边慌，边慌边学</strong>。</p><p>但这次让我明白了一件事：上线不等于成功。下次要把“被看见、被采用”写进 Definition of Done。</p><br/><br/><br/><br/><br/>]]></content:encoded>
+      
+      
+      
+      
+      <comments>https://blog.liluhui.cn/2025/08/18/googleio/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>2025/07 Review</title>
@@ -415,32 +438,6 @@
       
       
       <comments>https://blog.liluhui.cn/2024/07/02/202406/#disqus_thread</comments>
-      
-    </item>
-    
-    <item>
-      <title>2024 年 5 月总结</title>
-      <link>https://blog.liluhui.cn/2024/05/31/202405/</link>
-      <guid>https://blog.liluhui.cn/2024/05/31/202405/</guid>
-      <pubDate>Fri, 31 May 2024 11:06:30 GMT</pubDate>
-      
-        
-        
-      <description>&lt;p&gt;咖啡因和酒精填满了白天与黑夜&lt;br&gt;去看见各式各样的人&lt;br&gt;还是回到自己的桌前&lt;/p&gt;
-&lt;p&gt;这个月写下的很多情绪&lt;br&gt;躁动的心&lt;br&gt;喷涌的呐喊&lt;br&gt;我想&lt;br&gt;都是他人的映射&lt;/p&gt;
-&lt;h1 id=&quot;所见与所想&quot;&gt;&lt;a href=&quot;#所见与所想&quot; class=&quot;h</description>
-        
-      
-      
-      
-      <content:encoded><![CDATA[<p>咖啡因和酒精填满了白天与黑夜<br>去看见各式各样的人<br>还是回到自己的桌前</p><p>这个月写下的很多情绪<br>躁动的心<br>喷涌的呐喊<br>我想<br>都是他人的映射</p><h1 id="所见与所想"><a href="#所见与所想" class="headerlink" title="所见与所想"></a>所见与所想</h1><p>01<br>有人说自己没有办法再工作了，不是说这辈子没法工作，而是每过一阵子的工作，就变成无法忍耐，发现自己变成了一块回转寿司，甚至像是长毛了回转寿司，依然在餐桌上回转着。我遇到了好几个年轻人，意识到自由意志的存在却苦于生存之中，遇不到心仪的事业，也不甘心麻木地活着。有时候想说你们的要求太高了，但这话也没法说出口，想要一份心仪的工作是很纯粹美好的希望，投入工作让工作变成喜欢的样子显得太艰难了，大家都喜欢短平快，看多了外显的美好有害身心健康啊。</p><p>In every job that must be done,<br>There is an element of fun.<br>You find the fun and snap!<br>The job’s a game.<br><br/></p><p>02<br>对工作麻木的一种表征就是开始唯物质财富论，完全物化自己的时间和精力，甚至开始否定和批判曾经的热血和激情是一种愚蠢。</p><p>曾经身处其中会因为学习到新东西而欣喜、因为解决问题而满意、因为收获感激而欣慰，现在这些东西难道都不存在了吗？还是跟随着环境的评判标准而忽略了自我的收获？这些自我的收获竟然被现在的你当作毫无价值？价值？是因为这不可量化去比较的价值而失去了自我的定位吗？</p><p>好像非得是那些数字才能真切地说明些什么，慢慢地和自己的连接越来越远，能量越来越低，变成什么，需要靠一个个新奇的体验、一次次豪爽的消费才能激起一会能量脉冲。</p><p>那个问我到底发生了什么日子会毫无激情的人，</p><p>因为追逐财富剥夺了你，</p><p>可是财富从来不是那些看的到的东西，</p><p>财富是没有消耗出去的东西，</p><p>你觉得是什么呢？<br><br/></p><p>03<br>热心肠喜欢从道理上帮助别人又不讨好的朋友，我的人生经验是，绝绝大多数眼下正在倾诉苦恼的人，在问我该怎么办的人，他们内心本来就有答案，他们首先需要被看见被听见、然后需要被拥抱被关注。<br>解决问题？不是，重新定义问题对人性来说是个漫长又艰难的过程，不是一己之力能做到的，有时候就是助力一个缘分罢了。</p><br/><p>04<br>不要以为我是社牛，我喜欢闭关，喜欢一个人呆着，喜欢一个人头脑风暴。<br>因为这样我才需要安排自己去接近他人、听听别人的故事、学习分享一点点自己。<br>只是每段时间我都很震撼，人们之间的交流是如此稀少又缺少耐心，聒噪的世界啊。<br><br/></p><p>05<br>瑜伽体位练习让我充分的感受到，将追求体位动作达成的形状作为首要激励是无法长久的，必然走向一种外显的偏激，因为将可量化的照片、他人的夸赞作为反馈机制的一环甚至唯一一环产生的自我循环是非常快和焦虑的，而人体的变化&#x2F;进步却是符合边际递减和阶梯式模型的，这样的期待就与现实有强烈的差距。</p><p>反而将不可量化的目标作为反馈信号是更加聪明的选择，因为无关外界环境的信息、那些人性中的比较与骄傲，只是关注自身的变化，因为自身变化而喜悦，可以让这整件事更加可持续地发展下去。</p><br/><p>06<br>因为单侧坐骨结节处的腘绳肌慢性拉伤，最近对所有动作在大腿后侧的感觉非常的敏感。小心翼翼地保护是有的，还给了我一种感官放大的魔法去体会各种体式在后侧的反应，细微的肌肉位置的差异，紧绷和收缩，我想我应该记下来，该死，我只顾着一直感受了。</p><p>在不断的练习中体验到喜悦与快乐。<br>接受身体的阻碍，外界给你的阻碍。<br><br/></p><p>07<br>肌肉是表面的连接，是我们运动中最先学习和实践的部分；然后呼吸是其次的一层，比较精微的连接，将身体空间连接起来；再深入是意识层面觉知层面的连接，是由不断专注于一处的实践深入到全身心的注意力，更加全知全觉的能力。</p><p>凡是不需要思考的，其实就很接近于内心，所以呼吸很重要，呼吸时引领我们外在身体和内心觉知的桥梁。我们第一步从专注呼吸开始，我们的体位姿势就开发发生了，吸气时伸展，呼气时稳定，这是自然而然的连接。</p><br/><br/><h1 id="学习与工作"><a href="#学习与工作" class="headerlink" title="学习与工作"></a>学习与工作</h1><p>在明媚的春天里不谈工作不谈学习，没有收获，只是按照计划行动<br><br/></p><p>这个月的一些好内容记录在这里 👇<br>书籍：</p><ul><li><a href="https://book.douban.com/subject/36681252/">《不忙不慌》林桂枝</a> 繁忙的打工人一定能找到共鸣，作者老职场人有洞见也有诙谐，这些日常收录的文字就像隔壁的同事一样，很轻巧的一本书</li><li><a href="https://book.douban.com/subject/35517223/">《罗素论幸福》罗素</a> 符合我的人生经验，这本书非常的活在当下</li><li><a href="https://book.douban.com/subject/35060088/">《德米安》黑塞</a>  这本书更适合我本人，哲学类就不推荐了，书籍真是神奇的东西，文字能重新唤起和抚慰曾经的自己并不是孤身一人，即使时空错开，只是遥望海面上依然有他人，内心就足以<br>财经</li><li><a href="https://www.xiaoyuzhoufm.com/episode/664c1a0a251bd96e6cb476af">市场里什么最贵？是价格上涨！谁赢他们帮谁</a> 我太喜欢南添老师在播客的风格了哈哈，本条内容关注国九条的分红政策设计，讨论了国内外的历史环境区别</li></ul><br/><br/><h1 id="生活与社交"><a href="#生活与社交" class="headerlink" title="生活与社交"></a>生活与社交</h1><p>01<br>见了很多老朋友，还认识了很多新朋友，还有一些被delay没见的，一阵子这样的感觉也不错，就是有点癫狂。毕竟我本身是一个非常平静的人，要我自己的话，恐怕一年都没几次激烈的开心。情绪被影响肯定是有的，有收到晚辈的感激和欣赏的小开心，也有收到长辈的好奇和关怀的局促，更多的还是平等的交流的愉悦。交流，还是很有意思的，只要不被人无视。<br><br/></p><p>02<br>认识了好多瑜伽圈的人，莫名开始接触到各种身心灵的资料，东西是好东西，但我还是少碰，就像郝哲说的，远离天人合一，自己定义人生课题，做实事。<br>一帮真的喜欢瑜伽的人，一直在瑜伽的人，不再是那些来了又走的流动人口，真切看到他们的样貌，看到同样不想追求高体的朋友和1年前的我如出一辙，看到运动上瘾的自己和老瑜伽人，看到忍不住想气馁但一直没有放弃始终在的朋友，我觉得这些都很好，只要他们一直在。</p><br/><br/><br/><br/><br/>]]></content:encoded>
-      
-      
-      <category domain="https://blog.liluhui.cn/categories/%E7%94%9F%E6%B4%BB/">生活</category>
-      
-      
-      
-      <comments>https://blog.liluhui.cn/2024/05/31/202405/#disqus_thread</comments>
       
     </item>
     
