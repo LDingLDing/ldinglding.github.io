@@ -15,8 +15,27 @@
     <atom:link href="https://blog.liluhui.cn/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>关于生活、学习、工作 feedId:66855595489698816+userId:55886336755964928</description>
-    <pubDate>Mon, 18 Aug 2025 15:20:58 GMT</pubDate>
+    <pubDate>Fri, 22 Aug 2025 06:30:01 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>构建 Agent 中的方法论陷阱</title>
+      <link>https://blog.liluhui.cn/2025/08/22/Traps-of-Methodology-in-Agent-Development/</link>
+      <guid>https://blog.liluhui.cn/2025/08/22/Traps-of-Methodology-in-Agent-Development/</guid>
+      <pubDate>Fri, 22 Aug 2025 03:49:54 GMT</pubDate>
+      
+      <description>看似聪明的 Agent 方法论，可能是陷阱。少即是多。</description>
+      
+      
+      
+      <content:encoded><![CDATA[<p><em>看似聪明的 Agent 方法论，可能是陷阱。少即是多。</em></p><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前几天在刷推的时候，看到了 cline 的开发者 Ara 提到的一段话。<br>他说，在构建 AI Agent 时，有三种听起来很聪明的想法，其实常常是「思维毒药」。</p><p>“思维毒药” 这个词总归怪怪的，我觉得“陷阱”这个比喻让我更有共鸣。因为这些思维确实很有吸引力，就像远远看去是一条捷径，但走进去才发现，里面布满了泥潭。</p><p>作为一个开发者，我一边读，一边在回想自己做 Agent 的过程——踩过的坑，走过的弯路，几乎都能在这里找到影子。</p><h2 id="一、关于多代理编排"><a href="#一、关于多代理编排" class="headerlink" title="一、关于多代理编排"></a>一、关于多代理编排</h2><p>想象一下这样的画面：<br>有一支虚拟团队，里面有“分析员 Agent”“执行员 Agent”“总调度 Agent”。它们像人类小组一样，分工协作、互相传递消息，最后汇总出完美的结果。</p><p>听上去是不是很酷？我当初也实践过。</p><p>可现实是：<strong>大多数真正有价值的 Agent 工作，本质上还是单线程的</strong>。</p><p>复杂的编排，不仅增加了技术上的不确定性，还让我们更难解释模型的行为。<br>换句话说，它让项目背上了两份负担：<strong>实现复杂度 + 解释复杂度</strong>。</p><p>曾经做过一个 Team Demo 来完成 AI Coding 这件事，尝试用多个 Agent 分工协作。结果没走几步，就被“状态同步”和“出错恢复”折腾得焦头烂额。调试的时候，根本不知道到底是哪个 Agent 在搞鬼。</p><p>到最后，我还是把逻辑简化掉，留给一个更强的单体 Agent 去完成。意外的是，效果比多代理方案还要稳定。</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/22/2.png"></p><h2 id="二、关于-RAG-的补丁效应"><a href="#二、关于-RAG-的补丁效应" class="headerlink" title="二、关于 RAG 的补丁效应"></a>二、关于 RAG 的补丁效应</h2><p>过去两年，RAG（检索增强生成）几乎成了构建 Agent 的标配。好像不加上它，整个系统就“不完整”。</p><p>但真实的情况是：<strong>RAG 更像是一块补丁</strong>。<br>很多时候，一个简单的 grep 命令，或者一张设计良好的数据库表，就能解决问题。<br>如果你的数据和知识管理一团乱，RAG 只会把混乱放大，它不是万能钥匙。重要的数据，数据，还是 TMD 数据。</p><p>我刚开始用 RAG 的时候，觉得它是“救命稻草”。模型终于可以“记住”外部知识了。可随着项目复杂度增加，我发现问题并没有减少，反而多了新的麻烦：检索不准、上下文过载、延迟变高…… 慢慢我意识到：<strong>真正重要的，其实是信息组织方式</strong>。</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/22/3.png"></p><h2 id="三、关于「更多指令-x3D-更好结果」"><a href="#三、关于「更多指令-x3D-更好结果」" class="headerlink" title="三、关于「更多指令 &#x3D; 更好结果」"></a>三、关于「更多指令 &#x3D; 更好结果」</h2><p>还有一个陷阱，是很多人都会踩的：<br>我们常常相信，只要写更长、更详细的 prompt，模型就会更聪明。</p><p>现实往往相反。<br>长 prompt 增加了 token 成本，响应速度更慢，结果也不一定更好。更糟糕的是，它掩盖了真正的问题：<strong>模型本身的能力边界</strong>。</p><p>我刚开始玩 LLM 的时候，我也写过像“说明书”一样长的 prompt，把能想到的规则全堆上去。<br>但最后发现，简洁、清晰的三句话，往往比十段废话更有效。</p><p>现在我更看重的是 <strong>任务建模和上下文管理</strong>。<br>比如明确拆分任务，合理设计输入输出，这些往往比写一个“超级提示词”来得靠谱。</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/22/4.png"></p><h2 id="总结：少即是多"><a href="#总结：少即是多" class="headerlink" title="总结：少即是多"></a>总结：少即是多</h2><p>回顾这三点：</p><ul><li><strong>多代理编排</strong>：是幻觉，现实里常常多余。</li><li><strong>RAG</strong>：是补丁，价值有限，不该当成金科玉律。</li><li><strong>长 prompt</strong>：是迷思，解决不了模型的根本限制。</li></ul><p>别被“听起来聪明”的概念绑架，真正有效的，往往是简单、直接、可解释的方案。<br>作为开发者，我更愿意拥抱这种“少即是多”的原则。<br>因为时间和资源有限，每一行代码、每一个设计选择，都需要指向真正的核心价值。</p>]]></content:encoded>
+      
+      
+      
+      
+      <comments>https://blog.liluhui.cn/2025/08/22/Traps-of-Methodology-in-Agent-Development/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>48 小时小工具实录：我做了个大会助手</title>
@@ -413,31 +432,6 @@
       
       
       <comments>https://blog.liluhui.cn/2024/07/12/Test-Time-Training-layers/#disqus_thread</comments>
-      
-    </item>
-    
-    <item>
-      <title>2024 年 6 月总结</title>
-      <link>https://blog.liluhui.cn/2024/07/02/202406/</link>
-      <guid>https://blog.liluhui.cn/2024/07/02/202406/</guid>
-      <pubDate>Tue, 02 Jul 2024 13:50:48 GMT</pubDate>
-      
-        
-        
-      <description>&lt;p&gt;不要在人还没起来的时候按掉闹钟啊&lt;br&gt;不能这么自信..&lt;br&gt;我也是个拖延症患者 ( ╯□╰ )&lt;br&gt;&lt;br/&gt;&lt;/p&gt;
-&lt;h1 id=&quot;所见与所想&quot;&gt;&lt;a href=&quot;#所见与所想&quot; class=&quot;headerlink&quot; title=&quot;所见与所想&quot;&gt;&lt;/a&gt;所见与所想</description>
-        
-      
-      
-      
-      <content:encoded><![CDATA[<p>不要在人还没起来的时候按掉闹钟啊<br>不能这么自信..<br>我也是个拖延症患者 ( ╯□╰ )<br><br/></p><h1 id="所见与所想"><a href="#所见与所想" class="headerlink" title="所见与所想"></a>所见与所想</h1><p>01</p><p><strong>“No battle was ever won according to plan, but no battle was ever won without one.”</strong></p><p>很多人的日子是走一步看一步，他们管这个叫活在当下，认为别人总是想的太多。</p><p>我觉得这样不对，活在当下不是没有追求地随性接受，而是充分思考和准备后，在那个当下做好那个当下的事情，这一切是有计划的，这个小时午休就是午休，下个小时考试就是考试，因为这个下午要考试，所以前一周的每一天应该如何地安排复习计划。</p><p>计划会被破坏，计划是不准确的，这对于任何一个反复精力过完整规划的人来说都是常识，这个常识就是 —— <strong>没有一场战斗是按计划赢得的，但没有一场战斗是没有计划的。</strong></p><p>所以我会去思考和规划，不是一定要执行，而是让每个当下的我有个执行的安全垫，那个当下的她永远知道该干什么，并且如果状态很好又或不好，她很清楚可以有所变化，因为有一条路径，即使这条路径每个月都会变化，每年都会大改，也没有关系，在那个当下，才可以心安理得地睡觉，并且睡得很香。<br><br/></p><p>02<br>每个人都有拖延症，我最近在看《Feel Good Productivity》这本书，里面的很多观点都和我的亲身经历一致，这种工具书就很适合反复拿出来用用，虽然很多方法我知道，但有这么一个工具将它逻辑条理清晰地列举出来，就像一个教鞭，<strong>给懒惰的自己醒醒脑子，鞭挞一个消极的自己，更好的关照自己如何更愉快地发挥创造力。</strong></p><p>比如最两天就很受这小节的鸡汤激励，重新评估自己的灾难化想象，即使现在这样糟糕的表现，也不过影响自己的一个月罢了，半年，根本不可能。</p><p>这本书有太多好东西了，我喜欢这些工具，有机会甚至想翻译给更多的人。</p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/07/02/Pasted%20image%2020240702113147.png" class="" width="500"><br/><p>03</p><p>听朋友们聊天发现，人们的心思太多，发布朋友圈、点赞朋友圈有这么多的弯弯绕绕的想法。</p><p>咱就让事情简单一点，</p><p>想要表达，不论想要分享信息、喜悦、不满，那就发出；</p><p>想要互动，不论觉得内容不错、想激励他人、刷存在感，那就点赞；</p><p><strong>就这么简单一点，别想那么多，世界会明媚不少。</strong></p><br/><p>04<br>最近慢慢褪去了喜欢瑜伽朋友的粉色泡泡。一开始，我发现与这里的同志的交流质量明显高出其他圈子，因为大家都是愿意探索自我，并且发展了或多或少觉察力或者说觉知的人。然后，随着我自己也成了老师，我发现交谈的很多人是书看多了，对，就是书看多了，<strong>侃侃而谈一些大道理，急切地想要告诉别人如何离开苦恼、离开痛苦、离开所有的不平衡。</strong></p><p>说真的，这正是学习曲线中的愚昧高峰，而在这些年轻老师身上，尤为明显。</p><p>这让我想到我前阵子写下的那段话，“问题出现在哪里？出现在信任他人总结出来的路径；</p><p>出现在你竟然觉得自己可以绕过那些坎坷。”</p><br/><br/><br/><h1 id="学习与工作"><a href="#学习与工作" class="headerlink" title="学习与工作"></a>学习与工作</h1><p>01<br>子弹日历真是个好东西，方便记录又能帮助自己很直观地复盘我究竟将时间花到了哪里。简单介绍下，就是通过一个 excel 表，大致每个月一列，一天一个格子，每天结束前标注下当天真实的精力重点，比如像我通常一天在2-3个重点，”公司工作” &#x2F; “社交” &#x2F; “AI” &#x2F; “瑜伽” 等等。定期回看一下就会发现有些事情远超过预期，有些觉得很重要的事情又投入远远不够，等于给我了一个直观的数据去反思我真的想做什么，又或者我在逃避什么，然后再去做调整，很适合拖延症的我。</p><br/><br/><p>02<br>想想这几个月，杂七杂八学了堆AI相关的，应用开发、测评测试、文生图、图生视频、微调语音识别 … 这段时间广度上是增加了不少，但深度上很成问题，说白了，还没想好真的要投入去做什么，或者也是缺这么个机会，缺同志一起搞个东西出来，不是像这样抱着玩玩的心态学习。这样成不了事，不行。</p><br/><br/><br/><h1 id="生活与社交"><a href="#生活与社交" class="headerlink" title="生活与社交"></a>生活与社交</h1><p>01<br>这个月的社交密度远超预期，得歇停歇停，不能总在喝酒，痘痘都多了好几颗。和朋友们聊天是挺愉快的，还是线下的交流好，我想让线上的交流再少一点，我喜欢面对面的感觉，不需要那些哈哈哈哈和表情包的润滑，近距离地看到对方的表情、听到对方的语气，即使很滑的内容，也会变得有趣，也能真的感受到看到对方的一部分。</p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/07/02/IMG_20240614_214951.jpg" class="" width="500"><br/><br/><p>02<br>瑜伽练习真是让人身心愉悦，杭州梅雨季三伏天粘腻地难受，随着一场运动在呼吸间身体内的湿热随着汗水流淌，整个人会变得通透。对，是真的身体感受到通透，有时是一些，有时则感觉完全清爽了，下午干活的精神也有了。<br>有机会的话，想尝试下户外瑜伽了，比起看着高楼林立繁华马路的窗外练习（我的日常），这几次在西湖景区的馆里练习的感觉真的不错，抬眼望去都是绿色的山和摇曳的树，自然地风声和鸟叫，心自然跟着变慢了些。</p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/07/02/1faa88b7357696840144a8c00cab6a8.jpg" class=""><br/><br/><p>03<br>端午回了趟老家，见了好不容易回趟国的老朋友，舍不得，也有些感慨这么多年物理距离越来越远，好在也一直在互相陪伴着。会希望能长长久久一直这么下去，是比我的家更让人熟悉的家，是从小到大一直在一起的朋友，有时候我甚至觉得有点像家人，不知道对方最近经历了什么也没关系，只希望她一直好好的。</p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/07/02/retouch_2024060815205892.jpg" class="" width="500"><br/><br/><p>04<br>和对象去逛了美院的毕业展，良渚校区那边，因为新校区整个校园显得很死板，不如其他几个小区。毕业展的内容在我看来适用性普遍太低了，太低的意思是，我怎么分析都觉得只能是花瓶，并且这个花瓶对比美学&#x2F;视觉化呈现的价值也没有，抄来抄去的风格形式居多。当然，不排除有好作品，雕塑那边就是两个我觉着眼前一亮。学院这个环境，虽然可以不用和商业接轨，但还是得起到些引领作用，又或许是我的期待太高了，即使作为桥梁的作用，做更多的风格&#x2F;可视化方法论普及也是合格的了。</p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/07/02/retouch_2024061014070532.jpg" class="" width="500"><br/><br/><p>05<br>趁着618把2023年的照片都整理了一下打印出来了，回看这一年拍照片记录日常更多了，甚至还想记录下更多，开始靠记忆记得的事情越来越少，没有什么回忆就更想依赖这些照片。想来也很神奇，和对象认识十年，现在一起回看照片已经感觉如此遥远了，会忽然发现照片中的事情某人不记得了，另一个人却记得，我俩的记忆模式真的很不一样。</p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/07/02/IMG_20240625_221324.jpg" class="" width="500"><br/><br/><p>06<br>又去老同学那玩到了几款不错的桌游，记录一下<br>《拉斯维加斯》欢乐运气游戏，策略性较低，摇到了欣喜若狂，摇不到垂头痛哭那种<br>《夺宝奇兵》贪婪与恐惧的博弈游戏，规则超级简单，就是去吓跑不敢赌的，策略性一般<br>《风声》谍战背景的桌游，类似三国杀，策略性较强，我属于新人，角色搭配不熟，但是套路化好像有点明显啊</p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/07/02/dca94a3ad7d4deaf3bba590182906eb.jpg" class=""><br/><br/><br/><br/><br/>]]></content:encoded>
-      
-      
-      <category domain="https://blog.liluhui.cn/categories/%E7%94%9F%E6%B4%BB/">生活</category>
-      
-      
-      
-      <comments>https://blog.liluhui.cn/2024/07/02/202406/#disqus_thread</comments>
       
     </item>
     
