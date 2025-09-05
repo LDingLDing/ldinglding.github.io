@@ -15,8 +15,30 @@
     <atom:link href="https://blog.liluhui.cn/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>关于生活、学习、工作 feedId:66855595489698816+userId:55886336755964928</description>
-    <pubDate>Tue, 02 Sep 2025 13:37:35 GMT</pubDate>
+    <pubDate>Fri, 05 Sep 2025 10:32:44 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>从 Claude Code 学的 6 个设计铁律（含 prompts/tool 清单）</title>
+      <link>https://blog.liluhui.cn/2025/09/05/6-Design-Principles-I-Learned-from-Claude-Code/</link>
+      <guid>https://blog.liluhui.cn/2025/09/05/6-Design-Principles-I-Learned-from-Claude-Code/</guid>
+      <pubDate>Fri, 05 Sep 2025 10:28:12 GMT</pubDate>
+      
+        
+        
+      <description>&lt;h2 id=&quot;TL-DR&quot;&gt;&lt;a href=&quot;#TL-DR&quot; class=&quot;headerlink&quot; title=&quot;TL;DR&quot;&gt;&lt;/a&gt;TL;DR&lt;/h2&gt;&lt;p&gt;Claude Code 之所以“顺滑”，核心不是模型，而是架构和设计哲学。&lt;br&gt; 6 条可以直接迁移到你自己 Ag</description>
+        
+      
+      
+      
+      <content:encoded><![CDATA[<h2 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL;DR"></a>TL;DR</h2><p>Claude Code 之所以“顺滑”，核心不是模型，而是架构和设计哲学。<br> 6 条可以直接迁移到你自己 Agent 的铁律：</p><ol><li><strong>保持单一主循环</strong> —— 一条主 loop，最多一条分支，调试优先。</li><li><strong>小模型，大闭环</strong> —— 80% 的读&#x2F;扫&#x2F;总结都交给小模型，关键时刻才用大模型。</li><li><strong>上下文文件（claude.md）</strong> —— 用一个 context 文件固化团队约定与偏好。</li><li><strong>LLM Search 胜于 RAG</strong> —— 用 ripgrep&#x2F;jq&#x2F;find + LLM，而不是复杂的向量检索。</li><li><strong>分层工具设计</strong> —— 高频动作单独做工具，低频留给 Bash，高层工具保证 determinism。</li><li><strong>显式 To-Do 清单</strong> —— 让模型自己维护待办，防止长会话跑偏。</li></ol><br/><h2 id="一、保持单一主循环"><a href="#一、保持单一主循环" class="headerlink" title="一、保持单一主循环"></a>一、保持单一主循环</h2><p>我看到很多人做 Agent 时，喜欢搞多智能体、复杂 orchestrator。结果是：看 demo 很炫，真要调试时一团糟。Claude Code 完全反其道而行之：<strong>一条主循环，最多一条分支</strong>。</p><p>它的策略是：如果遇到复杂任务，就 spawn 一个“子自己”，<strong>最多一层</strong>，跑完再把结果写回消息历史。好处是整个控制流一目了然，出错时能很快定位。</p><p><strong>经验教训</strong>：debuggability &gt; 架构炫技。</p><br/><h2 id="二、小模型，大闭环"><a href="#二、小模型，大闭环" class="headerlink" title="二、小模型，大闭环"></a>二、小模型，大闭环</h2><p>Claude Code 超过一半的调用走的都是 Haiku（小模型），用来读文件、parse JSON、总结 git 历史。只有关键生成（比如复杂编辑）才用大模型。<br> 这有两个好处：</p><ul><li>成本能降 70–80%。</li><li>反馈速度快，闭环很短，用户觉得“爽”。<br> 对我来说，这其实是个很实用的模式：<strong>别浪费大模型去干小活。</strong></li></ul><br/><h2 id="三、上下文文件：claude-md-模式"><a href="#三、上下文文件：claude-md-模式" class="headerlink" title="三、上下文文件：claude.md 模式"></a>三、上下文文件：claude.md 模式</h2><p>Claude Code 的另一个 killer feature 是 claude.md。它是一个上下文文件，写清楚所有人类无法从代码直接推断出的规则：</p><ul><li>哪些目录要忽略</li><li>用哪些库</li><li>代码风格&#x2F;注释习惯<br> 每次请求都会把 claude.md 附上。效果非常明显：有和没有，差距是天与地。<br> 如果你做自己的 Agent，可以试着加个 agent.md，让它成为团队偏好的“单一真相源”。</li></ul><br/><h2 id="四、LLM-Search-胜于-RAG"><a href="#四、LLM-Search-胜于-RAG" class="headerlink" title="四、LLM Search 胜于 RAG"></a>四、LLM Search 胜于 RAG</h2><p>Claude Code 在搜索上做了一个非常“逆潮流”的选择：不用 RAG。<br>它直接让模型写 <code>ripgrep/jq/find</code>，就像你在终端里手敲一样。模型理解代码和正则，足以定位绝大多数问题。</p><p>为什么这样更好？因为 RAG 有很多隐形失效点（相似度函数、chunk 粒度、reranker…），而 LLM Search 可见、可调试。</p><p>我现在越来越相信：<strong>别急着上 RAG，先让模型像人一样搜索。</strong></p><br/><h2 id="五、分层工具设计"><a href="#五、分层工具设计" class="headerlink" title="五、分层工具设计"></a>五、分层工具设计</h2><p>Claude Code 的工具集很讲究层次感：</p><ul><li>低层：Bash、Read、Write</li><li>中层：Edit、Grep、Glob</li><li>高层：Task、WebFetch、diagnostics<br> 原则是：<strong>高频动作 → 独立工具</strong>（比如 Grep），这样更准确；低频场景交给 Bash 即可。</li></ul><p> 这点给我的启发是：设计工具时不要贪心，<strong>把 agent 最容易用错&#x2F;用频繁的动作，做成独立工具。</strong></p><br/><h2 id="六、显式-To-Do-清单"><a href="#六、显式-To-Do-清单" class="headerlink" title="六、显式 To-Do 清单"></a>六、显式 To-Do 清单</h2><p>长会话的一个大坑是“上下文腐烂”。Claude Code 的解法是：<strong>让模型自己维护 To-Do list</strong>。<br>它会频繁检查和更新 To-Do，这样就能保持方向一致，还能在中途插入&#x2F;删除子任务。<br>相比多 agent 接力，这种方式简单、直观，而且能充分利用 LLM 的“边想边写”能力。</p><br/><h2 id="附录：Prompts-amp-Tools-清单"><a href="#附录：Prompts-amp-Tools-清单" class="headerlink" title="附录：Prompts &amp; Tools 清单"></a>附录：Prompts &amp; Tools 清单</h2><p>Claude Code 的核心提示：太长评论留下邮箱，我会定期回复</p><p>Claude Code 的核心 Tools 提示：太长评论留下邮箱，我会定期回复</p><p>Claude Code 的 prompt 工程很值得参考：</p><ul><li><code>&lt;system-reminder&gt;</code>：定期提醒模型某些状态（但不暴露给用户）。</li><li><code>&lt;good-example&gt;/&lt;bad-example&gt;</code>：用示例来 steer 模型选择。</li></ul><p>工具方面，它的必备集包括：</p><ul><li>低层：Bash、Read、Write</li><li>中层：Edit、Grep、Glob</li><li>高层：Task、WebFetch、diagnostics</li></ul><br/><br/><br/><br/><br/>]]></content:encoded>
+      
+      
+      
+      
+      <comments>https://blog.liluhui.cn/2025/09/05/6-Design-Principles-I-Learned-from-Claude-Code/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>2025/08 Review</title>
@@ -408,29 +430,6 @@
       
       
       <comments>https://blog.liluhui.cn/2024/07/30/202407/#disqus_thread</comments>
-      
-    </item>
-    
-    <item>
-      <title>超强编程助手 CodeGPT！自用</title>
-      <link>https://blog.liluhui.cn/2024/07/24/codegpt/</link>
-      <guid>https://blog.liluhui.cn/2024/07/24/codegpt/</guid>
-      <pubDate>Wed, 24 Jul 2024 14:10:43 GMT</pubDate>
-      
-        
-        
-      <description>&lt;h2 id=&quot;推荐它的三个理由&quot;&gt;&lt;a href=&quot;#推荐它的三个理由&quot; class=&quot;headerlink&quot; title=&quot;推荐它的三个理由&quot;&gt;&lt;/a&gt;推荐它的三个理由&lt;/h2&gt;&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;在 IDE 内的使用和 Github Copilot 一样方便，并且更省钱</description>
-        
-      
-      
-      
-      <content:encoded><![CDATA[<h2 id="推荐它的三个理由"><a href="#推荐它的三个理由" class="headerlink" title="推荐它的三个理由"></a>推荐它的三个理由</h2><ol><li><p>在 IDE 内的使用和 Github Copilot 一样方便，并且更省钱</p></li><li><p>支持切换各个商用模型，也支持本地模型接入，第一时间把开源新模型接入到开发工作流里</p></li><li><p>可以构建自己领域知识的Agent，专人专用，比如 SQL 专家或者接口文档喂进去</p></li></ol><p>可以看下创始人的推，有不少展示片段：<a href="https://x.com/dani_avila7%20">Daniel San </a></p><br/><h2 id="基本功能介绍"><a href="#基本功能介绍" class="headerlink" title="基本功能介绍"></a>基本功能介绍</h2><p>插件商城可以直接搜索到，安装后左侧sidebar和右下角toolbox都有入口</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/07/24/image.png" alt="image.png"></p><br/><p>针对研发流程的常见功能了，用惯了 copilot 是一致的，包括修复、解释、重构、完善注释、单元测试。</p><p>基本使用方式就 &#x2F;explain @文件 这样，等于需要AI向你解释某个文件中代码的用途。</p><p>基本使用方式也可以是 &#x2F;explain + Import Selection 这样，等于需要AI向你解释选中的代码片段的用途。</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/07/24/image%201.png" alt="image 1.png"></p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/07/24/image%202.png" alt="image 2.png"></p><br/><p>模型可以自由切换，商用的对应需要折腾下连接下api key （都熟门熟路了吧）</p><p>蛮推荐搞个 LM Studio 直接本地管理所有模型和日志的，好用，但要折腾下 😀</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/07/24/image%203.png" alt="image 3.png"></p><br/><p>除了选择模型直接对话，也可以选择 CodeGPT 提供的 Agent，比如它这个 python 解释器是带代码运行的，确实方便，还有BI、SQL那些我还没尝试，但肯定用的上。而且可以自己定义这个Agent，支持上了RAG对于具体场景才是真有用，要是再带个 web search 就更妙了。</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/07/24/image%204.png" alt="image 4.png"></p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/07/24/image%205.png" alt="image 5.png"></p><br/><br/><br/><br/><br/>]]></content:encoded>
-      
-      
-      
-      
-      <comments>https://blog.liluhui.cn/2024/07/24/codegpt/#disqus_thread</comments>
       
     </item>
     

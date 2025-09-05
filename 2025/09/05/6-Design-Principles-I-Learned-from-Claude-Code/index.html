@@ -1,0 +1,292 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>从 Claude Code 学的 6 个设计铁律（含 prompts/tool 清单） | Luhui's Personal Website</title><meta name="author" content="Luhui芦荟"><meta name="copyright" content="Luhui芦荟"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="TL;DRClaude Code 之所以“顺滑”，核心不是模型，而是架构和设计哲学。 6 条可以直接迁移到你自己 Agent 的铁律：  保持单一主循环 —— 一条主 loop，最多一条分支，调试优先。 小模型，大闭环 —— 80% 的读&#x2F;扫&#x2F;总结都交给小模型，关键时刻才用大模型。 上下文文件（claude.md） —— 用一个 context 文件固化团队约定与偏好。 LLM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从 Claude Code 学的 6 个设计铁律（含 prompts&#x2F;tool 清单）">
+<meta property="og:url" content="https://blog.liluhui.cn/2025/09/05/6-Design-Principles-I-Learned-from-Claude-Code/index.html">
+<meta property="og:site_name" content="Luhui&#39;s Personal Website">
+<meta property="og:description" content="TL;DRClaude Code 之所以“顺滑”，核心不是模型，而是架构和设计哲学。 6 条可以直接迁移到你自己 Agent 的铁律：  保持单一主循环 —— 一条主 loop，最多一条分支，调试优先。 小模型，大闭环 —— 80% 的读&#x2F;扫&#x2F;总结都交给小模型，关键时刻才用大模型。 上下文文件（claude.md） —— 用一个 context 文件固化团队约定与偏好。 LLM">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg">
+<meta property="article:published_time" content="2025-09-05T10:28:12.000Z">
+<meta property="article:modified_time" content="2025-09-05T10:32:44.185Z">
+<meta property="article:author" content="Luhui芦荟">
+<meta property="article:tag" content="李璐慧,芦荟,Aloea,技术博客,前端,Node">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg"><link rel="shortcut icon" href="https://i.loli.net/2017/11/26/5a19c0b50432e.png"><link rel="canonical" href="https://blog.liluhui.cn/2025/09/05/6-Design-Principles-I-Learned-from-Claude-Code/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>(()=>{
+      const saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+      
+      window.btf = {
+        saveToLocal: saveToLocal,
+        getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+          script.src = url
+          script.async = true
+          script.onerror = reject
+          script.onload = script.onreadystatechange = function() {
+            const loadState = this.readyState
+            if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+            script.onload = script.onreadystatechange = null
+            resolve()
+          }
+
+          Object.keys(attr).forEach(key => {
+            script.setAttribute(key, attr[key])
+          })
+
+          document.head.appendChild(script)
+        }),
+
+        getCSS: (url, id = false) => new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+          link.rel = 'stylesheet'
+          link.href = url
+          if (id) link.id = id
+          link.onerror = reject
+          link.onload = link.onreadystatechange = function() {
+            const loadState = this.readyState
+            if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+            link.onload = link.onreadystatechange = null
+            resolve()
+          }
+          document.head.appendChild(link)
+        }),
+
+        addGlobalFn: (key, fn, name = false, parent = window) => {
+          const pjaxEnable = false
+          if (!pjaxEnable && key.startsWith('pjax')) return
+
+          const globalFn = parent.globalFn || {}
+          const keyObj = globalFn[key] || {}
+    
+          if (name && keyObj[name]) return
+    
+          name = name || Object.keys(keyObj).length
+          keyObj[name] = fn
+          globalFn[key] = keyObj
+          parent.globalFn = globalFn
+        }
+      }
+    
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+      
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })()</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=8Z2NNDYTL9"></script><script>window.dataLayer = window.dataLayer || []
+function gtag(){dataLayer.push(arguments)}
+gtag('js', new Date())
+gtag('config', '8Z2NNDYTL9')
+btf.addGlobalFn('pjaxComplete', () => {
+  gtag('config', '8Z2NNDYTL9', {'page_path': window.location.pathname})
+}, 'google_analytics')
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":true,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '从 Claude Code 学的 6 个设计铁律（含 prompts/tool 清单）',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-09-05 18:32:44'
+}</script><meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/rss2.xml" title="Luhui's Personal Website" type="application/rss+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">86</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" href="/process"><span> 建站历程</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/5W7DZ_A-ywM.jpg);"><nav id="nav"><span id="blog-info"><a href="/" title="Luhui's Personal Website"><span class="site-name">Luhui's Personal Website</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" href="/process"><span> 建站历程</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">从 Claude Code 学的 6 个设计铁律（含 prompts/tool 清单）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-09-05T10:28:12.000Z" title="发表于 2025-09-05 18:28:12">2025-09-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-09-05T10:32:44.185Z" title="更新于 2025-09-05 18:32:44">2025-09-05</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="从 Claude Code 学的 6 个设计铁律（含 prompts/tool 清单）"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL;DR"></a>TL;DR</h2><p>Claude Code 之所以“顺滑”，核心不是模型，而是架构和设计哲学。<br> 6 条可以直接迁移到你自己 Agent 的铁律：</p>
+<ol>
+<li><strong>保持单一主循环</strong> —— 一条主 loop，最多一条分支，调试优先。</li>
+<li><strong>小模型，大闭环</strong> —— 80% 的读&#x2F;扫&#x2F;总结都交给小模型，关键时刻才用大模型。</li>
+<li><strong>上下文文件（claude.md）</strong> —— 用一个 context 文件固化团队约定与偏好。</li>
+<li><strong>LLM Search 胜于 RAG</strong> —— 用 ripgrep&#x2F;jq&#x2F;find + LLM，而不是复杂的向量检索。</li>
+<li><strong>分层工具设计</strong> —— 高频动作单独做工具，低频留给 Bash，高层工具保证 determinism。</li>
+<li><strong>显式 To-Do 清单</strong> —— 让模型自己维护待办，防止长会话跑偏。</li>
+</ol>
+<br/>
+
+
+<h2 id="一、保持单一主循环"><a href="#一、保持单一主循环" class="headerlink" title="一、保持单一主循环"></a>一、保持单一主循环</h2><p>我看到很多人做 Agent 时，喜欢搞多智能体、复杂 orchestrator。结果是：看 demo 很炫，真要调试时一团糟。Claude Code 完全反其道而行之：<strong>一条主循环，最多一条分支</strong>。</p>
+<p>它的策略是：如果遇到复杂任务，就 spawn 一个“子自己”，<strong>最多一层</strong>，跑完再把结果写回消息历史。好处是整个控制流一目了然，出错时能很快定位。</p>
+<p><strong>经验教训</strong>：debuggability &gt; 架构炫技。</p>
+<br/>
+
+
+<h2 id="二、小模型，大闭环"><a href="#二、小模型，大闭环" class="headerlink" title="二、小模型，大闭环"></a>二、小模型，大闭环</h2><p>Claude Code 超过一半的调用走的都是 Haiku（小模型），用来读文件、parse JSON、总结 git 历史。只有关键生成（比如复杂编辑）才用大模型。<br> 这有两个好处：</p>
+<ul>
+<li>成本能降 70–80%。</li>
+<li>反馈速度快，闭环很短，用户觉得“爽”。<br> 对我来说，这其实是个很实用的模式：<strong>别浪费大模型去干小活。</strong></li>
+</ul>
+<br/>
+
+
+<h2 id="三、上下文文件：claude-md-模式"><a href="#三、上下文文件：claude-md-模式" class="headerlink" title="三、上下文文件：claude.md 模式"></a>三、上下文文件：claude.md 模式</h2><p>Claude Code 的另一个 killer feature 是 claude.md。它是一个上下文文件，写清楚所有人类无法从代码直接推断出的规则：</p>
+<ul>
+<li>哪些目录要忽略</li>
+<li>用哪些库</li>
+<li>代码风格&#x2F;注释习惯<br> 每次请求都会把 claude.md 附上。效果非常明显：有和没有，差距是天与地。<br> 如果你做自己的 Agent，可以试着加个 agent.md，让它成为团队偏好的“单一真相源”。</li>
+</ul>
+<br/>
+
+<h2 id="四、LLM-Search-胜于-RAG"><a href="#四、LLM-Search-胜于-RAG" class="headerlink" title="四、LLM Search 胜于 RAG"></a>四、LLM Search 胜于 RAG</h2><p>Claude Code 在搜索上做了一个非常“逆潮流”的选择：不用 RAG。<br>它直接让模型写 <code>ripgrep/jq/find</code>，就像你在终端里手敲一样。模型理解代码和正则，足以定位绝大多数问题。</p>
+<p>为什么这样更好？因为 RAG 有很多隐形失效点（相似度函数、chunk 粒度、reranker…），而 LLM Search 可见、可调试。</p>
+<p>我现在越来越相信：<strong>别急着上 RAG，先让模型像人一样搜索。</strong></p>
+<br/>
+
+<h2 id="五、分层工具设计"><a href="#五、分层工具设计" class="headerlink" title="五、分层工具设计"></a>五、分层工具设计</h2><p>Claude Code 的工具集很讲究层次感：</p>
+<ul>
+<li>低层：Bash、Read、Write</li>
+<li>中层：Edit、Grep、Glob</li>
+<li>高层：Task、WebFetch、diagnostics<br> 原则是：<strong>高频动作 → 独立工具</strong>（比如 Grep），这样更准确；低频场景交给 Bash 即可。</li>
+</ul>
+<p> 这点给我的启发是：设计工具时不要贪心，<strong>把 agent 最容易用错&#x2F;用频繁的动作，做成独立工具。</strong></p>
+<br/>
+
+<h2 id="六、显式-To-Do-清单"><a href="#六、显式-To-Do-清单" class="headerlink" title="六、显式 To-Do 清单"></a>六、显式 To-Do 清单</h2><p>长会话的一个大坑是“上下文腐烂”。Claude Code 的解法是：<strong>让模型自己维护 To-Do list</strong>。<br>它会频繁检查和更新 To-Do，这样就能保持方向一致，还能在中途插入&#x2F;删除子任务。<br>相比多 agent 接力，这种方式简单、直观，而且能充分利用 LLM 的“边想边写”能力。</p>
+<br/>
+
+<h2 id="附录：Prompts-amp-Tools-清单"><a href="#附录：Prompts-amp-Tools-清单" class="headerlink" title="附录：Prompts &amp; Tools 清单"></a>附录：Prompts &amp; Tools 清单</h2><p>Claude Code 的核心提示：太长评论留下邮箱，我会定期回复</p>
+<p>Claude Code 的核心 Tools 提示：太长评论留下邮箱，我会定期回复</p>
+<p>Claude Code 的 prompt 工程很值得参考：</p>
+<ul>
+<li><code>&lt;system-reminder&gt;</code>：定期提醒模型某些状态（但不暴露给用户）。</li>
+<li><code>&lt;good-example&gt;/&lt;bad-example&gt;</code>：用示例来 steer 模型选择。</li>
+</ul>
+<p>工具方面，它的必备集包括：</p>
+<ul>
+<li>低层：Bash、Read、Write</li>
+<li>中层：Edit、Grep、Glob</li>
+<li>高层：Task、WebFetch、diagnostics</li>
+</ul>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.liluhui.cn">Luhui芦荟</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.liluhui.cn/2025/09/05/6-Design-Principles-I-Learned-from-Claude-Code/">https://blog.liluhui.cn/2025/09/05/6-Design-Principles-I-Learned-from-Claude-Code/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.liluhui.cn" target="_blank">Luhui's Personal Website</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="next-post pull-full" href="/2025/09/02/202508/" title="2025/08 Review"><img class="cover" src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/02/shanghai.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">2025/08 Review</div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Luhui芦荟</div><div class="author-info-description">关于生活、学习、工作</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">86</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="/rss2.xml" target="_blank" title="RSS"><i class="fas fa-rss"></i></a><a class="social-icon" href="https://github.com/LDingLDing" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:liluhuizj@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#TL-DR"><span class="toc-number">1.</span> <span class="toc-text">TL;DR</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%BF%9D%E6%8C%81%E5%8D%95%E4%B8%80%E4%B8%BB%E5%BE%AA%E7%8E%AF"><span class="toc-number">2.</span> <span class="toc-text">一、保持单一主循环</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%B0%8F%E6%A8%A1%E5%9E%8B%EF%BC%8C%E5%A4%A7%E9%97%AD%E7%8E%AF"><span class="toc-number">3.</span> <span class="toc-text">二、小模型，大闭环</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E4%B8%8A%E4%B8%8B%E6%96%87%E6%96%87%E4%BB%B6%EF%BC%9Aclaude-md-%E6%A8%A1%E5%BC%8F"><span class="toc-number">4.</span> <span class="toc-text">三、上下文文件：claude.md 模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81LLM-Search-%E8%83%9C%E4%BA%8E-RAG"><span class="toc-number">5.</span> <span class="toc-text">四、LLM Search 胜于 RAG</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E5%88%86%E5%B1%82%E5%B7%A5%E5%85%B7%E8%AE%BE%E8%AE%A1"><span class="toc-number">6.</span> <span class="toc-text">五、分层工具设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E6%98%BE%E5%BC%8F-To-Do-%E6%B8%85%E5%8D%95"><span class="toc-number">7.</span> <span class="toc-text">六、显式 To-Do 清单</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%84%E5%BD%95%EF%BC%9APrompts-amp-Tools-%E6%B8%85%E5%8D%95"><span class="toc-number">8.</span> <span class="toc-text">附录：Prompts &amp; Tools 清单</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/05/6-Design-Principles-I-Learned-from-Claude-Code/" title="从 Claude Code 学的 6 个设计铁律（含 prompts/tool 清单）">从 Claude Code 学的 6 个设计铁律（含 prompts/tool 清单）</a><time datetime="2025-09-05T10:28:12.000Z" title="发表于 2025-09-05 18:28:12">2025-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/02/202508/" title="2025/08 Review"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/02/shanghai.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2025/08 Review"/></a><div class="content"><a class="title" href="/2025/09/02/202508/" title="2025/08 Review">2025/08 Review</a><time datetime="2025-09-02T13:23:21.000Z" title="发表于 2025-09-02 21:23:21">2025-09-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/08/22/Traps-of-Methodology-in-Agent-Development/" title="构建 Agent 中的方法论陷阱">构建 Agent 中的方法论陷阱</a><time datetime="2025-08-22T03:49:54.000Z" title="发表于 2025-08-22 11:49:54">2025-08-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/08/18/googleio/" title="48 小时小工具实录：我做了个大会助手">48 小时小工具实录：我做了个大会助手</a><time datetime="2025-08-18T15:11:51.000Z" title="发表于 2025-08-18 23:11:51">2025-08-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/08/02/202507/" title="2025/07 Review"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/02/IMG_20250721_130339.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2025/07 Review"/></a><div class="content"><a class="title" href="/2025/08/02/202507/" title="2025/07 Review">2025/07 Review</a><time datetime="2025-08-02T13:47:49.000Z" title="发表于 2025-08-02 21:47:49">2025-08-02</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By Luhui芦荟</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn">浙ICP备19010836号</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const initGitalk = () => {
+    const gitalk = new Gitalk(Object.assign({
+      clientID: '4987f0fb0a509fb9f0af',
+      clientSecret: '7e264967a3ea557003aacdf795b9e57e36a56382',
+      repo: 'ldinglding.github.io',
+      owner: 'LDingLDing',
+      admin: ['LDingLDing'],
+      id: '3c467708d4737d9fe682d08024a5fc39',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  const loadGitalk = async() => {
+    if (typeof Gitalk === 'function') initGitalk()
+    else {
+      await btf.getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+      await btf.getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js')
+      initGitalk()
+    }
+  }
+  
+  const commentCount = n => {
+    const isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+    if (isCommentCount) {
+      isCommentCount.textContent= n
+    }
+  }
+
+  if ('Gitalk' === 'Gitalk' || !false) {
+    if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+    else loadGitalk()
+  } else {
+    window.loadOtherComment = loadGitalk
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
