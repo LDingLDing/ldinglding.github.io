@@ -15,8 +15,30 @@
     <atom:link href="https://blog.liluhui.cn/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>关于生活、学习、工作 feedId:66855595489698816+userId:55886336755964928</description>
-    <pubDate>Fri, 05 Sep 2025 10:32:44 GMT</pubDate>
+    <pubDate>Fri, 12 Sep 2025 02:10:23 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>🌅22 个顶级 Agent 工作流框架整理</title>
+      <link>https://blog.liluhui.cn/2025/09/12/22-top-level-Agent-workflow-frameworks-organized/</link>
+      <guid>https://blog.liluhui.cn/2025/09/12/22-top-level-Agent-workflow-frameworks-organized/</guid>
+      <pubDate>Fri, 12 Sep 2025 01:56:16 GMT</pubDate>
+      
+        
+        
+      <description>&lt;p&gt;最近在做一个新的独立开发产品，核心功能里涉及到 多智能体协作。&lt;br&gt;在调研阶段，我发现相关框架和工具特别多：有的强调团队角色分工，有的走可视化无代码路线，还有的专注研究“涌现行为”。&lt;br&gt;于是我干脆整理了一份 Agent 框架全景图，按时间和特点做了分类。&lt;br&gt;如果要</description>
+        
+      
+      
+      
+      <content:encoded><![CDATA[<p>最近在做一个新的独立开发产品，核心功能里涉及到 多智能体协作。<br>在调研阶段，我发现相关框架和工具特别多：有的强调团队角色分工，有的走可视化无代码路线，还有的专注研究“涌现行为”。<br>于是我干脆整理了一份 Agent 框架全景图，按时间和特点做了分类。<br>如果要做 B2B&#x2F;B2C 的 Agent 产品，可以判断该走 可视化无代码（Flowise、n8n）、多角色分工（Meta-GPT、ChatDev）、还是 通用框架（AutoGen、Agno、CrewAI）路线。<br>结合框架生态热度（Star 数、厂商背景）做市场判断，避免选型踩坑。</p><br/><p><a href="https://github.com/agentuniverse-ai/agentUniverse">AgentUniverse</a>（2023，开源 1.6k⭐）：支持多智能体协作，具备完整的规划、工具使用和内存管理能力，部署以本地为主，角色定义包括 PEER、DOE 等。<br><a href="https://github.com/OpenBMB/AgentVerse">Agentverse</a>（2023，开源 4.7k⭐）：聚焦多智能体协同与涌现行为，角色涵盖专家、决策者等，采用基于阶段的控制流架构，支持跨平台部署。<br><a href="https://github.com/agno-agi/agno">Agno</a>（2024，开源 32.5k⭐）：轻量级多模态智能体框架，支持 “团队模式” 的多智能体协作，采用混合流（数据 + 控制）架构，基于 Python 实现工具调用。<br><a href="https://github.com/microsoft/autogen">AutoGen</a>（2023，开源 49.2k⭐）：以多智能体对话为核心，角色包括指挥官、工作者、评论家等，采用控制流架构和 DAG（有向无环图）表示，支持代码执行和人机协作。<br><a href="https://github.com/camel-ai/camel">CAMEL</a>（2023，开源 14.2⭐）：专注于智能体间 “心智探索” 的协作，角色分为规划者、执行者等，基于 MCP 协议通信，支持模块化任务分解。<br><a href="https://github.com/OpenBMB/ChatDev">ChatDev</a>（2023，开源 27.4k⭐）：模拟软件开发团队协作，角色包括 CEO、CTO、程序员等，采用类 DAG 的控制流，侧重代码生成与调试。<br><a href="https://github.com/coze-dev/coze-studio">Coze</a>（2024，开源 16.7k⭐）：支持对话式智能体工作流，角色以会话型为主，采用节点式表示和 API 协议，可部署于 Web、移动端等多平台。<br><a href="https://github.com/crewAIInc/crewAI">CrewAI</a>（2024，开源 38k⭐）：强调角色化协作（规划者、团队成员），基于 Python DSL 定义流程，采用控制流架构和任务规划图，支持多 LLM 集成。<br><a href="https://openai.com/index/introducing-deep-research/">DeepResearch</a>（2025，闭源）：聚焦协作推理任务，角色包括搜索者、分析者等，依赖 OpenAI 生态，支持部分自我反思能力。<br><a href="https://github.com/langgenius/dify">Dify</a>（2023，开源 114k⭐）：以提示链为核心的单智能体框架，采用控制流和 JSON 配置，支持函数调用，部署方式包括 SaaS 和本地。<br><a href="https://github.com/stanfordnlp/dspy">DSPy</a>（2023，开源 28.1k⭐）：通过声明式语言定义工作流，角色涵盖规划者、检索者等，采用混合流架构，支持模块化图表示。<br><a href="https://github.com/PaddlePaddle/ERNIE-SDK">ERNIE-SDK</a>（2024，开源 370⭐）：百度推出的智能体框架，角色设计较隐式，采用流程图表示，支持多模态交互和本地部署。<br><a href="https://github.com/FlowiseAI/Flowise">Flowise</a>（2023，开源 43.5k⭐）：基于 LangChain 的可视化工具，以数据流为核心，采用 DAG 表示，适合无代码构建工作流。<br><a href="https://github.com/langchain-ai/langgraph">LangGraph</a>（2023，开源 18.5k⭐）：LangChain 生态的扩展，以节点为单位定义智能体角色，采用 DAG 和状态共享机制，支持复杂循环与条件路由。<br><a href="https://github.com/microsoft/autogen/tree/main/python/packages/autogen-magentic-one">Magnetic-One</a>（2024，开源 49.7k⭐）：多智能体通用框架，角色包括编排者、编码者等，基于 AutoGen 对话协议，采用 DAG 架构。<br><a href="https://github.com/FoundationAgents/MetaGPT">Meta-GPT</a>（2023，开源 58.4k⭐）：模拟软件开发的元编程框架，角色包括产品经理、工程师等，采用类定义的控制流，支持命令行部署。<br><a href="https://github.com/n8n-io/n8n">n8n</a>（2019，开源 137k⭐）：非 LLM 驱动的工作流自动化工具，按节点定义功能，支持 Webhook、REST 等协议，部署灵活（云、本地）。<br><a href="https://github.com/om-ai-lab/OmAgent">OmAgent</a>（2024，开源 2.5k⭐）：专注视频理解的多模态框架，角色包括规划者、检索者等，采用文本计划表示，适用于特定系统集成。<br><a href="https://github.com/openai/swarm">OpenAI Swarm</a>（2024，开源 20.4k⭐）：OpenAI 推出的多智能体框架，角色包括工作者、路由器，采用封装式表示，支持 Python&#x2F;YAML 配置。<br><a href="https://github.com/QwenLM/Qwen-Agent">Qwen-agent</a>（2024，开源 11.4k⭐）：阿里推出的智能体框架，支持自定义角色，基于 MCP 协议，采用代码驱动的控制流，部署灵活。<br><a href="https://github.com/facebook/react">ReAct</a>（2022，开源 239k⭐）：早期提示框架，无明确角色划分，以 “推理 - 行动” 循环为核心，是现代智能体工作流的基础。<br><a href="https://github.com/microsoft/semantic-kernel">Semantic Kernel</a>（2023，开源 26.1k⭐）：微软推出的 SDK，角色设计隐式，采用 DAG 表示和函数调用协议，支持多语言与跨平台部署。</p><br/><p>🤔 如果让你来选，你更倾向哪一类路线？</p><ul><li>无代码可视化</li><li>多角色团队协作</li><li>通用框架</li><li>厂商生态</li></ul><p>👇评论留言 </p><br/><br/><br/><br/><br/>]]></content:encoded>
+      
+      
+      
+      
+      <comments>https://blog.liluhui.cn/2025/09/12/22-top-level-Agent-workflow-frameworks-organized/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>从 Claude Code 学的 6 个设计铁律（含 prompts/tool 清单）</title>
@@ -409,27 +431,6 @@
       
       
       <comments>https://blog.liluhui.cn/2024/08/15/vad/#disqus_thread</comments>
-      
-    </item>
-    
-    <item>
-      <title>2024 年 7 月总结</title>
-      <link>https://blog.liluhui.cn/2024/07/30/202407/</link>
-      <guid>https://blog.liluhui.cn/2024/07/30/202407/</guid>
-      <pubDate>Tue, 30 Jul 2024 14:52:43 GMT</pubDate>
-      
-      <description>我从来不输，要么赢，要么成长。</description>
-      
-      
-      
-      <content:encoded><![CDATA[<br/><p><em>我从来不输，要么赢，要么成长。</em><br><br/></p><h1 id="这个月发生了什么？"><a href="#这个月发生了什么？" class="headerlink" title="这个月发生了什么？"></a>这个月发生了什么？</h1><ul><li><p>新的探索，体验了一次 <a href="https://mp.weixin.qq.com/s/m3x3vmNdluz8aFShN4IrpQ">OH卡</a> 沙龙，人的意象探索果然挺有意思的。—— 玄学的世界？不，也算是心理学的世界。</p></li><li><p>生活乐趣，被推荐到一款超级爽口无负担的<a href="https://m.tb.cn/h.gQMqPVd8aCoGBbT?tk=oZYo32ul74t">西柚风味啤酒</a>，这个月竟然喝完并且复购了。</p></li><li><p>随缘阅读，收了一台 kindle，参与<a href="https://v8i244xt7m.feishu.cn/docx/Dvoqd2zvgorWsdxrJaSc8oFcnzb">共读会</a>读完了<a href="https://book.douban.com/subject/35699260/">《传习录》</a>，硬书还是需要人的陪伴呀。</p></li><li><p>瑜伽精进，这个月体位法有突破，每周练习通过<a href="https://aloea.cn/yoga/">直播形式</a>记录着，还报名了十一国庆去峨眉山瑜伽静修。</p></li><li><p>个人管理，知识库中 flomo 的卡片盒在逐步整理到 <a href="https://heptabase.com/">heptabase</a>，白板形式很直接带来了更多创新的想法。并且这个月回归了暂停实验室的训练，结合白板的书写形式，目前正在精简我的精力重点。</p></li><li><p>英语学习，读完了<a href="https://a.co/d/dXhe5oH">《Feel Good Productivity》</a>这本书（Youtube上很有名的一位效率博主），并且整理了知识点。别说，和暂停实验室这期的主题非常搭配，都是在讲 effective effort，观点一致、互为补充。更新在简书平台的<a href="https://www.jianshu.com/u/32ed08a3f35d">英语知识点系列</a>也达成80+篇了。</p></li><li><p>技术跟踪，持续关注AI行业的发展和一些上层中层的信息，主要在朋友圈发声来连接志同道合的朋友。</p></li><li><p>事业发展，新创业项目启动期，目前在探索教育+AI的结合，这块变数比较多，能产生价值的可能性也很多样化，在尝试聚焦的具体问题。</p></li></ul><br/><br/><h1 id="所见与所想"><a href="#所见与所想" class="headerlink" title="所见与所想"></a>所见与所想</h1><p>01⤵️<br>我在想，用更现代化的语言来说，致良知就是厘清并遵循我们的价值观，很多时候我们用了太多头脑思考，做了太多利益权衡，被太多社会环境填满，价值观也变得不干不净。</p><p>价值观不干不净的意思是，很多我们自认为的价值观，我们向外表达的跟我们的行为完全不一致。</p><p>比如我们一边声称健康对自己很重要，但同时又以极不健康的方式生活，暴饮暴食、熬夜、吸烟等等。</p><p>比如我们又想玩新潮，又想随大流；渴望独立，又依赖他人的认可；想要证明自己，又缺乏做出行动的魄力。</p><p>我们的价值观被教育塞了一部分，被亲人塞了一部分，被职场塞了一部分，乱七八糟，错综复杂，相互矛盾，又自成一体。 —— 也是荒诞呢哈哈。</p><p>所以致良知，我想是厘清出一个干净的价值观，这就是一个要向内清理的过程，清理掉那些污渍。<strong>我相信每个人干净的那个价值观都源于我们人生经验的审美体验，是那些我们由衷认为“美”的部分。</strong></p><p>在《理想国》描述的柏拉图洞穴中，我们的视角被锁定在火堆和墙壁之间，很难直接回头看到那个价值观，这是某种事实。但换个角度来说，这也使得发现价值观的过程变得艰难而有趣。</p><br/><p>02⤵️<br>王阳明传达的致良知是一种静心的、消念的、平稳的良知。 </p><p>王艮提到的良知是一种”鸢飞鱼跃“，是劳动的、创造的、充满生命力的良知。</p><p>良知不只有一种，良知是多元的。</p><p><strong>我现在内心更倾向于劳动的、创造的、充满生命力的！</strong></p><br/><p>03⤵️<br><strong>省察克制，省察克制。</strong></p><p>先有省察，再有克制。</p><p>省察省察，反省且觉察，一开始我们先去做时候的反省，按我们行业常用的黑话就是复盘。</p><p>对于苦恼之事如何发生进行多角度多维度的分析和调整制定。</p><p>随着复盘经验的丰富，我们从事后诸葛亮慢慢在某件事情&#x2F;某种模式中的当下就能觉察。</p><p>这意味着随着你持续的按照“省察克制”的要求来锻炼自己的过程中，你会在事件到情绪&#x2F;行为的链路上拥有越来越多的空间。</p><p>就像我们的身体肌肉一样，持续练习才能发展灵活性和稳定性，那种肌肉弹性的发展带给我们对于身体局部肌肉越来越精微的控制力，这也是我喜欢瑜伽体位法练习的一部分原因。</p><p>就像现代心理学之父的威廉·詹姆斯说的一样，</p><blockquote><p>能将溃散的注意力，一次又一次收回来的能力，是形成判断力、品格和意志的根本基础。<br>如果一个人没有这种能力，ta就不是自己的主人。<br>能够提高这种能力的教育，就是卓越的教育。</p></blockquote><br/><p>04⤵️<br>瑜伽体位法练习的时候，具体来说比如拜日式，吸气时手臂上举，整个脊柱、生命能量都在向上，随着锁骨一并展开，呼气时前屈，头脑带着整个背部臀部放松向下。</p><p><strong>呼吸在体内流动，指尖的酥麻感，脊柱的灵活感，肌肉的伸展感，我的身体，这个肉身本身就充满了能量。</strong></p><p>呼吸真是个伟大的自律系统！</p><br/><p>05⤵️<br>我最近的状态是，<br>一烦躁就买书，<br>一完成也买书，<br>看不完，根本看不完，<br>完全有悖我前阵子说的实用主义。<br>我想了下是因为，想有大把时间拿来看书“偷懒”，从各种“努力”中离开一下。<br><strong>可是已经到的书积累成了“负担”，只能用新的一笔笔“期待”来转移。</strong><br>我在买的就是下单到收到这段时间的心理按摩 —— ”我马上就可以和这本书去玩耍啦“。<br>…… （自我无语）<br>问题还是太多事情要做了，得给自己更多刻意的放松呀。</p><br/><p>06⤵️<br><strong>做自己想做的事情，做好玩的事情，做对自己有帮助的事情。</strong><br><strong>然后把这些经验分享出去，真正地去尝试帮助别人，也可以是分享美好。</strong><br><strong>不要没事找事做。</strong></p><br/><p>07⤵️<br>昨天晚上胡吃海喝，当下满足不爽的情绪，或者说想要爽，但是带给今天的身体的怠惰感其实很不舒服。<br><strong>保持身体的洁净，比浪费食物的损失感更重要。</strong></p><br/><br/><h1 id="学习与工作"><a href="#学习与工作" class="headerlink" title="学习与工作"></a>学习与工作</h1><p>01⤵️<br>采用了新的知识管理工具 <a href="https://heptabase.com/">Heptabase</a>，选用它是因为前阵子想对瑜伽领域进行探索创新挖掘下机会点，发现之前维护在幕布和flomo的框架和知识点很不方便去关联，就想去找白板工具。</p><p>当时的出发点是我需要一个可以网状发散的工具，如果市场没有视觉和交互更好的，就用我熟悉的 obsidian，对比了博思白板、Milanote、Heptabase 最终选择了这个，这小一个月用下来，核心部分完全符合我的期待。如果你也有兴趣，可以看下瓦基写的<a href="https://readingoutpost.com/is-heptabase-better/">这篇介绍</a>。</p><p>我很认同这是一个有助于对复杂事物建立深度理解的工具。</p><p>甚至这两天我开始尝试将 diary 也放到这里来，之前用的纸笔，但在 heptabase 可以提取并发展想法确实好用。</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/07/30/001-1-2048x1280.png"></p><br/><p>02⤵️<br>在了解教育行业的过程中对于当前的学生家长群体有了更多认识（当然肯定还不够），作为一个无娃的人，在我畅想的教育中，我特别想促成那种自主的、乐趣的学习。当然从一开始我也很清楚在全国大基数上这个事情不可能简单，毕竟绝大多数人是上不了大学是现实。</p><p>而在接触家长群体的过程中，这种焦虑则更清晰地展现在我们的交谈中，如果让孩子好好坐着，如果让孩子好好回答问题，如何让孩子不要看那么久的屏幕，如何让孩子不要老是粗心犯错，如何申请更好的中学，如何拿下比赛成绩 … </p><p>说白了，我切实感受到了“眼下的柴米油盐”是如何消耗着家长们，而理想想要实现还有很多接地气的路要走下去。在每一个家长表现出来的是，教育的长期价值是道理，短期价值才是财富。</p><p>当然，解法不是没有，只是我现在还不确定，这是不是难而正确的事。</p><br/><br/><h1 id="生活与社交"><a href="#生活与社交" class="headerlink" title="生活与社交"></a>生活与社交</h1><p>01⤵️<br>本月有启发的内容分享 ✨</p><ul><li><a href="https://mp.weixin.qq.com/s/buGTjBToiknutD6ghDZ2-g">写作，作为一种思考武器</a> 和菜头的文章，文笔犀利，很直白地点出写作是思考锻炼的工作，是做好的思想武器，我非常认同。</li><li><a href="https://www.bilibili.com/video/BV1Xy411v7RQ/">全嘻嘻对于女儿3岁这一年的记录</a> 虽然我没有孩子不能感同身受，还是被这种生命间的烦恼和欢乐感动哭了，这当然不是他们生活的全部，糟糕的时刻当然会很多，但是，好有力量。</li><li><a href="%5Bhttps://www.xiaoyuzhoufm.com/episode/6693cc188fcadceb903ba30b%5D(https://www.xiaoyuzhoufm.com/episode/6693cc188fcadceb903ba30b)">播客·纵横四海·EP04 安然巨案：复杂沉舟背后的财经风云</a> 已经是经典的商业故事了，但现实总是比小说还离谱。这带给我的提醒：可以制定规则的权利太诱人了，真的深处其中我也不知道会如何，毕竟我们羡慕国王，却从未当过国王。</li></ul><br/><p>02⤵️<br>又开拓了一个瑜伽馆，认识了一些新的朋友，不过认识的朋友再多，练习好像也都是自己的事，好难有个稳定的伙伴，大家的生活差距太大，我有很多想要分享的当下啊。</p><p>新买了一块垫子，我很喜欢，是大海和夕阳🌇。在一片垫子的天地间，面朝太阳，一次次的拜日式，让身体随着呼吸流动的舒畅。</p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/07/30/4aee99cee2fc5059ef92a0e343172ac.jpg" class="" width="500"><br/><p>03⤵️<br>回顾了下这个月忙忙碌碌竟然还看了几部影视剧，虽然主要是为了社交哈哈😄<br><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/07/30/087b338453408f3906ddf8d4a8a6374.png"></p><p>喜欢《我的阿勒泰》里的这段，也分享给有缘的你。</p><blockquote><p>牧民需要转场，因为每一片草原需要时间修养，需要时间重新变得肥沃。<br>人心也需要转场，如果一份工作让人变得倦怠，一份关系让人变得沮丧，需要时间，让这里重新变得清澈，再次回到这里，再次焕然新生。</p></blockquote><br/><p>04⤵️<br>和最亲密的人都没太多时间呆在一起，那就每周好好地一起吃一顿，简单的快乐 ~ 😉</p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/07/30/20240730212831.jpg" class="" width="500"><br/><br/><br/><br/><br/><br/>]]></content:encoded>
-      
-      
-      <category domain="https://blog.liluhui.cn/categories/%E7%94%9F%E6%B4%BB/">生活</category>
-      
-      
-      
-      <comments>https://blog.liluhui.cn/2024/07/30/202407/#disqus_thread</comments>
       
     </item>
     
