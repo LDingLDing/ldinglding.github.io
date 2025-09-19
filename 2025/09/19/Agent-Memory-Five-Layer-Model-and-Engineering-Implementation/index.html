@@ -1,0 +1,358 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Agent 记忆五层模型与工程落地 | Luhui's Personal Website</title><meta name="author" content="Luhui芦荟"><meta name="copyright" content="Luhui芦荟"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Agent 记忆五层模型与工程落地对话式大模型 Agent 的「记忆」问题，本质就是：如何让机器像人一样，不只是即时回答，而是能记住过去、理解现在、影响未来。过去两年，学术界和工业界已经逐渐形成一个共识：记忆需要分层，不同层次解决不同问题。下面我用一个五层模型，带你快速建立完整认知。   TL;DRAgent Memory 的五层模型，就像人类大脑的结构化记忆系统。  工作记忆负责即时 情景记忆负">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Agent 记忆五层模型与工程落地">
+<meta property="og:url" content="https://blog.liluhui.cn/2025/09/19/Agent-Memory-Five-Layer-Model-and-Engineering-Implementation/index.html">
+<meta property="og:site_name" content="Luhui&#39;s Personal Website">
+<meta property="og:description" content="Agent 记忆五层模型与工程落地对话式大模型 Agent 的「记忆」问题，本质就是：如何让机器像人一样，不只是即时回答，而是能记住过去、理解现在、影响未来。过去两年，学术界和工业界已经逐渐形成一个共识：记忆需要分层，不同层次解决不同问题。下面我用一个五层模型，带你快速建立完整认知。   TL;DRAgent Memory 的五层模型，就像人类大脑的结构化记忆系统。  工作记忆负责即时 情景记忆负">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg">
+<meta property="article:published_time" content="2025-09-19T03:27:20.000Z">
+<meta property="article:modified_time" content="2025-09-19T07:15:40.440Z">
+<meta property="article:author" content="Luhui芦荟">
+<meta property="article:tag" content="李璐慧,芦荟,Aloea,技术博客,前端,Node">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg"><link rel="shortcut icon" href="https://i.loli.net/2017/11/26/5a19c0b50432e.png"><link rel="canonical" href="https://blog.liluhui.cn/2025/09/19/Agent-Memory-Five-Layer-Model-and-Engineering-Implementation/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>(()=>{
+      const saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+      
+      window.btf = {
+        saveToLocal: saveToLocal,
+        getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+          script.src = url
+          script.async = true
+          script.onerror = reject
+          script.onload = script.onreadystatechange = function() {
+            const loadState = this.readyState
+            if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+            script.onload = script.onreadystatechange = null
+            resolve()
+          }
+
+          Object.keys(attr).forEach(key => {
+            script.setAttribute(key, attr[key])
+          })
+
+          document.head.appendChild(script)
+        }),
+
+        getCSS: (url, id = false) => new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+          link.rel = 'stylesheet'
+          link.href = url
+          if (id) link.id = id
+          link.onerror = reject
+          link.onload = link.onreadystatechange = function() {
+            const loadState = this.readyState
+            if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+            link.onload = link.onreadystatechange = null
+            resolve()
+          }
+          document.head.appendChild(link)
+        }),
+
+        addGlobalFn: (key, fn, name = false, parent = window) => {
+          const pjaxEnable = false
+          if (!pjaxEnable && key.startsWith('pjax')) return
+
+          const globalFn = parent.globalFn || {}
+          const keyObj = globalFn[key] || {}
+    
+          if (name && keyObj[name]) return
+    
+          name = name || Object.keys(keyObj).length
+          keyObj[name] = fn
+          globalFn[key] = keyObj
+          parent.globalFn = globalFn
+        }
+      }
+    
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+      
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })()</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=8Z2NNDYTL9"></script><script>window.dataLayer = window.dataLayer || []
+function gtag(){dataLayer.push(arguments)}
+gtag('js', new Date())
+gtag('config', '8Z2NNDYTL9')
+btf.addGlobalFn('pjaxComplete', () => {
+  gtag('config', '8Z2NNDYTL9', {'page_path': window.location.pathname})
+}, 'google_analytics')
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":true,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Agent 记忆五层模型与工程落地',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-09-19 15:15:40'
+}</script><meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/rss2.xml" title="Luhui's Personal Website" type="application/rss+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">88</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" href="/process"><span> 建站历程</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/5W7DZ_A-ywM.jpg);"><nav id="nav"><span id="blog-info"><a href="/" title="Luhui's Personal Website"><span class="site-name">Luhui's Personal Website</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" href="/process"><span> 建站历程</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Agent 记忆五层模型与工程落地</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-09-19T03:27:20.000Z" title="发表于 2025-09-19 11:27:20">2025-09-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-09-19T07:15:40.440Z" title="更新于 2025-09-19 15:15:40">2025-09-19</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Agent 记忆五层模型与工程落地"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Agent-记忆五层模型与工程落地"><a href="#Agent-记忆五层模型与工程落地" class="headerlink" title="Agent 记忆五层模型与工程落地"></a>Agent 记忆五层模型与工程落地</h1><p>对话式大模型 Agent 的「记忆」问题，本质就是：<strong>如何让机器像人一样，不只是即时回答，而是能记住过去、理解现在、影响未来。</strong><br>过去两年，学术界和工业界已经逐渐形成一个共识：记忆需要分层，不同层次解决不同问题。下面我用一个五层模型，带你快速建立完整认知。</p>
+<br/>
+
+<h2 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL;DR"></a>TL;DR</h2><p>Agent Memory 的五层模型，就像人类大脑的结构化记忆系统。</p>
+<ul>
+<li><strong>工作记忆负责即时</strong></li>
+<li><strong>情景记忆负责事件</strong></li>
+<li><strong>语义记忆负责知识</strong></li>
+<li><strong>程序性记忆负责技能</strong></li>
+<li><strong>外部持久记忆负责归档</strong></li>
+</ul>
+<p>业界工程实践已经逐步达成共识：<strong>分层 + 策略化 + 可控</strong>。这是未来对话式 Agent 真正“有记忆力”的基础。</p>
+<br/>
+
+<h2 id="1-工作记忆（Working-Memory）"><a href="#1-工作记忆（Working-Memory）" class="headerlink" title="1. 工作记忆（Working Memory）"></a>1. 工作记忆（Working Memory）</h2><ul>
+<li><strong>定义</strong>：Agent 当前正在处理的上下文，类似人类的「短时记忆」。</li>
+<li><strong>特点</strong>：存活时间短、容量有限，常常就是一段对话上下文窗口。</li>
+<li><strong>类比</strong>：你在和朋友聊天时，能记住刚才说的两三句话。</li>
+<li><strong>实现方式</strong>：<ul>
+<li>LLM prompt 窗口（context window）</li>
+<li>Scratchpad 技巧（中间步骤写出来）</li>
+</ul>
+</li>
+<li><strong>代表案例</strong>：LangChain 的 <code>ConversationBuffer</code>、ChatGPT 的当前对话历史。</li>
+</ul>
+<br/>
+
+
+<h2 id="2-情景记忆（Episodic-Memory）"><a href="#2-情景记忆（Episodic-Memory）" class="headerlink" title="2. 情景记忆（Episodic Memory）"></a>2. 情景记忆（Episodic Memory）</h2><ul>
+<li><strong>定义</strong>：记录「事件」和「经历」，带时间线，能追溯发生了什么。</li>
+<li><strong>特点</strong>：和具体时刻挂钩，经常包含“失败&#x2F;成功的经验”与“反思日志”。</li>
+<li><strong>类比</strong>：你记得昨天在咖啡馆聊过天，记得过程和情绪。</li>
+<li><strong>实现方式</strong>：<ul>
+<li>把对话片段存档，并打上时间戳</li>
+<li>提炼重要片段（反思）作为索引</li>
+</ul>
+</li>
+<li><strong>代表论文</strong>：<ul>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2304.03442"><em>Generative Agents</em>（2023）</a>：Agent 在虚拟小镇中记忆、反思、规划。</li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2303.11366"><em>Reflexion</em>（2023）</a>：让 Agent 自己“写日志”，从错误中学习。</li>
+</ul>
+</li>
+</ul>
+<br/>
+
+
+<h2 id="3-语义记忆（Semantic-Memory）"><a href="#3-语义记忆（Semantic-Memory）" class="headerlink" title="3. 语义记忆（Semantic Memory）"></a>3. 语义记忆（Semantic Memory）</h2><ul>
+<li><strong>定义</strong>：长期积累的「事实、知识、用户画像」。</li>
+<li><strong>特点</strong>：和时间无关，更像百科或人物设定。</li>
+<li><strong>类比</strong>：你记得朋友喜欢喝拿铁，这是稳定的知识。</li>
+<li><strong>实现方式</strong>：<ul>
+<li>向量数据库（Qdrant、Weaviate、FAISS）存储事实与偏好</li>
+<li>知识图谱记录“人-事-关系”</li>
+</ul>
+</li>
+<li><strong>代表论文&#x2F;项目</strong>：<ul>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2305.10250"><em>MemoryBank</em>（2023）</a>：持续对话中生成用户画像</li>
+<li><a target="_blank" rel="noopener" href="https://docs.mem0.ai/open-source/graph_memory/overview"><em>Mem0 Graph Memory</em>（2024）</a>：结构化保存人物与事件关系</li>
+</ul>
+</li>
+</ul>
+<br/>
+
+
+<h2 id="4-程序性记忆（Procedural-Memory）"><a href="#4-程序性记忆（Procedural-Memory）" class="headerlink" title="4. 程序性记忆（Procedural Memory）"></a>4. 程序性记忆（Procedural Memory）</h2><ul>
+<li><strong>定义</strong>：Agent 学到的「技能」或「操作套路」。</li>
+<li><strong>特点</strong>：不是单纯事实，而是“知道如何做”。</li>
+<li><strong>类比</strong>：你不用思考就能骑自行车、写一封邮件。</li>
+<li><strong>实现方式</strong>：<ul>
+<li>把常见操作总结成工具调用范式</li>
+<li>动态 Few-Shot 示例库（常用推理模板）</li>
+</ul>
+</li>
+<li><strong>工程案例</strong>：<ul>
+<li><a target="_blank" rel="noopener" href="https://www.langchain.com/langgraph">LangGraph</a> 中，Agent 会学习常用任务的状态流转</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/microsoft/autogen">Copilot&#x2F;AutoGen</a> 把编辑-执行-调试形成可复用的模式</li>
+</ul>
+</li>
+</ul>
+<br/>
+
+
+<h2 id="5-外部持久记忆（External-x2F-Persistent-Memory）"><a href="#5-外部持久记忆（External-x2F-Persistent-Memory）" class="headerlink" title="5. 外部持久记忆（External&#x2F;Persistent Memory）"></a>5. 外部持久记忆（External&#x2F;Persistent Memory）</h2><ul>
+<li><strong>定义</strong>：超越上下文的长期存储，像“硬盘”。</li>
+<li><strong>特点</strong>：支持无限扩展，必须解决检索与整理问题。</li>
+<li><strong>类比</strong>：你写日记、建笔记本，未来可以随时翻查。</li>
+<li><strong>实现方式</strong>：<ul>
+<li>向量库 + 图数据库 + 文档存储</li>
+<li>分层存储（高频缓存 vs. 历史归档）</li>
+</ul>
+</li>
+<li><strong>代表论文&#x2F;工程</strong>：<ul>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2310.08560"><em>MemGPT</em>（2023）</a>：提出“内存分页&#x2F;中断”机制，像操作系统一样管理记忆</li>
+<li>LangGraph × MongoDB（2024）：提供标准化的 <a target="_blank" rel="noopener" href="https://www.mongodb.com/company/blog/product-release-announcements/powering-long-term-memory-for-agents-langgraph">Memory Store</a></li>
+</ul>
+</li>
+</ul>
+<br/>
+
+
+<h2 id="工程落地的常见共识"><a href="#工程落地的常见共识" class="headerlink" title="工程落地的常见共识"></a>工程落地的常见共识</h2><h3 id="1-分层设计"><a href="#1-分层设计" class="headerlink" title="1. 分层设计"></a>1. 分层设计</h3><p>人类的记忆本来就是分层的：我们能在几秒钟里复述一串电话号码，却会在多年后仍然记得一次重要的旅行。工程上的 Agent 也是这样。短期的、随时会遗忘的“工作记忆”，与长期的、可以反复翻阅的“档案室”，需要用不同的方式去保存与检索。于是，分层设计成为共识：即时信息放在快取里，长期知识则交给更稳定的存储系统。就像书桌上的便签和书架上的厚厚档案，功能完全不同，却缺一不可。</p>
+<p><strong>短期记忆 vs 长期记忆，采用不同存储与检索策略。</strong><br><br/></p>
+<h3 id="2-写入策略"><a href="#2-写入策略" class="headerlink" title="2. 写入策略"></a>2. 写入策略</h3><p>想象一下，如果我们把每一句废话都写进日记，很快就会被无穷无尽的记录淹没。Agent 也是如此，它不能也不应该记住一切。于是，工程师们给它设定了选择标准：只有重要的（关系到目标或用户画像）、新颖的（之前未曾出现）、高频的（重复多次的事实）才会进入长期记忆。换句话说，Agent 的记忆更像是一本精选集，而不是毫无筛选的逐字稿。</p>
+<p><strong>写入策略不是所有内容都要保存，只记“重要&#x2F;新颖&#x2F;高频”的。</strong><br><br/></p>
+<h3 id="3-检索策略"><a href="#3-检索策略" class="headerlink" title="3. 检索策略"></a>3. 检索策略</h3><p>当记忆被写入，另一个问题随之而来：如何在需要时找到它？最初的做法往往依赖语义相似度，把提问和记忆做 embedding 比较。但很快，人们发现这还不够。因为有些信息不仅要“像”，还要“新”——时间因素不可或缺；有些信息要靠“重要性”来区分，避免被琐碎淹没。所以今天的检索策略更像是一场多维度的评分：语义相关、时间新鲜、重要程度，三者一起决定结果。</p>
+<p><strong>检索策略不仅仅靠语义相似度，还要结合时间性和重要性。</strong><br><br/></p>
+<h3 id="4-整理与巩固"><a href="#4-整理与巩固" class="headerlink" title="4. 整理与巩固"></a>4. 整理与巩固</h3><p>长久使用下来，任何系统都会遇到“记忆漂移”的问题：重复、矛盾、甚至遗忘关键信息。解决办法和人类差不多——定期整理。工程实践里，这意味着定时运行批处理，把零散的对话压缩成主题摘要，把重复的事实合并为一个清晰的条目。就像我们清理电脑文件夹，把散落各处的文档归档成整洁的文件夹，方便未来的自己。</p>
+<p><strong>定期把零散内容压缩为摘要，避免“记忆漂移”</strong><br><br/></p>
+<h3 id="5-透明与可控"><a href="#5-透明与可控" class="headerlink" title="5. 透明与可控"></a>5. 透明与可控</h3><p>最后，还有一个关乎信任的问题。人们普遍认为，Agent 的记忆不能是“黑箱”，用户必须能看见并掌控。用户应该知道系统记住了什么，也能在必要时删除、修改或屏蔽。ChatGPT、Claude 等主流产品已经在这一点上给出实践：用户可以进入设置界面，看到自己的“记忆”，甚至要求系统“忘掉”某些事实。这种透明和可控，不仅是工程最佳实践，更是赢得用户信赖的关键。</p>
+<p><strong>产品化下用户能看到、编辑甚至删除 Agent 的记忆。</strong></p>
+<br/>
+
+
+<h2 id="延伸阅读与资料"><a href="#延伸阅读与资料" class="headerlink" title="延伸阅读与资料"></a>延伸阅读与资料</h2><ul>
+<li><strong>论文</strong>：<ul>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2304.03442"><em>Generative Agents</em> (2023)</a></li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2303.11366"><em>Reflexion</em> (2023)</a></li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2310.08560"><em>MemGPT</em> (2023)</a></li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2305.10250"><em>MemoryBank</em> (2023)</a></li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2402.17753"><em>LoCoMo</em> (2024, 长对话记忆评测基准)</a></li>
+</ul>
+</li>
+<li><strong>框架文档</strong>：<ul>
+<li><a target="_blank" rel="noopener" href="https://langchain-ai.github.io/langgraph/concepts/memory/">LangGraph Memory</a></li>
+<li><a target="_blank" rel="noopener" href="https://developers.llamaindex.ai/python/framework/module_guides/deploying/agents/memory/">LlamaIndex Memory</a></li>
+<li><a target="_blank" rel="noopener" href="https://microsoft.github.io/autogen/0.2/docs/ecosystem/agent-memory-with-zep/">AutoGen Memory &amp; Zep</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.crewai.com/en/concepts/memory">CrewAI Long-term Memory</a></li>
+</ul>
+</li>
+</ul>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.liluhui.cn">Luhui芦荟</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.liluhui.cn/2025/09/19/Agent-Memory-Five-Layer-Model-and-Engineering-Implementation/">https://blog.liluhui.cn/2025/09/19/Agent-Memory-Five-Layer-Model-and-Engineering-Implementation/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.liluhui.cn" target="_blank">Luhui's Personal Website</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="next-post pull-full" href="/2025/09/12/22-top-level-Agent-workflow-frameworks-organized/" title="🌅 22 个顶级 Agent 工作流框架整理"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">🌅 22 个顶级 Agent 工作流框架整理</div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Luhui芦荟</div><div class="author-info-description">关于生活、学习、工作</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">88</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="/rss2.xml" target="_blank" title="RSS"><i class="fas fa-rss"></i></a><a class="social-icon" href="https://github.com/LDingLDing" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:liluhuizj@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Agent-%E8%AE%B0%E5%BF%86%E4%BA%94%E5%B1%82%E6%A8%A1%E5%9E%8B%E4%B8%8E%E5%B7%A5%E7%A8%8B%E8%90%BD%E5%9C%B0"><span class="toc-number">1.</span> <span class="toc-text">Agent 记忆五层模型与工程落地</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#TL-DR"><span class="toc-number">1.1.</span> <span class="toc-text">TL;DR</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%B7%A5%E4%BD%9C%E8%AE%B0%E5%BF%86%EF%BC%88Working-Memory%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">1. 工作记忆（Working Memory）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%83%85%E6%99%AF%E8%AE%B0%E5%BF%86%EF%BC%88Episodic-Memory%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">2. 情景记忆（Episodic Memory）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E8%AF%AD%E4%B9%89%E8%AE%B0%E5%BF%86%EF%BC%88Semantic-Memory%EF%BC%89"><span class="toc-number">1.4.</span> <span class="toc-text">3. 语义记忆（Semantic Memory）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E7%A8%8B%E5%BA%8F%E6%80%A7%E8%AE%B0%E5%BF%86%EF%BC%88Procedural-Memory%EF%BC%89"><span class="toc-number">1.5.</span> <span class="toc-text">4. 程序性记忆（Procedural Memory）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%A4%96%E9%83%A8%E6%8C%81%E4%B9%85%E8%AE%B0%E5%BF%86%EF%BC%88External-x2F-Persistent-Memory%EF%BC%89"><span class="toc-number">1.6.</span> <span class="toc-text">5. 外部持久记忆（External&#x2F;Persistent Memory）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E7%A8%8B%E8%90%BD%E5%9C%B0%E7%9A%84%E5%B8%B8%E8%A7%81%E5%85%B1%E8%AF%86"><span class="toc-number">1.7.</span> <span class="toc-text">工程落地的常见共识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%88%86%E5%B1%82%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.7.1.</span> <span class="toc-text">1. 分层设计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%86%99%E5%85%A5%E7%AD%96%E7%95%A5"><span class="toc-number">1.7.2.</span> <span class="toc-text">2. 写入策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%A3%80%E7%B4%A2%E7%AD%96%E7%95%A5"><span class="toc-number">1.7.3.</span> <span class="toc-text">3. 检索策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%95%B4%E7%90%86%E4%B8%8E%E5%B7%A9%E5%9B%BA"><span class="toc-number">1.7.4.</span> <span class="toc-text">4. 整理与巩固</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E9%80%8F%E6%98%8E%E4%B8%8E%E5%8F%AF%E6%8E%A7"><span class="toc-number">1.7.5.</span> <span class="toc-text">5. 透明与可控</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BB%B6%E4%BC%B8%E9%98%85%E8%AF%BB%E4%B8%8E%E8%B5%84%E6%96%99"><span class="toc-number">1.8.</span> <span class="toc-text">延伸阅读与资料</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/19/Agent-Memory-Five-Layer-Model-and-Engineering-Implementation/" title="Agent 记忆五层模型与工程落地">Agent 记忆五层模型与工程落地</a><time datetime="2025-09-19T03:27:20.000Z" title="发表于 2025-09-19 11:27:20">2025-09-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/12/22-top-level-Agent-workflow-frameworks-organized/" title="🌅 22 个顶级 Agent 工作流框架整理">🌅 22 个顶级 Agent 工作流框架整理</a><time datetime="2025-09-12T01:56:16.000Z" title="发表于 2025-09-12 09:56:16">2025-09-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/05/6-Design-Principles-I-Learned-from-Claude-Code/" title="从 Claude Code 学的 6 个设计铁律（含 prompts/tool 清单）">从 Claude Code 学的 6 个设计铁律（含 prompts/tool 清单）</a><time datetime="2025-09-05T10:28:12.000Z" title="发表于 2025-09-05 18:28:12">2025-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/02/202508/" title="2025/08 Review"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/02/shanghai.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2025/08 Review"/></a><div class="content"><a class="title" href="/2025/09/02/202508/" title="2025/08 Review">2025/08 Review</a><time datetime="2025-09-02T13:23:21.000Z" title="发表于 2025-09-02 21:23:21">2025-09-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/08/22/Traps-of-Methodology-in-Agent-Development/" title="构建 Agent 中的方法论陷阱">构建 Agent 中的方法论陷阱</a><time datetime="2025-08-22T03:49:54.000Z" title="发表于 2025-08-22 11:49:54">2025-08-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By Luhui芦荟</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn">浙ICP备19010836号</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const initGitalk = () => {
+    const gitalk = new Gitalk(Object.assign({
+      clientID: '4987f0fb0a509fb9f0af',
+      clientSecret: '7e264967a3ea557003aacdf795b9e57e36a56382',
+      repo: 'ldinglding.github.io',
+      owner: 'LDingLDing',
+      admin: ['LDingLDing'],
+      id: 'aa4dcdb3c2f8e675b4ad88b86d4f2ffc',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  const loadGitalk = async() => {
+    if (typeof Gitalk === 'function') initGitalk()
+    else {
+      await btf.getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+      await btf.getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js')
+      initGitalk()
+    }
+  }
+  
+  const commentCount = n => {
+    const isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+    if (isCommentCount) {
+      isCommentCount.textContent= n
+    }
+  }
+
+  if ('Gitalk' === 'Gitalk' || !false) {
+    if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+    else loadGitalk()
+  } else {
+    window.loadOtherComment = loadGitalk
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

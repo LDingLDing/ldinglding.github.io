@@ -1,0 +1,304 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>我的2019 | Luhui's Personal Website</title><meta name="author" content="Luhui芦荟"><meta name="copyright" content="Luhui芦荟"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="2019年，工作的第四年，回顾这一年在生活和想法上都有了太多的变化，有了更多想做的事情，希望在这不太平的2020，吐故纳新，能按照自己规划的80%完成就心满意足啦。整理回顾我的2019最重要的5件事。 理财踏入了一只脚今年总算是在理财方面，有了一颗安定的心，虽然明白自己有很多无知，经验方面更是缺少，但有了安抚自己心理的方式，明白之后适合自己的方向策略可以是怎么样的。今年在理财上尤为大的收获，其实就">
+<meta property="og:type" content="article">
+<meta property="og:title" content="我的2019">
+<meta property="og:url" content="https://blog.liluhui.cn/2020/01/28/%E6%88%91%E7%9A%842019/index.html">
+<meta property="og:site_name" content="Luhui&#39;s Personal Website">
+<meta property="og:description" content="2019年，工作的第四年，回顾这一年在生活和想法上都有了太多的变化，有了更多想做的事情，希望在这不太平的2020，吐故纳新，能按照自己规划的80%完成就心满意足啦。整理回顾我的2019最重要的5件事。 理财踏入了一只脚今年总算是在理财方面，有了一颗安定的心，虽然明白自己有很多无知，经验方面更是缺少，但有了安抚自己心理的方式，明白之后适合自己的方向策略可以是怎么样的。今年在理财上尤为大的收获，其实就">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/apEfIu.png">
+<meta property="article:published_time" content="2020-01-27T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-09-01T14:36:56.596Z">
+<meta property="article:author" content="Luhui芦荟">
+<meta property="article:tag" content="李璐慧,芦荟,Aloea,技术博客,前端,Node">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/apEfIu.png"><link rel="shortcut icon" href="https://i.loli.net/2017/11/26/5a19c0b50432e.png"><link rel="canonical" href="https://blog.liluhui.cn/2020/01/28/%E6%88%91%E7%9A%842019/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>(()=>{
+      const saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+      
+      window.btf = {
+        saveToLocal: saveToLocal,
+        getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+          script.src = url
+          script.async = true
+          script.onerror = reject
+          script.onload = script.onreadystatechange = function() {
+            const loadState = this.readyState
+            if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+            script.onload = script.onreadystatechange = null
+            resolve()
+          }
+
+          Object.keys(attr).forEach(key => {
+            script.setAttribute(key, attr[key])
+          })
+
+          document.head.appendChild(script)
+        }),
+
+        getCSS: (url, id = false) => new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+          link.rel = 'stylesheet'
+          link.href = url
+          if (id) link.id = id
+          link.onerror = reject
+          link.onload = link.onreadystatechange = function() {
+            const loadState = this.readyState
+            if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+            link.onload = link.onreadystatechange = null
+            resolve()
+          }
+          document.head.appendChild(link)
+        }),
+
+        addGlobalFn: (key, fn, name = false, parent = window) => {
+          const pjaxEnable = false
+          if (!pjaxEnable && key.startsWith('pjax')) return
+
+          const globalFn = parent.globalFn || {}
+          const keyObj = globalFn[key] || {}
+    
+          if (name && keyObj[name]) return
+    
+          name = name || Object.keys(keyObj).length
+          keyObj[name] = fn
+          globalFn[key] = keyObj
+          parent.globalFn = globalFn
+        }
+      }
+    
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+      
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })()</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=8Z2NNDYTL9"></script><script>window.dataLayer = window.dataLayer || []
+function gtag(){dataLayer.push(arguments)}
+gtag('js', new Date())
+gtag('config', '8Z2NNDYTL9')
+btf.addGlobalFn('pjaxComplete', () => {
+  gtag('config', '8Z2NNDYTL9', {'page_path': window.location.pathname})
+}, 'google_analytics')
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":true,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '我的2019',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-09-01 22:36:56'
+}</script><meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/rss2.xml" title="Luhui's Personal Website" type="application/rss+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">88</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" href="/process"><span> 建站历程</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/apEfIu.png);"><nav id="nav"><span id="blog-info"><a href="/" title="Luhui's Personal Website"><span class="site-name">Luhui's Personal Website</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" href="/process"><span> 建站历程</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">我的2019</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-01-27T16:00:00.000Z" title="发表于 2020-01-28 00:00:00">2020-01-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-09-01T14:36:56.596Z" title="更新于 2023-09-01 22:36:56">2023-09-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%94%9F%E6%B4%BB/">生活</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="我的2019"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>2019年，工作的第四年，回顾这一年在生活和想法上都有了太多的变化，有了更多想做的事情，希望在这不太平的2020，吐故纳新，能按照自己规划的80%完成就心满意足啦。整理回顾我的2019最重要的5件事。</p>
+<h3 id="理财踏入了一只脚"><a href="#理财踏入了一只脚" class="headerlink" title="理财踏入了一只脚"></a>理财踏入了一只脚</h3><p>今年总算是在理财方面，有了一颗安定的心，虽然明白自己有很多无知，经验方面更是缺少，但有了安抚自己心理的方式，明白之后适合自己的方向策略可以是怎么样的。今年在理财上尤为大的收获，其实就是在<strong>心理的舒适感</strong>吧 —— 不为回撤担心，不为追盈焦急，为自己划定我能收获的范围，并反思策略而非我自己。</p>
+<h4 id="2018-炒股之旅"><a href="#2018-炒股之旅" class="headerlink" title="2018 炒股之旅"></a>2018 炒股之旅</h4><p>2018年开始随着部门氛围小小试着炒了股，折折腾腾半年多回了本，自觉炒股这事不适合我。<br>&amp;nbsp;</p>
+<p>一是实在没时间去盯盘。</p>
+<p>二是这心理战着实难受，涨了想等再涨那么几毛，跌了又想等它U型回来，太太难了。我们总说炒股亏7平2赚1，亏了就安慰自己学费，谁还没为炒股交过点学费呢。但看看部门的前辈们经历了牛市还亏在里面出不来的，我放弃了，我虽然也是自信我是那“赚1”的，但没时间盯盘对吧，算了吧（摊手）。</p>
+<p>三是从我观察来看，公司里那几位赚着的“牛人”都在特定领域和策略的深入研究的，还至少2年以上的实战经验，而且还有运气成分，能常年赚钱的，都是靠知识、观察、实践的。虽然身边有大牛，也会帮看看选股、买卖点啥的，但也不会完全断言，毕竟黑天鹅说来就来，炒股这事是要靠长期盈利概率50%以上的。</p>
+<p>综上，有幸回本后就放弃了，不再拿核心资产进行炒股了..</p>
+<h4 id="调整目标"><a href="#调整目标" class="headerlink" title="调整目标"></a>调整目标</h4><p>最开始跟着炒股的时候，就想赚点“多出来的钱”。在看了一些理财相关的书籍资料后，我觉得书里说的对，系统性思考，不要小打小闹，我要“赚钱”，要让我资产雪球越滚越大，那么我要做的在这个年纪就是2件事</p>
+<blockquote>
+<p>投资自己，积累初始资本<br>建立理财观，学习知识，逐步试水</p>
+</blockquote>
+<p>详细讲就是</p>
+<ol>
+<li><p>大量时间还是以提升自己的竞争力为主，提高“工资收入”，积累人生初始资本，不然全靠理财的高盈利去翻倍资产也意味着高风险。</p>
+</li>
+<li><p>理财观就千人千面了，于我而言，明确自己的年度目标，以“大稳健，小风险，配置为主”为布局，不设立过大的年度目标，比如我希望之后二十年的能做到平均年化 15% 我就满足了，2019 年我的目标 10% 。在看很多牛人看来是很低的期望，但我知道真能做到的话，已经干掉市场上 90% 的散户和专业机构了，不去和顶部那些吆喝“年化 200% ”的对比，只跟自己的预期比较。在这个基础上我分了三个账户，其中 A 账户做流动资金管理，B 账户做稳健策略，C 账户做风险系数更高的实验。具体就不在这细说了，毕竟我也不靠谱..</p>
+</li>
+</ol>
+<h4 id="财富自由"><a href="#财富自由" class="headerlink" title="财富自由"></a>财富自由</h4><p>这应该是大家都很向往的一件事，今年因为理财上的“进步”，也仔细算了算，发现也没有那么远，其实做好理财，不贪高，假如每月自然盈利 1W 就算我财富自由了，只要好好积累资本，做好稳定理财，10年以内就能实现，一起努力吧～</p>
+<p>这里，送给大家一句我很喜欢的话，共勉吧</p>
+<blockquote>
+<p>就像花开有期。每个品种都有它的起伏周期。从周期的角度讲，你应该做的是尽量识别每个大类的春夏秋冬，然后根据大致的天气状态，增减衣服，舒舒服服的活下去。</p>
+</blockquote>
+<hr>
+<h3 id="找到了一件有价值并想做的事"><a href="#找到了一件有价值并想做的事" class="headerlink" title="找到了一件有价值并想做的事"></a>找到了一件有价值并想做的事</h3><p>19年是幸运的一年，也是充满挑战的一年，年中转到了架构组负责，业务管理方面放下了很多，开始重整手头的事，几番聊下来拉伙了设计和交互人员，决定开始推动视觉体系在PC客户端全面落地。目前公司这块完全出于混乱野生状态，正好结合上面在推的大中台计划，把组件生态的基础设施完善起来。</p>
+<p>这是计划初始的一个草图，19年整个时间计划包括人员资源上受阻挺多，所幸年度计划还算基本完成了，20年也获得了更多关注，争取到上面的资源投入进来。</p>
+<img src="/2020/01/28/%E6%88%91%E7%9A%842019/2020-3.jpg" class="" title="img">
+
+
+<p>之前做的很多事都是为部门去提效或解决问题的，这是一次推向整个公司的计划，因为所处的是toC事业部，这是一次非常难得自下而上推动来的计划。既然决定做这事就意味着需要更多的资源，不能再局限在自己的身份，要争取，要向上获取认同，要有自己的坚持。</p>
+<p>在这个方向上，不再是开发团队的事，除了规划、管理、技术方案，还包括设计语言、组件生态方面都还任重道远。将设计、交互、开发组合起来，内部迭代，对外服务业务方，真正去解决设计和开发的问题。</p>
+<p>这当中我们遇到过很多问题，像是如下等等</p>
+<ul>
+<li>设计语言如何制定，理论与实践依据，色板梯度协议如何保证普试性。</li>
+<li>在大中台已经运行一年的当下，公司跨部门组件使用的最大痛点是什么，如何找到切入点。</li>
+<li>接入各业务线的研发流程同时，如何保障技术支持和将反馈流程运行好。</li>
+</ul>
+<p>这些都是我们在内部不断讨论的问题，有的可能已经确定了方向，有的还在试错的路上，毕竟外面五彩缤纷的开源视觉框架从来不是为 toC 业务项目而用的。只有我们自己知道在这个范围内我们需要什么。越通用，越抽象，我们需要创造一种新的平衡点。</p>
+<hr>
+<h3 id="写技术文章"><a href="#写技术文章" class="headerlink" title="写技术文章"></a>写技术文章</h3><p>熟悉我的朋友应该知道我再19年初兴致勃勃写了一波文章。为什么之后没坚持下去呢，在当时有很多想法，但最重要的是一直有个声音在说——这“没意义”。</p>
+<blockquote>
+<p>为什么没坚持下去？</p>
+</blockquote>
+<p>主要还是心理上对这事意义或者说价值的认定不明确。<br>这其中包括，</p>
+<ol>
+<li>我对选题的定位到底是遇坑深入沉淀，还是看到兴趣点就去研究，再或者是就某一方面做更系统的入门到深入的介绍。没有想好，结果备选题板上越来越多，是个失败的教训。</li>
+<li>我想要产生什么价值。为了名气？宣传太麻烦。温故而知新？性价比太低。</li>
+<li>刻板印象，技术高手就该有文章沉淀。细想也不对啊，难道我不应该更急迫去做出点什么吗。</li>
+</ol>
+<p>结论：去做事吧！文章不过是闲情雅致的“抒发”或是必要的时刻的“宣传”罢了～</p>
+<hr>
+<h3 id="学习瑜伽，三个月的瑜伽之旅"><a href="#学习瑜伽，三个月的瑜伽之旅" class="headerlink" title="学习瑜伽，三个月的瑜伽之旅"></a>学习瑜伽，三个月的瑜伽之旅</h3><p>夏末秋初这三个月，跟着老师开始入门学习瑜伽，回忆起来是非常锻炼又愉悦的感觉，对于我这种一点都不想剧烈运动的人来说，真的没想到会是收获到一份这样的身心愉悦。</p>
+<p>认识小宇老师确实是意外和缘分，在我的人生规划里，也许会是在接近30岁的年纪去接触瑜伽，去管理自己的身体。但没想到，这机会就这么忽然在眼前，当然是抓住去试试了。</p>
+<p>这三个月大概每周3次左右，总共打卡也有了50+次，感谢自己的坚持。</p>
+<img src="/2020/01/28/%E6%88%91%E7%9A%842019/9A031E3D-9767-4AE5-AC73-92B1AEA16BEC.png" class="" title="img">
+
+
+<h4 id="瑜伽带给了我什么呢？（一个小白的感受）"><a href="#瑜伽带给了我什么呢？（一个小白的感受）" class="headerlink" title="瑜伽带给了我什么呢？（一个小白的感受）"></a>瑜伽带给了我什么呢？（一个小白的感受）</h4><p>其实也没啥玄乎的，了解了自己的外形（体型正位、各部位的柔韧和力量），获得更佳的专注力与放松（在呼吸和体式中感受沉浸和专注）</p>
+<p>呼吸和体式真的是个毫不神奇的神奇的东西。原来一个人静静坐着，感受空气从鼻尖到喉咙到胸腔到隔膜到小腹的反复会是每次都截然不同，会是这么沉浸的感受。原来一个体式在流动态和静止态的肌肉感受完全不同，在静止态就这么细品着微微酸痛的感觉真的非常解压，一堂课结束，休息术的时候真的会觉得那些工作中烦心、焦虑的事轻松了很多，虽然并没有解决..这大概就是运动该死的魅力吧。</p>
+<p>瑜伽真的很不错，尤其腿会细啊哈哈，虽然入冬后因为工作暂停了已经回来了。<br>20年争取打卡100次，想想每周3-4小时的锻炼可能比较奢侈，看情况吧，希望有一天，我也能做上2小时的拜日。</p>
+<hr>
+<h3 id="生活数据化，住商"><a href="#生活数据化，住商" class="headerlink" title="生活数据化，住商"></a>生活数据化，住商</h3><p>我自诩是一个储蓄能力非常好的人，从小就有自己的积蓄，小学储蓄了200，初中钱包没少于过2000，没当过“钱包光”的人，但奈何这手吧它管不住，储蓄归储蓄，花起来还是蛮冲动的。</p>
+<p>19年我学到了一个词 —— <strong>住商</strong>， 里面有一招真的对我醍醐灌顶。《有家就要好好住》里讲到的一个实例，作者如何管理她的鞋子，首先她设定了鞋子的数量，总共x个，既然总数量限定了，那就需要规划各类鞋子有几双，比如冬天的n双，夏天的m双，四季可穿的l双，特殊场合&#x2F;搭配预留j双，买满这个数量后每新增一双鞋就要考虑替换(扔)掉那双。可以说是非常策略性的方案了。</p>
+<p>上面这种生活策略真的事很妙，想得到，但从未对生活如此想过，以前我的想法都是 “啊这鞋子我要，好搭配，有钱，买”，或者 “啊放不下鞋子了，要不把那双扔了吧” 扔完后就发现这个搭配线上缺鞋子了…(懊恼)</p>
+<p>&amp;nbsp;</p>
+<p>首先我把最头疼的 护肤品&#x2F;美妆 在使用的和未开封的都管理了起来</p>
+<img src="/2020/01/28/%E6%88%91%E7%9A%842019/4179FA03-6974-47F7-88F8-87000FA42E73.png" class="" title="img">
+
+<p>&amp;nbsp;<br>每周都能收到邮件提醒</p>
+<img src="/2020/01/28/%E6%88%91%E7%9A%842019/8BB8432E-A622-42DA-98DA-B2E22E3671CD.png" class="" title="img">
+
+<p>总算买护肤品的时候可以有的参考了，还有个也页面对产品功效进行描述，不然老忘就又买了。还有家里买的日用品。理性购物理性购物。</p>
+<p>&amp;nbsp;</p>
+<p>后面是将我的衣物管理起来，这找图实在是块大工程，目前主要是先策略化管理最贵的 <strong>大衣</strong> 和 <strong>鞋子</strong> 。</p>
+<img src="/2020/01/28/%E6%88%91%E7%9A%842019/AF448AC0-9410-4151-A51B-23183833A5F5.jpg" class="" title="img">
+
+<p>数据化之后，给我的“买买买”提供了数据支持，“你自己看看精华已经几瓶了还买”真的是很有规划了。不过我还是那个理念，尽量性价比高的方式去管理感觉生活中有点不受控的地方。分析自己，量化数据，限制购物，感觉还不错。</p>
+<hr>
+<p>2020</p>
+<p>比 2019 更好一点点</p>
+<p>家人都平平安安 ❤～</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.liluhui.cn">Luhui芦荟</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.liluhui.cn/2020/01/28/%E6%88%91%E7%9A%842019/">https://blog.liluhui.cn/2020/01/28/%E6%88%91%E7%9A%842019/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.liluhui.cn" target="_blank">Luhui's Personal Website</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/apEfIu.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="prev-post pull-left" href="/2020/02/06/%E7%BB%84%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%89%96%E6%9E%90%EF%BC%88%E5%BC%80%E7%AF%87%E4%B8%80%EF%BC%89/" title="组件设计修炼之道"><img class="cover" src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/eHcJbx.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">组件设计修炼之道</div></div></a><a class="next-post pull-right" href="/2019/05/13/JWT%E7%9A%84Node%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/" title="JWT的Node简单实现"><img class="cover" src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/57623031-772bae00-75c1-11e9-8a98-aa3e8301420e.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">JWT的Node简单实现</div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Luhui芦荟</div><div class="author-info-description">关于生活、学习、工作</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">88</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="/rss2.xml" target="_blank" title="RSS"><i class="fas fa-rss"></i></a><a class="social-icon" href="https://github.com/LDingLDing" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:liluhuizj@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%90%86%E8%B4%A2%E8%B8%8F%E5%85%A5%E4%BA%86%E4%B8%80%E5%8F%AA%E8%84%9A"><span class="toc-number">1.</span> <span class="toc-text">理财踏入了一只脚</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2018-%E7%82%92%E8%82%A1%E4%B9%8B%E6%97%85"><span class="toc-number">1.1.</span> <span class="toc-text">2018 炒股之旅</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B0%83%E6%95%B4%E7%9B%AE%E6%A0%87"><span class="toc-number">1.2.</span> <span class="toc-text">调整目标</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B4%A2%E5%AF%8C%E8%87%AA%E7%94%B1"><span class="toc-number">1.3.</span> <span class="toc-text">财富自由</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%BE%E5%88%B0%E4%BA%86%E4%B8%80%E4%BB%B6%E6%9C%89%E4%BB%B7%E5%80%BC%E5%B9%B6%E6%83%B3%E5%81%9A%E7%9A%84%E4%BA%8B"><span class="toc-number">2.</span> <span class="toc-text">找到了一件有价值并想做的事</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%99%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0"><span class="toc-number">3.</span> <span class="toc-text">写技术文章</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E7%91%9C%E4%BC%BD%EF%BC%8C%E4%B8%89%E4%B8%AA%E6%9C%88%E7%9A%84%E7%91%9C%E4%BC%BD%E4%B9%8B%E6%97%85"><span class="toc-number">4.</span> <span class="toc-text">学习瑜伽，三个月的瑜伽之旅</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%91%9C%E4%BC%BD%E5%B8%A6%E7%BB%99%E4%BA%86%E6%88%91%E4%BB%80%E4%B9%88%E5%91%A2%EF%BC%9F%EF%BC%88%E4%B8%80%E4%B8%AA%E5%B0%8F%E7%99%BD%E7%9A%84%E6%84%9F%E5%8F%97%EF%BC%89"><span class="toc-number">4.1.</span> <span class="toc-text">瑜伽带给了我什么呢？（一个小白的感受）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%B4%BB%E6%95%B0%E6%8D%AE%E5%8C%96%EF%BC%8C%E4%BD%8F%E5%95%86"><span class="toc-number">5.</span> <span class="toc-text">生活数据化，住商</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/19/Agent-Memory-Five-Layer-Model-and-Engineering-Implementation/" title="Agent 记忆五层模型与工程落地">Agent 记忆五层模型与工程落地</a><time datetime="2025-09-19T03:27:20.000Z" title="发表于 2025-09-19 11:27:20">2025-09-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/12/22-top-level-Agent-workflow-frameworks-organized/" title="🌅 22 个顶级 Agent 工作流框架整理">🌅 22 个顶级 Agent 工作流框架整理</a><time datetime="2025-09-12T01:56:16.000Z" title="发表于 2025-09-12 09:56:16">2025-09-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/05/6-Design-Principles-I-Learned-from-Claude-Code/" title="从 Claude Code 学的 6 个设计铁律（含 prompts/tool 清单）">从 Claude Code 学的 6 个设计铁律（含 prompts/tool 清单）</a><time datetime="2025-09-05T10:28:12.000Z" title="发表于 2025-09-05 18:28:12">2025-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/02/202508/" title="2025/08 Review"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/02/shanghai.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2025/08 Review"/></a><div class="content"><a class="title" href="/2025/09/02/202508/" title="2025/08 Review">2025/08 Review</a><time datetime="2025-09-02T13:23:21.000Z" title="发表于 2025-09-02 21:23:21">2025-09-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/08/22/Traps-of-Methodology-in-Agent-Development/" title="构建 Agent 中的方法论陷阱">构建 Agent 中的方法论陷阱</a><time datetime="2025-08-22T03:49:54.000Z" title="发表于 2025-08-22 11:49:54">2025-08-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By Luhui芦荟</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn">浙ICP备19010836号</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const initGitalk = () => {
+    const gitalk = new Gitalk(Object.assign({
+      clientID: '4987f0fb0a509fb9f0af',
+      clientSecret: '7e264967a3ea557003aacdf795b9e57e36a56382',
+      repo: 'ldinglding.github.io',
+      owner: 'LDingLDing',
+      admin: ['LDingLDing'],
+      id: 'c68fce7a25db1464a78916a30a511745',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  const loadGitalk = async() => {
+    if (typeof Gitalk === 'function') initGitalk()
+    else {
+      await btf.getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+      await btf.getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js')
+      initGitalk()
+    }
+  }
+  
+  const commentCount = n => {
+    const isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+    if (isCommentCount) {
+      isCommentCount.textContent= n
+    }
+  }
+
+  if ('Gitalk' === 'Gitalk' || !false) {
+    if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+    else loadGitalk()
+  } else {
+    window.loadOtherComment = loadGitalk
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

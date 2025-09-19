@@ -1,0 +1,268 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>有效可以学会，有效也必须学会 | Luhui's Personal Website</title><meta name="author" content="Luhui芦荟"><meta name="copyright" content="Luhui芦荟"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="2022-07 《卓有成效的管理者》书评 00这本书的书名，让人有点讨厌，又是「卓有成效」、又是「管理者」，似乎透露着一股精英主义的成功学气息，光看名字实在让人没有第一眼的好印象。好在书名不会埋没好书，经典的生命力是顽强的，吸引人的书名为它带来读者，好的内容又帮它沉淀和流传，这已经是一本出版 55 周年的作品了，半个世纪的智慧，在当代的组织发展中依然有效，对于每一个参与工作的人来说都是值得参阅和思">
+<meta property="og:type" content="article">
+<meta property="og:title" content="有效可以学会，有效也必须学会">
+<meta property="og:url" content="https://blog.liluhui.cn/2022/07/31/%E4%B9%A6%E8%AF%84-%E5%8D%93%E6%9C%89%E6%88%90%E6%95%88%E7%9A%84%E7%AE%A1%E7%90%86%E8%80%85/index.html">
+<meta property="og:site_name" content="Luhui&#39;s Personal Website">
+<meta property="og:description" content="2022-07 《卓有成效的管理者》书评 00这本书的书名，让人有点讨厌，又是「卓有成效」、又是「管理者」，似乎透露着一股精英主义的成功学气息，光看名字实在让人没有第一眼的好印象。好在书名不会埋没好书，经典的生命力是顽强的，吸引人的书名为它带来读者，好的内容又帮它沉淀和流传，这已经是一本出版 55 周年的作品了，半个世纪的智慧，在当代的组织发展中依然有效，对于每一个参与工作的人来说都是值得参阅和思">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/DI_SM_About-Peter-Drucker.png">
+<meta property="article:published_time" content="2022-07-31T03:37:28.000Z">
+<meta property="article:modified_time" content="2023-09-01T14:36:56.432Z">
+<meta property="article:author" content="Luhui芦荟">
+<meta property="article:tag" content="李璐慧,芦荟,Aloea,技术博客,前端,Node">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/DI_SM_About-Peter-Drucker.png"><link rel="shortcut icon" href="https://i.loli.net/2017/11/26/5a19c0b50432e.png"><link rel="canonical" href="https://blog.liluhui.cn/2022/07/31/%E4%B9%A6%E8%AF%84-%E5%8D%93%E6%9C%89%E6%88%90%E6%95%88%E7%9A%84%E7%AE%A1%E7%90%86%E8%80%85/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>(()=>{
+      const saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+      
+      window.btf = {
+        saveToLocal: saveToLocal,
+        getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+          script.src = url
+          script.async = true
+          script.onerror = reject
+          script.onload = script.onreadystatechange = function() {
+            const loadState = this.readyState
+            if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+            script.onload = script.onreadystatechange = null
+            resolve()
+          }
+
+          Object.keys(attr).forEach(key => {
+            script.setAttribute(key, attr[key])
+          })
+
+          document.head.appendChild(script)
+        }),
+
+        getCSS: (url, id = false) => new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+          link.rel = 'stylesheet'
+          link.href = url
+          if (id) link.id = id
+          link.onerror = reject
+          link.onload = link.onreadystatechange = function() {
+            const loadState = this.readyState
+            if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+            link.onload = link.onreadystatechange = null
+            resolve()
+          }
+          document.head.appendChild(link)
+        }),
+
+        addGlobalFn: (key, fn, name = false, parent = window) => {
+          const pjaxEnable = false
+          if (!pjaxEnable && key.startsWith('pjax')) return
+
+          const globalFn = parent.globalFn || {}
+          const keyObj = globalFn[key] || {}
+    
+          if (name && keyObj[name]) return
+    
+          name = name || Object.keys(keyObj).length
+          keyObj[name] = fn
+          globalFn[key] = keyObj
+          parent.globalFn = globalFn
+        }
+      }
+    
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+      
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })()</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=8Z2NNDYTL9"></script><script>window.dataLayer = window.dataLayer || []
+function gtag(){dataLayer.push(arguments)}
+gtag('js', new Date())
+gtag('config', '8Z2NNDYTL9')
+btf.addGlobalFn('pjaxComplete', () => {
+  gtag('config', '8Z2NNDYTL9', {'page_path': window.location.pathname})
+}, 'google_analytics')
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":true,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '有效可以学会，有效也必须学会',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-09-01 22:36:56'
+}</script><meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/rss2.xml" title="Luhui's Personal Website" type="application/rss+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">88</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" href="/process"><span> 建站历程</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/DI_SM_About-Peter-Drucker.png);"><nav id="nav"><span id="blog-info"><a href="/" title="Luhui's Personal Website"><span class="site-name">Luhui's Personal Website</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" href="/process"><span> 建站历程</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">有效可以学会，有效也必须学会</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-07-31T03:37:28.000Z" title="发表于 2022-07-31 11:37:28">2022-07-31</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-09-01T14:36:56.432Z" title="更新于 2023-09-01 22:36:56">2023-09-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%80%9D%E8%80%83/">思考</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="有效可以学会，有效也必须学会"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>2022-07 《卓有成效的管理者》书评</p>
+<h2 id="00"><a href="#00" class="headerlink" title="00"></a>00</h2><p>这本书的书名，让人有点讨厌，又是「卓有成效」、又是「管理者」，似乎透露着一股精英主义的成功学气息，光看名字实在让人没有第一眼的好印象。好在书名不会埋没好书，经典的生命力是顽强的，吸引人的书名为它带来读者，好的内容又帮它沉淀和流传，这已经是一本出版 55 周年的作品了，半个世纪的智慧，在当代的组织发展中依然有效，对于每一个参与工作的人来说都是值得参阅和思考的。它只不关乎卓有成效，也只不关乎管理者，书名只不过是个噱头。</p>
+<br />
+
+<h2 id="01"><a href="#01" class="headerlink" title="01"></a>01</h2><p><strong>这本书不是在说「卓有成效」，而是在说「有效」</strong><br><br /></p>
+<p>「有效」是什么？ 我们需要先对「有效」有个定义，这种时候我们虽然不能一下子定义出是什么，但我们可以从思考和得出不是什么而逐步接近它的含义。</p>
+<p>第一，「有效」不是「有效率」。<br />有效率是把一件事做的很快、甚至是又快又好，但这当然不粗暴的等同于有效。我记得这样一个故事，三个工人挖路埋线，一个负责挖开、一个负责埋线、一个负责埋土，每个人专精自己的部分，充分提高效率，有一天负责埋线的工人请假了，但是另外两人虽然知道，也依然如火如荼的工作着，完成着他们的工作指标。这个故事里，显然这样的结构设计追求了效率，但却完全忽略的有效，这个故事虽然看起来很离谱，但我们不妨会想一下，我们身边真的有很多竭尽全力让自己陷于忙碌中的人，仅仅用数量和时间来描述自己所做的工作。</p>
+<p>第二，「有效」不是「有产出」<br />我们大多数人都是靠专业特长、某几项技能作为输入去产出的，可能是一段代码、可能是一个零件、可能是一篇内容，但当代社会上真正对于他人、对于社会有所用的东西，是需要多项能力的产出依赖、合作、竞争才会产生的，也就是我们说的社会价值。它很难完全依靠一个人的产出产生，也很难依赖一个人来加强价值。这也是为什么企业、组织、小团体会更具有社会价值贡献的能力。<br />在这里，我想说的是，不要让自己的产出被埋没，不是我不太想宣传、营销自己的产出，而是我有责任让我的产出被看见。不要抱有天真的幻想，我的作品很好，一定会被人看见，被人们喜爱。不是的，那是一种幸运，幸运也需要自己创造，我们应该好好包装它，期待自己的产出能帮到别人，哪怕它只是其中的一小环，我们也参与到了一个真正有效的建设中。</p>
+<p>我认为，有效就是有价值，是那些真正有用且被用的成果。对于一个组织来说，就是追求社会价值；对于一个组织成员来说，就是追求最终绩效。</p>
+<p>书中提到过一个德鲁克老爷很喜欢的小故事：有三个石匠，人们问他人在干什么。<br />第一个说：“我在养家糊口。”<br />第二个说：“我在干全国最漂亮的石匠活儿。”<br />第三个说：“我在建筑大教堂。”</p>
+<p>在这里，第一个将注意力放在自己的小家，第二个将注意力放在自己的能力，只有第三个在追求有效。<br />当然这个故事我觉得很多人听来会倒果为因，觉得哎呀那我以后工作就得这么想，我必须把自己的抱负、目标说的很大才行，得把自己包装的“有格局”。这绝不是这本书想要达成的，它想做的是希望每一个知识管理者都打从心底里认可为有效负责，投身于建设成果之中。我想补充的是，这种投身、利他精神绝不是一朝一夕的观念改变，从强大的自我世界和自恋中抽身而出是很多人一生的课题。我们更应该实诚地对待自己，从学习和实干开始，尝试投身于贡献中，也要面对自己的贪念、自己的错误，并从中不断地学习和前往向往的精神世界。我们不可能瞬间抵达，只是空喊口号也不过是麻痹自我，我们能做的不过是进一步有进一步的收获。</p>
+<br />
+
+<h2 id="02"><a href="#02" class="headerlink" title="02"></a>02</h2><p><strong>这本书不是写给「管理者」的，而是写给每一个可以成为「知识工作者」的人</strong><br><br /></p>
+<p>管理者是什么，管理者是需要思考和作出决策的人，ta 决定某个目标如何行动、某个决策如何取舍。其实知识工作者也是一样的，只不过他们的影响范围大小有所不同。书名选择用「管理者」而不是书中更多提到的「知识工作者」或许也是想筛选出真正有意愿去思考和作出决策的人。</p>
+<p>知识工作者可以成为管理者，也可以沦为体力劳动者，区别是什么呢？<br />陷入纯粹的忙碌中，即使一个利用自己学识产出成果的人也会变为体力劳动者，一直鞭笞着自己干活，不说主动思考，甚至是刻意回避很多思考和责任。反过来说，任何一个世俗意义上的体力劳动者，也可以变为知识工作者，但 ta 确实需要更刻意去抽离去思考自己所处的角色和事情，不断为局部建设共享想法和实施创新。<br />对于追求有效来说，每一个知识工作者都应该在成长的过程中逐步变为一个管理者。这意味着我们不但要在当下精进技能，还需要认识和提问我们所处的环境，去挖掘机会，去参与到组织价值创造的过程中。</p>
+<br />
+
+<h2 id="03"><a href="#03" class="headerlink" title="03"></a>03</h2><p>这本书从有效出发，通过各种故事向读者打开一个关于认识有效、觉察有效的世界。其中提到了我们如何去发现和管理自己的时间，我们如何取舍和聚焦重要的事情，我们如何发展和连接不同人的优势，我们如何促进组织的有效性，我们如何做出真正有效的决策 等等等等，德鲁克老爷多年的经验和智慧的一角被浓缩在这本书中，每一点都值得我们参阅和试验，下面为就小谈几点对我而言更有启发的要素。</p>
+<br />
+
+<h2 id="04"><a href="#04" class="headerlink" title="04"></a>04</h2><p><strong>喂饱机会，饿死问题</strong><br><br /></p>
+<p>任何组织内部活动都会不断的产生问题，问题是必须得拿出来说明白，不能藏着掖着，但不论问题多么必要，解决问题都不能创建成果，更多是防止损失，只有充分利用机会，才能产生成果。换句话说，问题当然要解决，但绝不能是组织成长阶段的核心，除非这个问题能转化成机会。</p>
+<p>明确聚焦于机会下，组织策略也需要调整。人才匹配更应该把绩效最突出的人放在把握机会上，而不是让他们解决眼前的困难问题，尤其是不致命的麻烦问题。围绕机会用人可以参考日本大企业的常规做法，要求管理团队的每个成员每六个月编制出两份清单，一份是全公司的机会，另一份是全公司绩效最突出的员工，讨论后将两份清单合并，把最好的人和机会做匹配。</p>
+<p>挖掘机会需要觉察力，把组织内外的变化当作可能的机会来考虑，多想一下，“怎么才能把这些变化用作企业发展的契机？”，包括友商的动作产生的某些成功或失败，行业上新出现或消失的流程、产品、服务等，行业或市场产生的结构变化，相关用户群体的思维模式、价值观、感知等的变化 …</p>
+<p>有效的组织需要机会高于问题，用最突出的人去探索机会，思考变化如何转化为机会而不是被动接受的威胁。</p>
+<br />
+
+<h2 id="05"><a href="#05" class="headerlink" title="05"></a>05</h2><p><strong>延迟任务的勇气</strong><br><br /></p>
+<p>影响聚焦去做重要的事情的，还有我们不敢果断地延迟任务。延迟任务几乎就意味着放弃这件事情，很多“不得不做”的事情，恰恰是因为眼下的机会最好，时间窗口摆在这，如果我不做，那么别人就做了，如果我不做，我就没有先发优势，降级处理这个事，却可能成为对手的重大胜利。我们害怕这种机会的错失，就像冲浪时来的一道大浪，它看起来这么大这么好，但是自己的位置其实不太巧，但是总归可以去抓每一道眼前的浪，就是忍不住，不敢放下这个机会。</p>
+<p>延迟任务还意味要得罪人，我们的任务通常是作为别人的上游依赖，或是下游产出，对我们来说重要性不高的事，却可能对别人来说极其重要，我们对它降级，就会惹来别人的催促和不满，这些“眼前”的人很容易动摇我们的决定。</p>
+<p>四象限优先级什么的，告诉我们要去区分重要的事情和紧急的事情，但是没有告诉我们什么是重要、什么是紧急，紧急的事情真的紧急吗，它们真的非做不可吗，这是需要质疑的。最舒服的状态，就是列出一个完美的清单，每个事情都去做一点、推进一点，但这就是会导致在重要的事上我们远离有效、陷于忙碌。</p>
+<br />
+
+<h2 id="06"><a href="#06" class="headerlink" title="06"></a>06</h2><p><strong>找到问题的共性</strong><br><br /></p>
+<p>社会生活和政治生活当中有一个很突出的现象：临时性的事物会长期存在。总是有很多特例情况需要临时的解决方案，人们匆匆制定出一个方案来应急，而这些纷纷嚷嚷的事件事实上只是“症状”，不是真正的问题。有效决策者应该总是问自己：“如果这样的方案将伴随我的生活很久，我还愿意吗？”。如果这个问题是否定的，我们就应该继续思考，寻找更加普适的、更全面的解决方案。</p>
+<p>最常见的错误就是，把共性问题当成了一连串的特例对待，既没有对于根本性问题的理解，也没有确立处理的原则，便总是对每个特例问题出台临时方案来搞实用主义，看似修补了一个问题，但长期下来总有问题不断产生，还因为各种修补动作而变得臃肿。</p>
+<p>还有需要警惕的，就是我们也会定义错误共性问题，思考的结果也可能是一知半解，在此基础上做出的决策行动反而会损害成果，所以我们必须得更多的思考和不慎求解。</p>
+<p>总之，我们要明白真正的特例是很少的，做出有效决策的首要关键就是提出问题：“这是共性问题，还是例外情况？”</p>
+<br />
+
+<h2 id="07"><a href="#07" class="headerlink" title="07"></a>07</h2><p><strong>沉默的专业知识</strong><br><br /></p>
+<p>专业人才的产出本质上是一个片段，而不是果实。我们有责任让自己的产出被看到、被理解、被使用。但现实是，很多专业知识的对外材料，不论是文字、演讲，都让人根本听不懂，不明白我能用它来做什么，听上去更像是一场苦难汇报，为了做出这把绝妙的武器都跑了哪些地方、经历了什么大坑，有时候听了一堆，但是这把武器究竟是个什么完全没有被理解。</p>
+<p>好的专业知识产出是谦逊的，它会想尽办法拉齐于受众的语言体系和知识储备，首先表达自己的可能用途、可能风险，甚至包括希望如何发展，然后才是核心原理、细节内容。</p>
+<p>我们得了解一个事实，大多数的专业知识是沉默的，充分利用它们也不过为整个成果打通了一点关键，而那些了不起的专业知识是很少的，即使写得晦涩，因为痛点需求量大、又或是曾经被某个人使用撬动了杠杆效应而有更多的使用。<br />作为产出构想、信息和概念的知识工作者，绝大多数时候能做的就是为成果攻克一个个的小点，在这过程中，硕大的果实某种程度上是不可知的，不能永远追寻可见最大效益的事情去做。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.liluhui.cn">Luhui芦荟</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.liluhui.cn/2022/07/31/%E4%B9%A6%E8%AF%84-%E5%8D%93%E6%9C%89%E6%88%90%E6%95%88%E7%9A%84%E7%AE%A1%E7%90%86%E8%80%85/">https://blog.liluhui.cn/2022/07/31/%E4%B9%A6%E8%AF%84-%E5%8D%93%E6%9C%89%E6%88%90%E6%95%88%E7%9A%84%E7%AE%A1%E7%90%86%E8%80%85/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.liluhui.cn" target="_blank">Luhui's Personal Website</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/DI_SM_About-Peter-Drucker.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="prev-post pull-left" href="/2022/08/22/%E4%B9%A6%E8%AF%84-%E7%A9%B7%E6%9F%A5%E7%90%86%E5%AE%9D%E5%85%B8/" title="反过来思考，反过来思考，还是反过来思考"><img class="cover" src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/p2877881361.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">反过来思考，反过来思考，还是反过来思考</div></div></a><a class="next-post pull-right" href="/2022/07/26/%E5%85%89%E7%85%A7/" title="UE实时渲染基础4 - 光照"><img class="cover" src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/p28699747652.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">UE实时渲染基础4 - 光照</div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Luhui芦荟</div><div class="author-info-description">关于生活、学习、工作</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">88</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="/rss2.xml" target="_blank" title="RSS"><i class="fas fa-rss"></i></a><a class="social-icon" href="https://github.com/LDingLDing" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:liluhuizj@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#00"><span class="toc-number">1.</span> <span class="toc-text">00</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#01"><span class="toc-number">2.</span> <span class="toc-text">01</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#02"><span class="toc-number">3.</span> <span class="toc-text">02</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#03"><span class="toc-number">4.</span> <span class="toc-text">03</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#04"><span class="toc-number">5.</span> <span class="toc-text">04</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#05"><span class="toc-number">6.</span> <span class="toc-text">05</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#06"><span class="toc-number">7.</span> <span class="toc-text">06</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#07"><span class="toc-number">8.</span> <span class="toc-text">07</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/19/Agent-Memory-Five-Layer-Model-and-Engineering-Implementation/" title="Agent 记忆五层模型与工程落地">Agent 记忆五层模型与工程落地</a><time datetime="2025-09-19T03:27:20.000Z" title="发表于 2025-09-19 11:27:20">2025-09-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/12/22-top-level-Agent-workflow-frameworks-organized/" title="🌅 22 个顶级 Agent 工作流框架整理">🌅 22 个顶级 Agent 工作流框架整理</a><time datetime="2025-09-12T01:56:16.000Z" title="发表于 2025-09-12 09:56:16">2025-09-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/05/6-Design-Principles-I-Learned-from-Claude-Code/" title="从 Claude Code 学的 6 个设计铁律（含 prompts/tool 清单）">从 Claude Code 学的 6 个设计铁律（含 prompts/tool 清单）</a><time datetime="2025-09-05T10:28:12.000Z" title="发表于 2025-09-05 18:28:12">2025-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/02/202508/" title="2025/08 Review"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/02/shanghai.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2025/08 Review"/></a><div class="content"><a class="title" href="/2025/09/02/202508/" title="2025/08 Review">2025/08 Review</a><time datetime="2025-09-02T13:23:21.000Z" title="发表于 2025-09-02 21:23:21">2025-09-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/08/22/Traps-of-Methodology-in-Agent-Development/" title="构建 Agent 中的方法论陷阱">构建 Agent 中的方法论陷阱</a><time datetime="2025-08-22T03:49:54.000Z" title="发表于 2025-08-22 11:49:54">2025-08-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By Luhui芦荟</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn">浙ICP备19010836号</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const initGitalk = () => {
+    const gitalk = new Gitalk(Object.assign({
+      clientID: '4987f0fb0a509fb9f0af',
+      clientSecret: '7e264967a3ea557003aacdf795b9e57e36a56382',
+      repo: 'ldinglding.github.io',
+      owner: 'LDingLDing',
+      admin: ['LDingLDing'],
+      id: '1b3144717c4e19d1c2fcf34aad7c6089',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  const loadGitalk = async() => {
+    if (typeof Gitalk === 'function') initGitalk()
+    else {
+      await btf.getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+      await btf.getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js')
+      initGitalk()
+    }
+  }
+  
+  const commentCount = n => {
+    const isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+    if (isCommentCount) {
+      isCommentCount.textContent= n
+    }
+  }
+
+  if ('Gitalk' === 'Gitalk' || !false) {
+    if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+    else loadGitalk()
+  } else {
+    window.loadOtherComment = loadGitalk
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

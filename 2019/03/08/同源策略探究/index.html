@@ -1,0 +1,324 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>同源策略(CORS)探究 | Luhui's Personal Website</title><meta name="author" content="Luhui芦荟"><meta name="copyright" content="Luhui芦荟"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一、有哪些场景 由 XMLHttpRequest 或者 Fetch 发起跨域 HTTP 请求 Web FONT （CSS @font-face） WebGL 贴图 canvas API 中的 drawImage CSS 中的资源请求  二、简单的 CORS 实现在跨域 AJAX 请求中， 浏览器端无需做任何操作，会自动在 header 信息中添加一个 Orgin 字段；如果是 Fetch ，则需要">
+<meta property="og:type" content="article">
+<meta property="og:title" content="同源策略(CORS)探究">
+<meta property="og:url" content="https://blog.liluhui.cn/2019/03/08/%E5%90%8C%E6%BA%90%E7%AD%96%E7%95%A5%E6%8E%A2%E7%A9%B6/index.html">
+<meta property="og:site_name" content="Luhui&#39;s Personal Website">
+<meta property="og:description" content="一、有哪些场景 由 XMLHttpRequest 或者 Fetch 发起跨域 HTTP 请求 Web FONT （CSS @font-face） WebGL 贴图 canvas API 中的 drawImage CSS 中的资源请求  二、简单的 CORS 实现在跨域 AJAX 请求中， 浏览器端无需做任何操作，会自动在 header 信息中添加一个 Orgin 字段；如果是 Fetch ，则需要">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/54025738-6d0ebd00-41d6-11e9-88d1-ff4cff59a200.png">
+<meta property="article:published_time" content="2019-03-08T10:57:41.000Z">
+<meta property="article:modified_time" content="2023-09-01T14:36:56.580Z">
+<meta property="article:author" content="Luhui芦荟">
+<meta property="article:tag" content="Request">
+<meta property="article:tag" content="Ajax">
+<meta property="article:tag" content="Fetch">
+<meta property="article:tag" content="XMLHTTPRequest">
+<meta property="article:tag" content="CORS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/54025738-6d0ebd00-41d6-11e9-88d1-ff4cff59a200.png"><link rel="shortcut icon" href="https://i.loli.net/2017/11/26/5a19c0b50432e.png"><link rel="canonical" href="https://blog.liluhui.cn/2019/03/08/%E5%90%8C%E6%BA%90%E7%AD%96%E7%95%A5%E6%8E%A2%E7%A9%B6/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>(()=>{
+      const saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+      
+      window.btf = {
+        saveToLocal: saveToLocal,
+        getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+          script.src = url
+          script.async = true
+          script.onerror = reject
+          script.onload = script.onreadystatechange = function() {
+            const loadState = this.readyState
+            if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+            script.onload = script.onreadystatechange = null
+            resolve()
+          }
+
+          Object.keys(attr).forEach(key => {
+            script.setAttribute(key, attr[key])
+          })
+
+          document.head.appendChild(script)
+        }),
+
+        getCSS: (url, id = false) => new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+          link.rel = 'stylesheet'
+          link.href = url
+          if (id) link.id = id
+          link.onerror = reject
+          link.onload = link.onreadystatechange = function() {
+            const loadState = this.readyState
+            if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+            link.onload = link.onreadystatechange = null
+            resolve()
+          }
+          document.head.appendChild(link)
+        }),
+
+        addGlobalFn: (key, fn, name = false, parent = window) => {
+          const pjaxEnable = false
+          if (!pjaxEnable && key.startsWith('pjax')) return
+
+          const globalFn = parent.globalFn || {}
+          const keyObj = globalFn[key] || {}
+    
+          if (name && keyObj[name]) return
+    
+          name = name || Object.keys(keyObj).length
+          keyObj[name] = fn
+          globalFn[key] = keyObj
+          parent.globalFn = globalFn
+        }
+      }
+    
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+      
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })()</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=8Z2NNDYTL9"></script><script>window.dataLayer = window.dataLayer || []
+function gtag(){dataLayer.push(arguments)}
+gtag('js', new Date())
+gtag('config', '8Z2NNDYTL9')
+btf.addGlobalFn('pjaxComplete', () => {
+  gtag('config', '8Z2NNDYTL9', {'page_path': window.location.pathname})
+}, 'google_analytics')
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":true,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '同源策略(CORS)探究',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-09-01 22:36:56'
+}</script><meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/rss2.xml" title="Luhui's Personal Website" type="application/rss+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">88</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" href="/process"><span> 建站历程</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/54025738-6d0ebd00-41d6-11e9-88d1-ff4cff59a200.png);"><nav id="nav"><span id="blog-info"><a href="/" title="Luhui's Personal Website"><span class="site-name">Luhui's Personal Website</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" href="/process"><span> 建站历程</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">同源策略(CORS)探究</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-03-08T10:57:41.000Z" title="发表于 2019-03-08 18:57:41">2019-03-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-09-01T14:36:56.580Z" title="更新于 2023-09-01 22:36:56">2023-09-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="同源策略(CORS)探究"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="一、有哪些场景"><a href="#一、有哪些场景" class="headerlink" title="一、有哪些场景"></a>一、有哪些场景</h2><ul>
+<li>由 <code>XMLHttpRequest</code> 或者 <code>Fetch</code> 发起跨域 HTTP 请求</li>
+<li><a target="_blank" rel="noopener" href="http://webfonts.info/index.php?title=%2540font-face_support_in_Firefox">Web FONT</a> （CSS @font-face）</li>
+<li><a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Tutorial/Using_textures_in_WebGL">WebGL 贴图</a></li>
+<li>canvas API 中的 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage">drawImage</a></li>
+<li>CSS 中的资源请求</li>
+</ul>
+<h2 id="二、简单的-CORS-实现"><a href="#二、简单的-CORS-实现" class="headerlink" title="二、简单的 CORS 实现"></a>二、简单的 CORS 实现</h2><p>在跨域 AJAX 请求中， <strong>浏览器端无需做任何操作</strong>，会自动在 header 信息中添加一个 <code>Orgin</code> 字段；<br>如果是 Fetch ，则需要添加字段 <code>mode: &#39;cors&#39;</code> 。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">GET http://square.10jqka.com.cn/usercenter/strategy/getrecommendlist HTTP/1.1</span><br><span class="line">Host: square.10jqka.com.cn</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Pragma: no-cache</span><br><span class="line">Cache-Control: no-cache</span><br><span class="line">Accept: */*</span><br><span class="line">Origin: http://www.10jqka.com.cn</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36</span><br><span class="line">Referer: http://www.10jqka.com.cn/</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9,en;q=0.8</span><br></pre></td></tr></table></figure>
+
+<p>这是我截的 Request Headers，第 7 行的 <code>Origin</code>  是 XMLHttpRequest 自动加在请求头中的 ，表示请求来自哪个站点，与 <code>Referer</code> 首部字段相似。</p>
+<p>&amp;nbsp;</p>
+<p>而对应的，<strong>服务端</strong>需要在响应头中加入字段 <code>Access-Control-Allow-Origin</code>， 表示该资源可以允许哪些外域访问。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Server: openresty</span><br><span class="line">Date: Fri, 08 Mar 2019 05:34:03 GMT</span><br><span class="line">Content-Type: application/json; charset=utf-8</span><br><span class="line">Content-Length: 48</span><br><span class="line">Vary: Origin</span><br><span class="line">Access-Control-Allow-Origin: *</span><br><span class="line">Accept-Ranges: bytes</span><br><span class="line">x-frame-options: SAMEORIGIN</span><br><span class="line">x-xss-protection: 1; mode=block</span><br><span class="line">x-content-type-options: nosniff</span><br><span class="line">x-download-options: noopen</span><br><span class="line">x-readtime: 1</span><br><span class="line">VH: 210_254</span><br><span class="line">X-Cache: MISS from cachemd.10jqka.com.cn</span><br><span class="line">Via: 1.1 cachemd.10jqka.com.cn (squid/3.5.20)</span><br><span class="line">Connection: keep-alive</span><br></pre></td></tr></table></figure>
+
+<p>如上面例子的第 7 行， <code>Access-Control-Allow-Origin: *</code>  表示允许任何外域访问该资源。</p>
+<p>如果请求响应头没有包含 <code>Access-Control-Allow-Origin</code> ，则 <code>XMLHttpRequest</code> 会捕获错误，走入 <code>onerror</code>  回调中。</p>
+<p>至此，一个最简单的 CORS 就可以了。</p>
+<h2 id="三、携带-cookie"><a href="#三、携带-cookie" class="headerlink" title="三、携带 cookie"></a>三、携带 cookie</h2><p>CORS 请求默认是不发送 Cookie 和 HTTP 认证信息的，如果需要携带 cookie， <strong>浏览器端和服务端都需要再做一些操作</strong>。</p>
+<h3 id="3-1-浏览器"><a href="#3-1-浏览器" class="headerlink" title="3.1 浏览器"></a>3.1 浏览器</h3><p>浏览器端 XHR 需要打开 <code>withCredentials</code> 参数，Fetch 则需要设置 <code>credentials</code> 参数，如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Ajax</span></span><br><span class="line"><span class="keyword">var</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">xhr.<span class="property">withCredentials</span> = <span class="literal">true</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Fetch</span></span><br><span class="line"><span class="title function_">fetch</span>(url, </span><br><span class="line">    <span class="attr">mode</span>: <span class="string">&#x27;cors&#x27;</span>,</span><br><span class="line">    <span class="attr">credentials</span>: <span class="string">&#x27;include&#x27;</span></span><br><span class="line">&#125;)</span><br><span class="line">.<span class="title function_">then</span>(<span class="function"><span class="params">response</span> =&gt;</span> response.<span class="title function_">json</span>()) <span class="comment">// parses response to JSON&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>这里需要注意下，有的内核实现的 XMLHttpRequest 是默认开启 withCredentials 的。</p>
+<h3 id="3-2-服务端"><a href="#3-2-服务端" class="headerlink" title="3.2 服务端"></a>3.2 服务端</h3><ol>
+<li><p>加上 <code>Access-Control-Allow-Credentials: true</code>， 表示服务器允许认证信息携带</p>
+</li>
+<li><p><code>Access-Control-Allow-Origin</code>  不可以是星号(*)，必须指明具体的域名</p>
+</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Access-Control-Allow-Credentials: true</span><br><span class="line">Access-Control-Allow-Origin: http://mozilla.com</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、预检请求-Preflight-Request"><a href="#四、预检请求-Preflight-Request" class="headerlink" title="四、预检请求 Preflight Request"></a>四、预检请求 Preflight Request</h2><ul>
+<li>POST 请求变成 OPTIONS 了怎么办？</li>
+<li>给跨域请求写了自定义的 header 就报错了怎么回事？</li>
+</ul>
+<p>也许某天你要经历或经历过这样的问题，那是因为你触发了 <code>Preflight request</code>，至于具体触发预检的情况，往下翻。</p>
+<img src="/2019/03/08/%E5%90%8C%E6%BA%90%E7%AD%96%E7%95%A5%E6%8E%A2%E7%A9%B6/1.png" class="" width="546" height="578">
+
+
+<h3 id="4-1-解决方案"><a href="#4-1-解决方案" class="headerlink" title="4.1 解决方案"></a>4.1 解决方案</h3><p><strong>服务端</strong>需要再在 header 中加入一些字段，响应 OPTIONS 请求来表明是否预检通过。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Access-Control-Allow-Credentials: true</span><br><span class="line">Access-Control-Allow-Origin: http://mozilla.com</span><br><span class="line">Access-Control-Allow-Methods: POST, GET, OPTIONS</span><br><span class="line">Access-Control-Allow-Headers: X-PINGOTHER, Content-Type</span><br><span class="line">Access-Control-Max-Age: 86400</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-Access-Control-Allow-Methods"><a href="#1-Access-Control-Allow-Methods" class="headerlink" title="(1) Access-Control-Allow-Methods"></a>(1) Access-Control-Allow-Methods</h4><p>该字段为必需，表示在 preflight request 中所要访问资源允许使用的方法或方法列表</p>
+<h4 id="2-Access-Control-Allow-Headers"><a href="#2-Access-Control-Allow-Headers" class="headerlink" title="(2) Access-Control-Allow-Headers"></a>(2) Access-Control-Allow-Headers</h4><p>如果在浏览器端发起 XMLHttpRequest 时写了非规范的 header 字段， 那么 <code> Access-Control-Allow-Headers</code> 是必须的。</p>
+<p>表示在 preflight request 中所要访问资源允许携带的 header 字段</p>
+<h4 id="3-Access-Control-Max-Age"><a href="#3-Access-Control-Max-Age" class="headerlink" title="(3) Access-Control-Max-Age"></a>(3) Access-Control-Max-Age</h4><p>可选这段，指定了 preflight request 的结果可以被缓存多久</p>
+<p>这个字段从一些第三方资料看，可能存在一些bug，某些浏览器的旧版本可能有上限值；另外禁用 cache 的情况下也会无效。</p>
+<h3 id="4-2-触发条件"><a href="#4-2-触发条件" class="headerlink" title="4.2 触发条件"></a>4.2 触发条件</h3><p>当满足下面任意一项条件，就会先发出预检请求</p>
+<ol>
+<li><p>使用了下面任一 HTTP 方法：</p>
+<ul>
+<li>PUT</li>
+<li>DELETE</li>
+<li>CONNECT</li>
+<li>OPTIONS</li>
+<li>TRACE</li>
+<li>PATCH</li>
+</ul>
+</li>
+<li><p>请求头中有<a target="_blank" rel="noopener" href="https://fetch.spec.whatwg.org/#cors-safelisted-request-header">安全首部字段集合</a>之外的字段</p>
+<ul>
+<li>Accept</li>
+<li>Content-Type</li>
+<li>等…</li>
+</ul>
+</li>
+</ol>
+<p>具体查官方文档，各浏览器可能有一定差异</p>
+<ol start="3">
+<li><p><code>Content-Type</code> 的值不是下述之一</p>
+<ul>
+<li>application&#x2F;x-www-form-urlencoded</li>
+<li>multipart&#x2F;form-data</li>
+<li>text&#x2F;plain</li>
+</ul>
+</li>
+<li><p>请求中的 <code>XMLHttpRequestUpload</code> 对象注册了任意多个事件监听器</p>
+</li>
+<li><p>请求中使用了 <code>ReadableStream</code> 对象</p>
+</li>
+</ol>
+<h2 id="五、为什么设计预检请求"><a href="#五、为什么设计预检请求" class="headerlink" title="五、为什么设计预检请求"></a>五、为什么设计预检请求</h2><blockquote>
+<p>   <strong>Why is there a preflight request?</strong><br> &amp;nbsp;<br>   For most type of requests two resource sharing checks are performed. Initially a “permission to make the request” check is done on the response to the preflight request. And then a “permission to read” check is done on the response to the actual request. Both of these checks need to succeed in order for success to be relayed to the API (e.g. XMLHttpRequest). The “permission to make the request” check is performed because deployed servers do not expect such cross-origin requests. E.g., a request using the HTTP DELETE method. If they reply positively to the preflight request the client knows it can go ahead and perform the actual desired request.</p>
+</blockquote>
+<p>摘自<a target="_blank" rel="noopener" href="https://www.w3.org/wiki/CORS">wiki-CORS</a>，大致意思是一是认为对于大多数请求进行两次请求是可行的，二是进行预检校验是很多场景安全性上的考虑。</p>
+<p>&amp;nbsp; </p>
+<p>或者可以这么说，预检请求本身其实并没有做什么安全性上的检查，只是这项新的特性必须不影响各个项目，项目方必须知道有这样一项检查并针对它做些设置。</p>
+<h2 id="六、与-JSONP-比较？"><a href="#六、与-JSONP-比较？" class="headerlink" title="六、与 JSONP 比较？"></a>六、与 JSONP 比较？</h2><ol>
+<li>JSONP 不存在兼容问题，而 CORS 你必须确认你需要兼容的设备，必要情况需要做降级处理</li>
+<li>JSONP 只支持 GET 请求， CORS 则能支持所有 HTTP 请求类型</li>
+<li>JSONP 单次请求， CORS 触发预检则会有两次请求</li>
+</ol>
+<h2 id="七、附录"><a href="#七、附录" class="headerlink" title="七、附录"></a>七、附录</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.w3.org/TR/cors/">W3C 文档</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.liluhui.cn">Luhui芦荟</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.liluhui.cn/2019/03/08/%E5%90%8C%E6%BA%90%E7%AD%96%E7%95%A5%E6%8E%A2%E7%A9%B6/">https://blog.liluhui.cn/2019/03/08/%E5%90%8C%E6%BA%90%E7%AD%96%E7%95%A5%E6%8E%A2%E7%A9%B6/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.liluhui.cn" target="_blank">Luhui's Personal Website</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Request/">Request</a><a class="post-meta__tags" href="/tags/Ajax/">Ajax</a><a class="post-meta__tags" href="/tags/Fetch/">Fetch</a><a class="post-meta__tags" href="/tags/XMLHTTPRequest/">XMLHTTPRequest</a><a class="post-meta__tags" href="/tags/CORS/">CORS</a></div><div class="post-share"><div class="social-share" data-image="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/54025738-6d0ebd00-41d6-11e9-88d1-ff4cff59a200.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="prev-post pull-left" href="/2019/03/10/%E5%A6%82%E4%BD%95%E6%89%93%E4%B9%B1%E6%95%B0%E7%BB%84/" title="如何打乱数组? (洗牌算法)"><img class="cover" src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/54085715-e72c7680-437b-11e9-8d6a-2239a85a7abb.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">如何打乱数组? (洗牌算法)</div></div></a><a class="next-post pull-right" href="/2019/03/07/Fetch%E5%92%8CAjax%E6%9C%89%E4%BB%80%E4%B9%88%E5%B7%AE%E5%88%AB/" title="Fetch 和 Ajax 有什么差别"><img class="cover" src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/54025723-5a948380-41d6-11e9-8398-573768dfa50c.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Fetch 和 Ajax 有什么差别</div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a href="/2019/03/07/Fetch%E5%92%8CAjax%E6%9C%89%E4%BB%80%E4%B9%88%E5%B7%AE%E5%88%AB/" title="Fetch 和 Ajax 有什么差别"><img class="cover" src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/54025723-5a948380-41d6-11e9-8398-573768dfa50c.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-03-07</div><div class="title">Fetch 和 Ajax 有什么差别</div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Luhui芦荟</div><div class="author-info-description">关于生活、学习、工作</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">88</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="/rss2.xml" target="_blank" title="RSS"><i class="fas fa-rss"></i></a><a class="social-icon" href="https://github.com/LDingLDing" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:liluhuizj@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%9C%89%E5%93%AA%E4%BA%9B%E5%9C%BA%E6%99%AF"><span class="toc-number">1.</span> <span class="toc-text">一、有哪些场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%AE%80%E5%8D%95%E7%9A%84-CORS-%E5%AE%9E%E7%8E%B0"><span class="toc-number">2.</span> <span class="toc-text">二、简单的 CORS 实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%90%BA%E5%B8%A6-cookie"><span class="toc-number">3.</span> <span class="toc-text">三、携带 cookie</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E6%B5%8F%E8%A7%88%E5%99%A8"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 浏览器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E6%9C%8D%E5%8A%A1%E7%AB%AF"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 服务端</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E9%A2%84%E6%A3%80%E8%AF%B7%E6%B1%82-Preflight-Request"><span class="toc-number">4.</span> <span class="toc-text">四、预检请求 Preflight Request</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">4.1.</span> <span class="toc-text">4.1 解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-Access-Control-Allow-Methods"><span class="toc-number">4.1.1.</span> <span class="toc-text">(1) Access-Control-Allow-Methods</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-Access-Control-Allow-Headers"><span class="toc-number">4.1.2.</span> <span class="toc-text">(2) Access-Control-Allow-Headers</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-Access-Control-Max-Age"><span class="toc-number">4.1.3.</span> <span class="toc-text">(3) Access-Control-Max-Age</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E8%A7%A6%E5%8F%91%E6%9D%A1%E4%BB%B6"><span class="toc-number">4.2.</span> <span class="toc-text">4.2 触发条件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%AE%BE%E8%AE%A1%E9%A2%84%E6%A3%80%E8%AF%B7%E6%B1%82"><span class="toc-number">5.</span> <span class="toc-text">五、为什么设计预检请求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E4%B8%8E-JSONP-%E6%AF%94%E8%BE%83%EF%BC%9F"><span class="toc-number">6.</span> <span class="toc-text">六、与 JSONP 比较？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E9%99%84%E5%BD%95"><span class="toc-number">7.</span> <span class="toc-text">七、附录</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/19/Agent-Memory-Five-Layer-Model-and-Engineering-Implementation/" title="Agent 记忆五层模型与工程落地">Agent 记忆五层模型与工程落地</a><time datetime="2025-09-19T03:27:20.000Z" title="发表于 2025-09-19 11:27:20">2025-09-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/12/22-top-level-Agent-workflow-frameworks-organized/" title="🌅 22 个顶级 Agent 工作流框架整理">🌅 22 个顶级 Agent 工作流框架整理</a><time datetime="2025-09-12T01:56:16.000Z" title="发表于 2025-09-12 09:56:16">2025-09-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/05/6-Design-Principles-I-Learned-from-Claude-Code/" title="从 Claude Code 学的 6 个设计铁律（含 prompts/tool 清单）">从 Claude Code 学的 6 个设计铁律（含 prompts/tool 清单）</a><time datetime="2025-09-05T10:28:12.000Z" title="发表于 2025-09-05 18:28:12">2025-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/02/202508/" title="2025/08 Review"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/02/shanghai.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2025/08 Review"/></a><div class="content"><a class="title" href="/2025/09/02/202508/" title="2025/08 Review">2025/08 Review</a><time datetime="2025-09-02T13:23:21.000Z" title="发表于 2025-09-02 21:23:21">2025-09-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/08/22/Traps-of-Methodology-in-Agent-Development/" title="构建 Agent 中的方法论陷阱">构建 Agent 中的方法论陷阱</a><time datetime="2025-08-22T03:49:54.000Z" title="发表于 2025-08-22 11:49:54">2025-08-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By Luhui芦荟</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn">浙ICP备19010836号</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const initGitalk = () => {
+    const gitalk = new Gitalk(Object.assign({
+      clientID: '4987f0fb0a509fb9f0af',
+      clientSecret: '7e264967a3ea557003aacdf795b9e57e36a56382',
+      repo: 'ldinglding.github.io',
+      owner: 'LDingLDing',
+      admin: ['LDingLDing'],
+      id: '1416b47389904e27e30d9bfe4ac36004',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  const loadGitalk = async() => {
+    if (typeof Gitalk === 'function') initGitalk()
+    else {
+      await btf.getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+      await btf.getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js')
+      initGitalk()
+    }
+  }
+  
+  const commentCount = n => {
+    const isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+    if (isCommentCount) {
+      isCommentCount.textContent= n
+    }
+  }
+
+  if ('Gitalk' === 'Gitalk' || !false) {
+    if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+    else loadGitalk()
+  } else {
+    window.loadOtherComment = loadGitalk
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
