@@ -1,3 +1,4 @@
+https://blog.liluhui.cn/2025/10/01/What-Should-an-Agent-Remember-Writing-Strategies-Inspired-by-Human-Memory/
 https://blog.liluhui.cn/2025/09/19/Agent-Memory-Five-Layer-Model-and-Engineering-Implementation/
 https://blog.liluhui.cn/2025/09/12/22-top-level-Agent-workflow-frameworks-organized/
 https://blog.liluhui.cn/2025/09/05/6-Design-Principles-I-Learned-from-Claude-Code/

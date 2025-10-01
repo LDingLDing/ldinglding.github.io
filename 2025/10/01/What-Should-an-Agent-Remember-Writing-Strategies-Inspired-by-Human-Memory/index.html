@@ -1,0 +1,303 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Agent 记忆写入策略：如何决定“记什么”？ | Luhui's Personal Website</title><meta name="author" content="Luhui芦荟"><meta name="copyright" content="Luhui芦荟"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="在上一篇文章里，我聊过 Agent 记忆的五层模型。那篇文章更多是框架视角：我们需要区分短期记忆、长期记忆、情景记忆、语义记忆、技能记忆等等。但是，当真正开始在工程里落地的时候，很多人会遇到一个更具体的问题：  Agent 每天都在接收大量输入，但不可能把所有内容都存下来。那，究竟应该“记什么”？  这个问题听起来简单，背后却很关键。因为一旦写入策略没设计好，要么记忆库很快“垃圾堆积”，要么遗漏了">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Agent 记忆写入策略：如何决定“记什么”？">
+<meta property="og:url" content="https://blog.liluhui.cn/2025/10/01/What-Should-an-Agent-Remember-Writing-Strategies-Inspired-by-Human-Memory/index.html">
+<meta property="og:site_name" content="Luhui&#39;s Personal Website">
+<meta property="og:description" content="在上一篇文章里，我聊过 Agent 记忆的五层模型。那篇文章更多是框架视角：我们需要区分短期记忆、长期记忆、情景记忆、语义记忆、技能记忆等等。但是，当真正开始在工程里落地的时候，很多人会遇到一个更具体的问题：  Agent 每天都在接收大量输入，但不可能把所有内容都存下来。那，究竟应该“记什么”？  这个问题听起来简单，背后却很关键。因为一旦写入策略没设计好，要么记忆库很快“垃圾堆积”，要么遗漏了">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg">
+<meta property="article:published_time" content="2025-10-01T09:27:33.000Z">
+<meta property="article:modified_time" content="2025-10-01T09:41:03.704Z">
+<meta property="article:author" content="Luhui芦荟">
+<meta property="article:tag" content="李璐慧,芦荟,Aloea,技术博客,前端,Node">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg"><link rel="shortcut icon" href="https://i.loli.net/2017/11/26/5a19c0b50432e.png"><link rel="canonical" href="https://blog.liluhui.cn/2025/10/01/What-Should-an-Agent-Remember-Writing-Strategies-Inspired-by-Human-Memory/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>(()=>{
+      const saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+      
+      window.btf = {
+        saveToLocal: saveToLocal,
+        getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+          script.src = url
+          script.async = true
+          script.onerror = reject
+          script.onload = script.onreadystatechange = function() {
+            const loadState = this.readyState
+            if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+            script.onload = script.onreadystatechange = null
+            resolve()
+          }
+
+          Object.keys(attr).forEach(key => {
+            script.setAttribute(key, attr[key])
+          })
+
+          document.head.appendChild(script)
+        }),
+
+        getCSS: (url, id = false) => new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+          link.rel = 'stylesheet'
+          link.href = url
+          if (id) link.id = id
+          link.onerror = reject
+          link.onload = link.onreadystatechange = function() {
+            const loadState = this.readyState
+            if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+            link.onload = link.onreadystatechange = null
+            resolve()
+          }
+          document.head.appendChild(link)
+        }),
+
+        addGlobalFn: (key, fn, name = false, parent = window) => {
+          const pjaxEnable = false
+          if (!pjaxEnable && key.startsWith('pjax')) return
+
+          const globalFn = parent.globalFn || {}
+          const keyObj = globalFn[key] || {}
+    
+          if (name && keyObj[name]) return
+    
+          name = name || Object.keys(keyObj).length
+          keyObj[name] = fn
+          globalFn[key] = keyObj
+          parent.globalFn = globalFn
+        }
+      }
+    
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+      
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })()</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=8Z2NNDYTL9"></script><script>window.dataLayer = window.dataLayer || []
+function gtag(){dataLayer.push(arguments)}
+gtag('js', new Date())
+gtag('config', '8Z2NNDYTL9')
+btf.addGlobalFn('pjaxComplete', () => {
+  gtag('config', '8Z2NNDYTL9', {'page_path': window.location.pathname})
+}, 'google_analytics')
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":true,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Agent 记忆写入策略：如何决定“记什么”？',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-10-01 17:41:03'
+}</script><meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/rss2.xml" title="Luhui's Personal Website" type="application/rss+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">89</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" href="/process"><span> 建站历程</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/5W7DZ_A-ywM.jpg);"><nav id="nav"><span id="blog-info"><a href="/" title="Luhui's Personal Website"><span class="site-name">Luhui's Personal Website</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" href="/process"><span> 建站历程</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Agent 记忆写入策略：如何决定“记什么”？</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-10-01T09:27:33.000Z" title="发表于 2025-10-01 17:27:33">2025-10-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-10-01T09:41:03.704Z" title="更新于 2025-10-01 17:41:03">2025-10-01</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Agent 记忆写入策略：如何决定“记什么”？"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>在<a href="https://blog.liluhui.cn/2025/09/19/Agent-Memory-Five-Layer-Model-and-Engineering-Implementation/">上一篇文章</a>里，我聊过 <strong>Agent 记忆的五层模型</strong>。那篇文章更多是框架视角：我们需要区分短期记忆、长期记忆、情景记忆、语义记忆、技能记忆等等。<br>但是，当真正开始在工程里落地的时候，很多人会遇到一个更具体的问题：</p>
+<blockquote>
+<p>Agent 每天都在接收大量输入，但不可能把所有内容都存下来。那，究竟应该“记什么”？</p>
+</blockquote>
+<p>这个问题听起来简单，背后却很关键。因为一旦写入策略没设计好，要么记忆库很快“垃圾堆积”，要么遗漏了用户真正关心的事实。今天就来聊聊 <strong>记忆写入策略</strong>。</p>
+<br/>
+
+<h2 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL;DR"></a>TL;DR</h2><p>多轮对话 Agent 不可能“什么都记”，关键是设计写入策略。<br>本文总结了三种常用方法，并给出 LangGraph + 向量库的代码示例：</p>
+<ul>
+<li><strong>LLM 打分（重要性）</strong>：让大模型自己评估一条信息对未来是否重要，重要才写入。</li>
+<li><strong>相似度检测（新颖性）</strong>：用 embedding 检查新信息是否与已有记忆相似，避免重复存储。</li>
+<li><strong>计数与蒸馏（高频性）</strong>：对重复出现的信息进行计数，达到阈值后用 LLM 总结为一条稳定事实。</li>
+</ul>
+<p>这三种策略往往要<strong>混合使用</strong>，才能既不遗漏关键信息，也避免记忆库膨胀。</p>
+<br/>
+
+<h2 id="策略一：LLM-打分（重要性）"><a href="#策略一：LLM-打分（重要性）" class="headerlink" title="策略一：LLM 打分（重要性）"></a>策略一：LLM 打分（重要性）</h2><p>第一种策略很直接：<strong>让模型自己判断</strong>。<br>做法是：在对话后，把新信息丢给一个 LLM，让它用自然语言理解的能力打一个 “重要性分数”。比如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">请根据以下事件对未来是否重要打分（1-10）：</span><br><span class="line">“用户告诉你她最喜欢喝黑咖啡。”</span><br></pre></td></tr></table></figure>
+<p>测试设定一个合适的阈值，分数高于这个阈值 → 写入长期记忆，分数低于这个阈值 → 丢掉或只保留在短期上下文。<br>这种方法在 Generative Agents 论文里就被用过。研究发现，模型给出的打分，和人类直觉其实挺接近的。</p>
+<p>优点：</p>
+<ul>
+<li>能理解上下文的语义，不只是关键词匹配。</li>
+<li>灵活，可以针对不同任务改写 prompt。</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>每次都要额外调用 LLM，成本较高。</li>
+<li>打分可能不稳定（受 prompt 影响）。</li>
+</ul>
+<p>但即便如此，作为第一道“筛子”，它仍然很实用。</p>
+<br/>
+
+<h2 id="策略二：相似度检测（新颖性）"><a href="#策略二：相似度检测（新颖性）" class="headerlink" title="策略二：相似度检测（新颖性）"></a>策略二：相似度检测（新颖性）</h2><p>第二种方法是<strong>避免重复</strong>。<br>我们可以把每条候选记忆编码成向量，存入一个向量数据库（比如 FAISS、Chroma、Weaviate）。<br>当新内容出现时，先检索一下：如果相似度很高，说明这东西之前就存过。→ 不新建，只更新一下计数或时间戳。如果相似度很低，说明这是全新的信息。→ 写入为新记忆。<br>例如：第一次用户说“我喜欢咖啡” → 存下来。后来又说“我很爱喝黑咖啡” → 与已有记忆相似度很高 → 不新建，而是给原记忆增加一个“+1 出现次数”。</p>
+<p>优点：</p>
+<ul>
+<li>避免记忆冗余。</li>
+<li>让记忆库保持精炼。</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>阈值难调。过高会漏掉细微差别，过低又容易写入重复。</li>
+</ul>
+<br/>
+
+<h2 id="策略三：计数与蒸馏（高频性）"><a href="#策略三：计数与蒸馏（高频性）" class="headerlink" title="策略三：计数与蒸馏（高频性）"></a>策略三：计数与蒸馏（高频性）</h2><p>第三种思路是<strong>重复即重要</strong>。<br>人类也是这样：别人随口说一次的话我们可能忘记，但如果一再强调，我们会牢牢记住。<br>在 Agent 中，可以通过“计数器”实现：每次遇到类似的事实，就给计数 +1。当 count ≥ 阈值（比如 3），触发一次总结：用 LLM 把这几次重复的信息，合并成一条稳定的长期记忆。</p>
+<p>比如： “我喜欢咖啡” 出现了 3 次 → 总结为一条稳定记忆：“用户偏好：咖啡”。</p>
+<p>这样做的好处是：</p>
+<ul>
+<li>记忆越来越浓缩，避免无限膨胀。</li>
+<li>高频事实得到强化，和人类习惯接近。</li>
+</ul>
+<br/>
+
+<h2 id="实战示例：LangGraph-向量库"><a href="#实战示例：LangGraph-向量库" class="headerlink" title="实战示例：LangGraph + 向量库"></a>实战示例：LangGraph + 向量库</h2><p>下面是我写的一个简化的 demo，展示如何把三种策略放到一个 写入节点 里。这里我用 LangGraph 来组织流程，用 FAISS 来做相似度搜索。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langgraph.graph <span class="keyword">import</span> StateGraph</span><br><span class="line"><span class="keyword">from</span> langchain_openai <span class="keyword">import</span> ChatOpenAI</span><br><span class="line"><span class="keyword">from</span> langchain.vectorstores <span class="keyword">import</span> FAISS</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化 LLM 和向量库</span></span><br><span class="line">llm = ChatOpenAI(model=<span class="string">&quot;gpt-4o-mini&quot;</span>)</span><br><span class="line">vectorstore = FAISS.load_local(<span class="string">&quot;memory_index&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">memory_writer</span>(<span class="params">state</span>):</span><br><span class="line">    text = state[<span class="string">&quot;observation&quot;</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 1. 重要性打分</span></span><br><span class="line">    score = llm.predict(<span class="string">f&quot;请对以下内容打分（1-10）重要性：<span class="subst">&#123;text&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">int</span>(score) &lt; <span class="number">6</span>:</span><br><span class="line">        <span class="keyword">return</span> state  <span class="comment"># 分数太低，不写入</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 2. 相似度检测</span></span><br><span class="line">    docs = vectorstore.similarity_search(text, k=<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">if</span> docs <span class="keyword">and</span> docs[<span class="number">0</span>].score &gt; <span class="number">0.9</span>:</span><br><span class="line">        <span class="comment"># 已存在 → 更新计数</span></span><br><span class="line">        docs[<span class="number">0</span>].metadata[<span class="string">&quot;count&quot;</span>] += <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> docs[<span class="number">0</span>].metadata[<span class="string">&quot;count&quot;</span>] &gt;= <span class="number">3</span>:</span><br><span class="line">            summary = llm.predict(<span class="string">f&quot;总结以下信息为一条稳定事实：<span class="subst">&#123;docs[<span class="number">0</span>].page_content&#125;</span>&quot;</span>)</span><br><span class="line">            vectorstore.update(docs[<span class="number">0</span>].<span class="built_in">id</span>, summary)</span><br><span class="line">        <span class="keyword">return</span> state</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 3. 新建记忆</span></span><br><span class="line">    vectorstore.add_texts([text], metadatas=[&#123;<span class="string">&quot;count&quot;</span>: <span class="number">1</span>&#125;])</span><br><span class="line">    <span class="keyword">return</span> state</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在 LangGraph 中注册节点</span></span><br><span class="line">graph = StateGraph()</span><br><span class="line">graph.add_node(<span class="string">&quot;memory_writer&quot;</span>, memory_writer)</span><br></pre></td></tr></table></figure>
+<p>这只是最简版骨架，真正的系统里可以扩展：</p>
+<ul>
+<li>importance_score 和 similarity_score 可以做加权平均。</li>
+<li>高频性总结可以用更复杂的聚类 + LLM 总结。</li>
+<li>遗忘机制（衰减 &#x2F; FIFO 替换）也可以接上。</li>
+</ul>
+<br/>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>大语言模型的上下文长度是有限的。就算用上 100k、甚至百万级上下文，你也不会想把所有历史对话原样塞进去。<br>写入策略决定了 Agent 的“人格”——它记什么，忘什么，直接影响了用户体验。<br>写入必须有一个“门槛”，类似人脑的选择性记忆。我们往往只会保留：</p>
+<ul>
+<li><strong>重要的</strong>：影响未来决策的事情 → 避免噪音。</li>
+<li><strong>新鲜的</strong>以前没出现过的事实 → 避免冗余</li>
+<li><strong>高频的</strong>：多次重复强调的偏好 → 提炼知识</li>
+</ul>
+<p>工程上，三种策略往往是混合使用。<br>我的建议是：</p>
+<ul>
+<li>从最简单的相似度检测开始，先解决重复存储问题。</li>
+<li>再加上 LLM 打分和高频总结，让记忆越来越“聪明”。</li>
+</ul>
+<p>下一篇，我会聊 <strong>记忆的检索与遗忘</strong> ——如何从一大堆记忆里找回最相关的那几条，以及如何避免记忆库无限膨胀。</p>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.liluhui.cn">Luhui芦荟</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.liluhui.cn/2025/10/01/What-Should-an-Agent-Remember-Writing-Strategies-Inspired-by-Human-Memory/">https://blog.liluhui.cn/2025/10/01/What-Should-an-Agent-Remember-Writing-Strategies-Inspired-by-Human-Memory/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.liluhui.cn" target="_blank">Luhui's Personal Website</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="next-post pull-full" href="/2025/09/19/Agent-Memory-Five-Layer-Model-and-Engineering-Implementation/" title="Agent 记忆五层模型与工程落地"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Agent 记忆五层模型与工程落地</div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Luhui芦荟</div><div class="author-info-description">关于生活、学习、工作</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">89</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="/rss2.xml" target="_blank" title="RSS"><i class="fas fa-rss"></i></a><a class="social-icon" href="https://github.com/LDingLDing" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:liluhuizj@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#TL-DR"><span class="toc-number">1.</span> <span class="toc-text">TL;DR</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AD%96%E7%95%A5%E4%B8%80%EF%BC%9ALLM-%E6%89%93%E5%88%86%EF%BC%88%E9%87%8D%E8%A6%81%E6%80%A7%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">策略一：LLM 打分（重要性）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AD%96%E7%95%A5%E4%BA%8C%EF%BC%9A%E7%9B%B8%E4%BC%BC%E5%BA%A6%E6%A3%80%E6%B5%8B%EF%BC%88%E6%96%B0%E9%A2%96%E6%80%A7%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">策略二：相似度检测（新颖性）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AD%96%E7%95%A5%E4%B8%89%EF%BC%9A%E8%AE%A1%E6%95%B0%E4%B8%8E%E8%92%B8%E9%A6%8F%EF%BC%88%E9%AB%98%E9%A2%91%E6%80%A7%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">策略三：计数与蒸馏（高频性）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9ALangGraph-%E5%90%91%E9%87%8F%E5%BA%93"><span class="toc-number">5.</span> <span class="toc-text">实战示例：LangGraph + 向量库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text">总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/01/What-Should-an-Agent-Remember-Writing-Strategies-Inspired-by-Human-Memory/" title="Agent 记忆写入策略：如何决定“记什么”？">Agent 记忆写入策略：如何决定“记什么”？</a><time datetime="2025-10-01T09:27:33.000Z" title="发表于 2025-10-01 17:27:33">2025-10-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/19/Agent-Memory-Five-Layer-Model-and-Engineering-Implementation/" title="Agent 记忆五层模型与工程落地">Agent 记忆五层模型与工程落地</a><time datetime="2025-09-19T03:27:20.000Z" title="发表于 2025-09-19 11:27:20">2025-09-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/12/22-top-level-Agent-workflow-frameworks-organized/" title="🌅 22 个顶级 Agent 工作流框架整理">🌅 22 个顶级 Agent 工作流框架整理</a><time datetime="2025-09-12T01:56:16.000Z" title="发表于 2025-09-12 09:56:16">2025-09-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/05/6-Design-Principles-I-Learned-from-Claude-Code/" title="从 Claude Code 学的 6 个设计铁律（含 prompts/tool 清单）">从 Claude Code 学的 6 个设计铁律（含 prompts/tool 清单）</a><time datetime="2025-09-05T10:28:12.000Z" title="发表于 2025-09-05 18:28:12">2025-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/02/202508/" title="2025/08 Review"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/02/shanghai.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2025/08 Review"/></a><div class="content"><a class="title" href="/2025/09/02/202508/" title="2025/08 Review">2025/08 Review</a><time datetime="2025-09-02T13:23:21.000Z" title="发表于 2025-09-02 21:23:21">2025-09-02</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By Luhui芦荟</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn">浙ICP备19010836号</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const initGitalk = () => {
+    const gitalk = new Gitalk(Object.assign({
+      clientID: '4987f0fb0a509fb9f0af',
+      clientSecret: '7e264967a3ea557003aacdf795b9e57e36a56382',
+      repo: 'ldinglding.github.io',
+      owner: 'LDingLDing',
+      admin: ['LDingLDing'],
+      id: 'ffb3f2c92f7049ba926c312089e74a44',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  const loadGitalk = async() => {
+    if (typeof Gitalk === 'function') initGitalk()
+    else {
+      await btf.getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+      await btf.getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js')
+      initGitalk()
+    }
+  }
+  
+  const commentCount = n => {
+    const isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+    if (isCommentCount) {
+      isCommentCount.textContent= n
+    }
+  }
+
+  if ('Gitalk' === 'Gitalk' || !false) {
+    if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+    else loadGitalk()
+  } else {
+    window.loadOtherComment = loadGitalk
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
