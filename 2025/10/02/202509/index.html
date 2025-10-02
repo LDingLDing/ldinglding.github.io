@@ -1,0 +1,270 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>2025/09 Review | Luhui's Personal Website</title><meta name="author" content="Luhui芦荟"><meta name="copyright" content="Luhui芦荟"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="鸟站在枝头宁静安详，不是因为它知道树枝不会断，而是因为它知道自己有翅膀。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2025&#x2F;09 Review">
+<meta property="og:url" content="https://blog.liluhui.cn/2025/10/02/202509/index.html">
+<meta property="og:site_name" content="Luhui&#39;s Personal Website">
+<meta property="og:description" content="鸟站在枝头宁静安详，不是因为它知道树枝不会断，而是因为它知道自己有翅膀。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/10/2/001.png">
+<meta property="article:published_time" content="2025-10-02T07:47:22.000Z">
+<meta property="article:modified_time" content="2025-10-02T08:01:46.400Z">
+<meta property="article:author" content="Luhui芦荟">
+<meta property="article:tag" content="李璐慧,芦荟,Aloea,技术博客,前端,Node">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/10/2/001.png"><link rel="shortcut icon" href="https://i.loli.net/2017/11/26/5a19c0b50432e.png"><link rel="canonical" href="https://blog.liluhui.cn/2025/10/02/202509/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>(()=>{
+      const saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+      
+      window.btf = {
+        saveToLocal: saveToLocal,
+        getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+          script.src = url
+          script.async = true
+          script.onerror = reject
+          script.onload = script.onreadystatechange = function() {
+            const loadState = this.readyState
+            if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+            script.onload = script.onreadystatechange = null
+            resolve()
+          }
+
+          Object.keys(attr).forEach(key => {
+            script.setAttribute(key, attr[key])
+          })
+
+          document.head.appendChild(script)
+        }),
+
+        getCSS: (url, id = false) => new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+          link.rel = 'stylesheet'
+          link.href = url
+          if (id) link.id = id
+          link.onerror = reject
+          link.onload = link.onreadystatechange = function() {
+            const loadState = this.readyState
+            if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+            link.onload = link.onreadystatechange = null
+            resolve()
+          }
+          document.head.appendChild(link)
+        }),
+
+        addGlobalFn: (key, fn, name = false, parent = window) => {
+          const pjaxEnable = false
+          if (!pjaxEnable && key.startsWith('pjax')) return
+
+          const globalFn = parent.globalFn || {}
+          const keyObj = globalFn[key] || {}
+    
+          if (name && keyObj[name]) return
+    
+          name = name || Object.keys(keyObj).length
+          keyObj[name] = fn
+          globalFn[key] = keyObj
+          parent.globalFn = globalFn
+        }
+      }
+    
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+      
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })()</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=8Z2NNDYTL9"></script><script>window.dataLayer = window.dataLayer || []
+function gtag(){dataLayer.push(arguments)}
+gtag('js', new Date())
+gtag('config', '8Z2NNDYTL9')
+btf.addGlobalFn('pjaxComplete', () => {
+  gtag('config', '8Z2NNDYTL9', {'page_path': window.location.pathname})
+}, 'google_analytics')
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":true,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '2025/09 Review',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-10-02 16:01:46'
+}</script><meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/rss2.xml" title="Luhui's Personal Website" type="application/rss+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">90</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" href="/process"><span> 建站历程</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/10/2/001.png);"><nav id="nav"><span id="blog-info"><a href="/" title="Luhui's Personal Website"><span class="site-name">Luhui's Personal Website</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" href="/process"><span> 建站历程</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">2025/09 Review</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-10-02T07:47:22.000Z" title="发表于 2025-10-02 15:47:22">2025-10-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-10-02T08:01:46.400Z" title="更新于 2025-10-02 16:01:46">2025-10-02</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="2025/09 Review"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p><em>鸟站在枝头 宁静安详<br>不是因为它知道树枝不会断<br>而是因为它知道自己有翅膀</em></p>
+<br/>
+
+<h2 id="所见与所想"><a href="#所见与所想" class="headerlink" title="所见与所想"></a>所见与所想</h2><p>01<br><strong>绝大部分小企业从未被吃掉，大鱼想吃的是其它大鱼。</strong></p>
+<p>在开始一滩事情之前就害怕被各路资本抄袭没什么好处，不如期待做大了就共舞，做不大就守护好自己的先进奶牛，先把事情跑起来再说。<br>今天，我想赚小而美的90%，而不是大而全的0.1%。</p>
+<br/>
+
+
+<p>02<br><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/10/2/002.png" alt="image"></p>
+<p>最近的自媒体数据非常稳定的增长中，再次见证复利的力量，第一个月积累100粉，第二月达成500粉，即将完成第三个月1000粉。看着自己的产品有人使用，还是蛮开心的。也加入了科技薯的创作者社区，和前辈们交流取经。<br>目前内容方面精力有限，优先还是产品侧投入，内容主要是 数学几何画板的功能宣传 和 Agent构建相关知识科普，Q4 再继续探索探索。</p>
+<br/>
+
+
+<p>03<br>不舒服，让自己动起来。<br>舒服了，也让自己动起来。<br>经历过就会感谢 <strong>“体验-创造-分享-爱”</strong> 这个循环，在此之前，第一步是行动起来。</p>
+<br/>
+
+<p>04<br><strong>会买才会卖。</strong></p>
+<p>当你真真正正能辨析自己的消费背后的需求和投射的情绪和认知，一个是会降低很多莫名其妙的消费，第二个是你也能在业务中间去创建一个理解用户需求的过程，同时你还学会了不去评价这些事情 。</p>
+<p><strong>精分十年不出门，占星三年打死人。</strong></p>
+<p>很嘲讽是吧，学精神分析十年都没把自己搞明白，学星盘三年就能出来干收费1500的咨询，为什么？</p>
+<p>这是两个产品，一个要求自己被精神分析的人，是希望通过把理性照入自己的潜意识里，深度看到自己人性的善与恶后，通过自己的意志力来改变。而星盘解决的是，我有好多想法，甚至是有确定的想法，我需要一个人给我答案。<br><br/><br><br/></p>
+<h2 id="学习与工作"><a href="#学习与工作" class="headerlink" title="学习与工作"></a>学习与工作</h2><p>01<br>把最近Agent工程实践中学习和落地的知识进行梳理，这个月写了四篇文章，同步更新到博客、公众号、小红书了，这个方向随着书写越挖越深，可以写的东西也从最开始的框架选择、架构思路越来越细越拓越宽，这就是 Learn In Public 的魔力吧。</p>
+<ul>
+<li><a href="https://blog.liluhui.cn/2025/09/05/6-Design-Principles-I-Learned-from-Claude-Code/">从 Claude Code 学的 6 个设计铁律（含 prompts&#x2F;tool 清单）</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/dy2q4omQ_GzT9alPyLJB5w">22 个顶级 Agent 工作流框架整理</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzU2NTg1ODk2Mg==&mid=2247483810&idx=1&sn=1a7e92a0a2d875e17b531a618e8b632c&chksm=fcb4065fcbc38f4996d86bff572567f7125f8ab5963014098c10f078d7411e9a1ffb72cbb2a5&cur_album_id=4172082496760184844&scene=189#wechat_redirect">Agent 记忆的五层模型</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzU2NTg1ODk2Mg==&mid=2247483835&idx=1&sn=acd4c7440435a8f721ea3cb9d8609126&chksm=fcb40646cbc38f50d7449907372c9e00ec7ebdd958f46c376f64a06657761695ff269eb5699a&cur_album_id=4172082496760184844&scene=189#wechat_redirect">Agent 记忆写入三大策略，决定“记什么”的工程学</a></li>
+</ul>
+<br/>
+
+
+<p>02<br>大角几何画板9月份重点都放在了构建全新的 Agent workflow 流程以及各种 Bad Case 的优化，也已经进入积累用户反馈的问题&#x2F;需求池，逐步解决的情况中了，目前属于有很多可以做的也缺很多对标功能，但在优势上依然没有放大到验证有效的阶段。<br>截止9月底产品已经有3000+有效用户了，其中1000+认为是有效激活的，用户画像也开始更丰富，从基本是教师和数学从业者，增加了一些爱好者、学生和家长。<br>目前产品算是持续有进展，但还没到阶段性里程碑的程度，小团队内部的分歧也导致发力方向的混乱，这些都是客观存在的问题，希望产品发展越来越好。</p>
+<p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/10/2/003.png" alt="image"><br><br/><br><br/></p>
+<h2 id="生活与社交"><a href="#生活与社交" class="headerlink" title="生活与社交"></a>生活与社交</h2><p>01<br>加入了霖子的瑜伽工作室，开始加强训练，这个月取得了蛮不错的进步。轮式的耐力明显增长了很多个呼吸；尝试了很多从没做过的进阶动作，以前不敢的鹤蝉式转头倒立也不害怕了；倒立的跳跃也明显少了些恐惧，虽然也很难一步到位就不害怕了，但我清晰充分感受到自己的变化 … 这就是瑜伽提示练习带来的增加勇气吧！<br>要夸夸自己本月取得的阶段成就：肘倒立能独立定住3秒、三点头倒立髋腿能自己立起了、不规则头倒立稳定可以起来、骆驼转轮从力量控不住起不来到能独立完成、站立上下轮完成、鸽王从非常紧张到能自己去深入的感觉。虽然有非常多可以继续努力的力量和伸展，也有很多不完美，总之感激本月取得的进步！</p>
+<p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/10/2/004.png" alt="image"><br><br/></p>
+<p>02<br>吃到了好爽的战斧牛排 ！ （太腻了，下次不吃了）</p>
+<p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/10/2/005.png" alt="image"></p>
+<br/>
+
+<p>03<br>团建去海边吃了海鲜、放了烟花 ~（其实很想回家干活）</p>
+<p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/10/2/006.jpg" alt="image"></p>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.liluhui.cn">Luhui芦荟</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.liluhui.cn/2025/10/02/202509/">https://blog.liluhui.cn/2025/10/02/202509/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.liluhui.cn" target="_blank">Luhui's Personal Website</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/10/2/001.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="next-post pull-full" href="/2025/10/01/What-Should-an-Agent-Remember-Writing-Strategies-Inspired-by-Human-Memory/" title="Agent 记忆写入策略：如何决定“记什么”？"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Agent 记忆写入策略：如何决定“记什么”？</div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Luhui芦荟</div><div class="author-info-description">关于生活、学习、工作</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">90</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="/rss2.xml" target="_blank" title="RSS"><i class="fas fa-rss"></i></a><a class="social-icon" href="https://github.com/LDingLDing" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:liluhuizj@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%80%E8%A7%81%E4%B8%8E%E6%89%80%E6%83%B3"><span class="toc-number">1.</span> <span class="toc-text">所见与所想</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E4%B8%8E%E5%B7%A5%E4%BD%9C"><span class="toc-number">2.</span> <span class="toc-text">学习与工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%9F%E6%B4%BB%E4%B8%8E%E7%A4%BE%E4%BA%A4"><span class="toc-number">3.</span> <span class="toc-text">生活与社交</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/10/02/202509/" title="2025/09 Review"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/10/2/001.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2025/09 Review"/></a><div class="content"><a class="title" href="/2025/10/02/202509/" title="2025/09 Review">2025/09 Review</a><time datetime="2025-10-02T07:47:22.000Z" title="发表于 2025-10-02 15:47:22">2025-10-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/01/What-Should-an-Agent-Remember-Writing-Strategies-Inspired-by-Human-Memory/" title="Agent 记忆写入策略：如何决定“记什么”？">Agent 记忆写入策略：如何决定“记什么”？</a><time datetime="2025-10-01T09:27:33.000Z" title="发表于 2025-10-01 17:27:33">2025-10-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/19/Agent-Memory-Five-Layer-Model-and-Engineering-Implementation/" title="Agent 记忆五层模型与工程落地">Agent 记忆五层模型与工程落地</a><time datetime="2025-09-19T03:27:20.000Z" title="发表于 2025-09-19 11:27:20">2025-09-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/12/22-top-level-Agent-workflow-frameworks-organized/" title="🌅 22 个顶级 Agent 工作流框架整理">🌅 22 个顶级 Agent 工作流框架整理</a><time datetime="2025-09-12T01:56:16.000Z" title="发表于 2025-09-12 09:56:16">2025-09-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/05/6-Design-Principles-I-Learned-from-Claude-Code/" title="从 Claude Code 学的 6 个设计铁律（含 prompts/tool 清单）">从 Claude Code 学的 6 个设计铁律（含 prompts/tool 清单）</a><time datetime="2025-09-05T10:28:12.000Z" title="发表于 2025-09-05 18:28:12">2025-09-05</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By Luhui芦荟</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn">浙ICP备19010836号</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const initGitalk = () => {
+    const gitalk = new Gitalk(Object.assign({
+      clientID: '4987f0fb0a509fb9f0af',
+      clientSecret: '7e264967a3ea557003aacdf795b9e57e36a56382',
+      repo: 'ldinglding.github.io',
+      owner: 'LDingLDing',
+      admin: ['LDingLDing'],
+      id: 'ceb1e5b058315f28f0c0aad12c7523cc',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  const loadGitalk = async() => {
+    if (typeof Gitalk === 'function') initGitalk()
+    else {
+      await btf.getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+      await btf.getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js')
+      initGitalk()
+    }
+  }
+  
+  const commentCount = n => {
+    const isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+    if (isCommentCount) {
+      isCommentCount.textContent= n
+    }
+  }
+
+  if ('Gitalk' === 'Gitalk' || !false) {
+    if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+    else loadGitalk()
+  } else {
+    window.loadOtherComment = loadGitalk
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
