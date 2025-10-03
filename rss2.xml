@@ -15,8 +15,36 @@
     <atom:link href="https://blog.liluhui.cn/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>关于生活、学习、工作 feedId:66855595489698816+userId:55886336755964928</description>
-    <pubDate>Thu, 02 Oct 2025 08:01:46 GMT</pubDate>
+    <pubDate>Fri, 03 Oct 2025 12:11:24 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>把 MCP 放回它该在的位置</title>
+      <link>https://blog.liluhui.cn/2025/10/03/Quick-Clarity-The-Key-Difference-Between-Agent-and-MCP/</link>
+      <guid>https://blog.liluhui.cn/2025/10/03/Quick-Clarity-The-Key-Difference-Between-Agent-and-MCP/</guid>
+      <pubDate>Fri, 03 Oct 2025 12:08:10 GMT</pubDate>
+      
+        
+        
+      <description>&lt;p&gt;前阵子有朋友问我：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“Agent 和 MCP 到底有什么区别啊？”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;我当时愣了一下。&lt;/p&gt;
+&lt;p&gt;这问题乍听很简单，甚至让人觉得是不是在“混淆概念”。&lt;/p&gt;
+&lt;p&gt;但转念一想，没错啊。对于</description>
+        
+      
+      
+      
+      <content:encoded><![CDATA[<p>前阵子有朋友问我：</p><blockquote><p>“Agent 和 MCP 到底有什么区别啊？”</p></blockquote><p>我当时愣了一下。</p><p>这问题乍听很简单，甚至让人觉得是不是在“混淆概念”。</p><p>但转念一想，没错啊。对于刚入行的人来说，<strong>各种 buzzword 像弹幕一样飞来</strong>，Agent、MCP、RAG、LangChain……乍一看都差不多，背后却完全不是一回事。</p><p>我决定写下这篇文章。</p><p>不是为了定义概念，而是想<strong>把它们放回该在的位置</strong>。这样以后遇到选择，就不会懵逼。</p><br/><br/><h2 id="Agent-是人，MCP-是语言"><a href="#Agent-是人，MCP-是语言" class="headerlink" title="Agent 是人，MCP 是语言"></a>Agent 是人，MCP 是语言</h2><p>如果把 Agent 比作一个人：</p><ul><li>眼睛耳朵是 <strong>感知</strong>（输入）</li><li>大脑是 <strong>认知与推理</strong>（记忆、判断）</li><li>决定去做什么是 <strong>决策</strong></li><li>动手去做是 <strong>执行</strong></li><li>事后总结经验是 <strong>反馈</strong></li></ul><p>而 <strong>MCP</strong> 呢？</p><p><strong>它不是另一个“大脑”，而是这人和外部世界说话时，用的通用语言。</strong></p><p>Agent 想用锤子、笔记本、数据库……如果没有通用语言，就只能每次“手舞足蹈”解释一遍。但有了 MCP，像插 USB 一样——对接标准统一了，沟通就不再痛苦。</p><br/><br/> <h2 id="三种方式接工具"><a href="#三种方式接工具" class="headerlink" title="三种方式接工具"></a>三种方式接工具</h2><p>作为开发者，我自己踩过的坑大概分三种：</p><ul><li><strong>直连 API</strong>：最省事，写几行代码就能跑。但工具一多，就像每个家电都要单独插线，很快乱成一团。</li><li><strong>自建网关</strong>：给工具统一写一层包装，好一点，但维护起来累。</li><li><strong>MCP 协议</strong>：就像买了插排，谁来都能插，但前提是大家都认这个标准。</li></ul><p>所以 MCP 解决的不是“有没有 Agent”，而是“工具怎么接得更省心”。</p><br/><br/><h2 id="什么时候该用-MCP？"><a href="#什么时候该用-MCP？" class="headerlink" title="什么时候该用 MCP？"></a>什么时候该用 MCP？</h2><p>我很喜欢把问题拆成“要不要现在就做”。</p><p><strong>推荐用 MCP 的场景：</strong></p><ul><li>你要接的工具特别多、特别杂。</li><li>你想做一个“插件市场”，别人开发的工具也能接进来。</li><li>你的团队很大，需要统一接口和权限。</li></ul><p><strong>不急着用 MCP 的场景：</strong></p><ul><li>你只有 1-2 个工具，跑起来最重要。</li><li>原型阶段，时间比优雅更关键。</li><li>场景完全内网，不需要和别人兼容。</li></ul><p>说白了：<strong>MCP 是标准，不是魔法</strong>。 如果你的产品还在“验证能不能跑”，先别急着上。</p><br/><br/><h2 id="渐进路线（我自己走过的）"><a href="#渐进路线（我自己走过的）" class="headerlink" title="渐进路线（我自己走过的）"></a>渐进路线（我自己走过的）</h2><p>做产品的时候，我的演进路线大概是：</p><ol><li><strong>先直连 API</strong>：把东西跑起来，先看到结果。</li><li><strong>工具变多了</strong>：抽象一层接口，否则维护起来要崩溃。</li><li><strong>产品要规模化</strong>：再考虑 MCP，把“工具接入”完全标准化。</li></ol><p>我不是一开始就追 MCP，而是把它当作未来的一步。<br>有点像盖房子：先把砖垒起来，等真的要接水电气，再考虑用不用品质更好的插座系统。</p><br/><br/><h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>所以，Agent 和 MCP 不是一回事：</p><ul><li><strong>Agent 是大脑+身体，去做事。</strong></li><li><strong>MCP 是语言+插口，帮它对接外部世界。</strong></li></ul><br/><p>理解这一点，你就不会再问“Agent 和 MCP 是不是一个东西”，而会问：</p><p><strong>“我的产品阶段，需不需要 MCP？”</strong></p><p>我觉得这才是更有价值的问题。</p><br/><br/><br/><br/><br/>]]></content:encoded>
+      
+      
+      
+      
+      <comments>https://blog.liluhui.cn/2025/10/03/Quick-Clarity-The-Key-Difference-Between-Agent-and-MCP/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>2025/09 Review</title>
@@ -414,25 +442,6 @@
       
       
       <comments>https://blog.liluhui.cn/2024/10/11/2410yoga/#disqus_thread</comments>
-      
-    </item>
-    
-    <item>
-      <title>OpenAI o1 preview 一周回顾</title>
-      <link>https://blog.liluhui.cn/2024/09/20/openai-o1/</link>
-      <guid>https://blog.liluhui.cn/2024/09/20/openai-o1/</guid>
-      <pubDate>Fri, 20 Sep 2024 12:38:45 GMT</pubDate>
-      
-      <description>9月12日 OpenAI 发布 o1 模型的预览版本和迷你版本，对观察和探索了一周的信息做个整理。</description>
-      
-      
-      
-      <content:encoded><![CDATA[<h2 id="1o1-模型是什么？全新的系列？"><a href="#1o1-模型是什么？全新的系列？" class="headerlink" title="1o1 模型是什么？全新的系列？"></a>1o1 模型是什么？全新的系列？</h2><h3 id="三句话介绍的话，最重要的是"><a href="#三句话介绍的话，最重要的是" class="headerlink" title="三句话介绍的话，最重要的是"></a>三句话介绍的话，最重要的是</h3><ol><li>o1 是 OpenAI 开发的一种新型推理系统。新的路线不再受到预训练的瓶颈，扩展推理计算的可能性，以应对更具有挑战性的推理场景。</li><li>o1 通过在长推理链上训练新模型并进行大量强化学习来设计，教会模型如何以高度数据效率的方式利用其思维链进行高效思考，并且能够大规模部署。</li><li>o1 为用户进行在线搜索，并且在推理上投入更多，因此推理成本也更高，它展示了 AI 未来的发展方向。</li></ol><br/><h3 id="为什么是-o1-这个全新的系列呢？"><a href="#为什么是-o1-这个全新的系列呢？" class="headerlink" title="为什么是 o1 这个全新的系列呢？"></a>为什么是 o1 这个全新的系列呢？</h3><p>就像前文提到的它代表了OpenAI看好的未来方向，名称“o1”中的“o”代表 OpenAI，并且将将计数器重置为1。OpenAI希望通过这个模型重新定义人工智能的推理能力，并开启一个新的纪元。</p><p>从技术的角度来说，之前大模型的迭代方向主要是预训练（pre training），依赖大量的数据，而在今天天然数据已经不够用了，很难说还有哪家能拿出超出一个数量级的天然数据，学术界也早有讨论后训练（post training）对于智能的提升，这也是为什么是 o1，因为范式已经改变了，引入了强化学习来持续提升智能。</p><br/><h3 id="一些必要知道的信息"><a href="#一些必要知道的信息" class="headerlink" title="一些必要知道的信息"></a>一些必要知道的信息</h3><ul><li>o1 就是之前透露出的代号为 Strawberry、Q* 的新一代人工智能。目前发布的版本是 o1-preview（预览版） 和 o1 mini（迷你版），官方文章中的对比很多用的是正式版，至于为什么还未放出正式版有不同的猜测，可能是考虑推理成本、部署压力、安全管理。</li><li>o1-preview 是 o1 的缩小版本，以确定其最合适的用例和需要改进的领域。</li><li>o1-mini 是一个针对 STEM 应用程序优化的更具成本效益的版本。O1-mini 在数学和编程任务中实现了与 o1 几乎相同的性能，但成本却显著降低。</li><li>目前 o1 的调用是限制速率和频率的，每周五十条，价格也很贵，输出成本 100m tok 是 60刀，是 GPT-4o 的 4 倍。<a href="https://openai.com/api/pricing/">官网价格🔗</a></li><li>另外由于o1 的思维链是隐藏的，用户看不到，但是是算进输出 tokens 的用量里的。</li></ul><br/><h3 id="一些重要的数据"><a href="#一些重要的数据" class="headerlink" title="一些重要的数据"></a>一些重要的数据</h3><div style="text-align: center;"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/09/20/2.png" class="" width="500">👆人类对 GPT-4o 的写作和编辑任务评价更高，而 o1 在编程、数据分析、数学计算等逻辑方面的评价更高。<img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/09/20/3.png" class="" width="500"><p>👆虽然大多数LLMs在预训练上投入了大量资金，但 o1 将更大的部分分配给推理。</p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/09/20/4.png" class="" width="500"><p>👆与其他最先进的模型相比，o1 是数学推理的巨大进步！</div></p><br/><br/><h2 id="o1-模型适用什么场景？"><a href="#o1-模型适用什么场景？" class="headerlink" title="o1 模型适用什么场景？"></a>o1 模型适用什么场景？</h2><p>首先很确定的是，不适合简单的查询，如下图花费的token和time远超其他llm，没必要且浪费。</p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/09/20/5.png" class="" width="500"><p>从官方和各方的测试数据来看，o1模型的展示了其在处理复杂认知任务方面的潜力，尤其是在需要深层次推理和分析的高价值领域。所以我们可以展望其在科学研究、软件编程、数学问题等方面的发展，但同时有理由怀疑奖励模型无法覆盖所有涉及通用知识的领域。</p><p>而且从目前的花费时间来说，应用端只能是更加异步的使用场景，这意味着很难在短时间内面向大众消费市场，还是偏向适用于专业生产者，对于效果的要求更高，对于延迟更加包容。</p><p>目前，o1 在做出反应之前只思考了几秒钟。在对于未来的描述中，OpenAI 的愿景是让模型能够在数小时、数天甚至数周的时间内思考答案。大多数场景用不到这么高的推理成本，不过对于一些复杂应用场景来说，比如学术、医学研究、生物学研究等等非常值得期待。</p><br/><br/><h2 id="3o1-模型背后做了什么？"><a href="#3o1-模型背后做了什么？" class="headerlink" title="3o1 模型背后做了什么？"></a>3o1 模型背后做了什么？</h2><p>提取其中的关键点包括：</p><ol><li><p>o1模型使用强化学习算法来训练，这种算法可以教会模型如何高效地使用其思考链进行思考，并且通过这种方式，模型的性能随着更多的强化学习和更多的思考时间而持续提高。<br>o1模型运用了一种过程奖励模型，该模型会对推理过程中的每一步进行评分。这种方法与传统的强化学习不同，后者通常只在整个过程结束时给予一次性奖励。过程奖励模型能够提供更细粒度的反馈，帮助模型在推理的每个步骤中进行改进。除了过程奖励外，推测o1模型还可能结合了基于结果的奖励模型或启发式方法，以判断模型是否给出了正确的答案。这可能包括对答案长度的惩罚，以避免模型生成无休止的非答案内容。值得注意的是，在不同场景下的奖励模型可能需要根据特定任务和目标进行定制和优化，所以 o1 未必在很多垂类逻辑问题上能取得可用的结果。</p></li><li><p>o1 模型在训练过程中，通过引入动态的 Reasoning Token 来启发隐式思维链进行问题思考，使得模型的思考时间越长，推理能力越强。<br>这种训练方式也涉及到了“后训练扩展律（Post-Training Scaling Laws）”，意味着可以通过在训练后期提升强化学习训练的探索时间和增加模型推理思考时间来实现性能提升。</p></li></ol><br/><br/><h2 id="o1-发布带来的影响猜测"><a href="#o1-发布带来的影响猜测" class="headerlink" title="o1 发布带来的影响猜测"></a>o1 发布带来的影响猜测</h2><p>OpenAI 指出要达成 AGI 的下一步发展不再是预训练（retraining），而是需要强化后训练（post training）了，并且选择了强化学习作为这个方向的抓手。</p><p>那么我们是不是可以说接下来的大模型领域的竞争不再是比拼预训练的数据量达成的通用知识了，而是去迭代模型解决问题的思维方式去达成更强的推理能力。</p><p>强化学习作为是本次新模型的关键技术之一，通过复杂的设计与训练（例如奖励模型、搜索和探索机制），使模型在面临长序列推理挑战时能有效地进行计算与分析，这个思路会很快扩展到大模型竞争中。如果是这个方向的话，垂直领域的强化学习设计是非常有可能跑出更多垂直模型的，我觉得不太可能有一个适用于所有推理场景的奖励模型。</p><p>未来的正式版 o1 估计会提供更多的参数给使用方去调节推理预算以及其中的搜索参数等，不然现在隐藏式的推理消耗实在兜不住，只有这样不同场景下成本和效果才能实现平衡。</p><br/><br/><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://openai.com/index/learning-to-reason-with-llms/OpenAI">https://openai.com/index/learning-to-reason-with-llms/OpenAI</a><br><a href="https://cdn.openai.com/o1-system-card.pdf">https://cdn.openai.com/o1-system-card.pdf</a><br><a href="https://www.interconnects.ai/p/reverse-engineering-openai-o1">https://www.interconnects.ai/p/reverse-engineering-openai-o1</a><br><a href="https://www.latent.space/p/openai-api-and-o1?r=q2z20">https://www.latent.space/p/openai-api-and-o1?r=q2z20</a><br><a href="https://mp.weixin.qq.com/s/ZYIHoSUoTH4wd3d5Z2zmeQ">https://mp.weixin.qq.com/s/ZYIHoSUoTH4wd3d5Z2zmeQ</a></p><br/><br/><br/><br/><br/>]]></content:encoded>
-      
-      
-      
-      
-      <comments>https://blog.liluhui.cn/2024/09/20/openai-o1/#disqus_thread</comments>
       
     </item>
     
