@@ -15,8 +15,33 @@
     <atom:link href="https://blog.liluhui.cn/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>关于生活、学习、工作 feedId:66855595489698816+userId:55886336755964928</description>
-    <pubDate>Fri, 10 Oct 2025 10:37:21 GMT</pubDate>
+    <pubDate>Wed, 15 Oct 2025 08:13:25 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>什么是多 Agent 系统？从单体模型到协作智能的进化</title>
+      <link>https://blog.liluhui.cn/2025/10/15/What-Is-a-Multi-Agent-System-From-a-Single-LLM-to-Collaborative-Intelligence/</link>
+      <guid>https://blog.liluhui.cn/2025/10/15/What-Is-a-Multi-Agent-System-From-a-Single-LLM-to-Collaborative-Intelligence/</guid>
+      <pubDate>Wed, 15 Oct 2025 08:11:28 GMT</pubDate>
+      
+        
+        
+      <description>&lt;p&gt;过去一年，我们见证了无数“大模型”带来的奇迹。&lt;br&gt;它们能写代码、能画图、能写策划书，甚至能帮你找 bug。  &lt;/p&gt;
+&lt;p&gt;于是一个问题出现了：  &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;既然大模型已经这么强了，&lt;strong&gt;为什么还要搞那么复杂的「多 Agent</description>
+        
+      
+      
+      
+      <content:encoded><![CDATA[<p>过去一年，我们见证了无数“大模型”带来的奇迹。<br>它们能写代码、能画图、能写策划书，甚至能帮你找 bug。  </p><p>于是一个问题出现了：  </p><blockquote><p>既然大模型已经这么强了，<strong>为什么还要搞那么复杂的「多 Agent 系统」</strong>？ </p><p>是不是就是多开几个大模型？  </p></blockquote><p>其实，多 Agent 不是“堆模型”，而是一次<strong>智能结构的转变</strong>。  </p><p>它让我们开始用「团队」的方式去理解 AI，让语言模型从“单人作坊”变成“协作组织”。  </p><br/><br/><h2 id="一个-Agent-不够用吗？"><a href="#一个-Agent-不够用吗？" class="headerlink" title="一个 Agent 不够用吗？"></a>一个 Agent 不够用吗？</h2><p>想象你让 GPT 帮你开发一个网站：它能写前端，也能设计数据库，还能生成测试代码。 </p><p>但很快你会发现一个问题，它在写完后<strong>自测永远都通过</strong>，逻辑错误自己也检查不出来。  </p><br/><p>于是人们开始尝试：<br>让一个 GPT 写，另一个 GPT 审；<br>让一个负责规划，另一个负责执行；<br>甚至让两个 GPT 吵一架，看谁的结论更靠谱。  </p><p>这就是最早的 “<strong>multi-agent</strong>” 思想萌芽。<br>不是因为模型不行，而是因为<strong>智能需要结构</strong>。<br>单个 Agent 再强，也无法同时兼顾规划、执行、评估、反思这些不同心智功能。  </p><br/><br/><h2 id="为什么要多个-Agent：从「个体智能」到「集体智能」"><a href="#为什么要多个-Agent：从「个体智能」到「集体智能」" class="headerlink" title="为什么要多个 Agent：从「个体智能」到「集体智能」"></a>为什么要多个 Agent：从「个体智能」到「集体智能」</h2><h3 id="1️⃣-分工让思考更高效"><a href="#1️⃣-分工让思考更高效" class="headerlink" title="1️⃣ 分工让思考更高效"></a>1️⃣ 分工让思考更高效</h3><p>就像人类社会的分工一样，AI 也有“认知负荷”。<br>一个 Agent 的上下文再长，也无法同时规划和执行。  </p><br/><p>于是多 Agent 系统会把任务拆解：  </p><ul><li><strong>Planner</strong> 规划任务  </li><li><strong>Executor</strong> 调用工具或编写代码  </li><li><strong>Critic</strong> 检查结果、给出反馈</li></ul><br/><p>论文参考：</p><ul><li>MetaGPT: Meta Programming for Multi-Agent Collaborative Framework (Hong et al., 2023)  </li><li>Reflexion: Verbal Reinforcement Learning with LLMs (Shinn et al., 2023)</li></ul><h3 id="2️⃣-不同视角，减少偏差"><a href="#2️⃣-不同视角，减少偏差" class="headerlink" title="2️⃣ 不同视角，减少偏差"></a>2️⃣ 不同视角，减少偏差</h3><p>当多个 Agent 相互讨论、辩论、复核时，错误就更难溜走。<br>这就是所谓的 “<strong>social critique</strong>” —— AI 用社会互动的方式，来弥补单模型思维的盲点。 </p><br/><p>例如 <em>CAMEL (2023)</em> 中，两个 LLM 扮演不同角色，通过角色扮演协作完成任务，结果准确率显著高于单模型执行。  </p><h3 id="3️⃣-群体记忆与长期任务"><a href="#3️⃣-群体记忆与长期任务" class="headerlink" title="3️⃣ 群体记忆与长期任务"></a>3️⃣ 群体记忆与长期任务</h3><p>一个模型记不住太久的上下文，而多 Agent 系统可以共享外部记忆。  </p><p><strong>LangGraph</strong> 就用图状结构记录各 Agent 的状态与结果，<br><strong>AutoGen</strong> 则通过消息路由实现多轮协作。  </p><p>这让智能系统第一次能像组织一样 <strong>有状态、有记忆、有分工</strong>。  </p><br/><br/><h2 id="「Agent」vs-「Multi-Agents」：什么时候该用哪种？"><a href="#「Agent」vs-「Multi-Agents」：什么时候该用哪种？" class="headerlink" title="「Agent」vs 「Multi Agents」：什么时候该用哪种？"></a>「Agent」vs 「Multi Agents」：什么时候该用哪种？</h2><p>不是所有任务都需要多 Agent，整理了下面这张表，帮你快速判断：  </p><table><thead><tr><th>场景类型</th><th>适合单 Agent</th><th>适合多 Agent</th></tr></thead><tbody><tr><td>简单问答、摘要、翻译</td><td>✅</td><td>❌</td></tr><tr><td>多步骤推理（数学、逻辑）</td><td>⚠️</td><td>✅</td></tr><tr><td>代码生成与测试</td><td>❌</td><td>✅</td></tr><tr><td>长期运营任务（游戏、规划）</td><td>❌</td><td>✅</td></tr><tr><td>决策 &#x2F; 研究讨论类任务</td><td>⚠️</td><td>✅</td></tr></tbody></table><p>👉 简单说：  </p><ul><li><strong>单 Agent</strong>：快、轻、直接。  </li><li><strong>多 Agent</strong>：稳、复杂、可解释。</li></ul><p>它更像是“团队思维”，适用于有阶段、有反馈、有评估的任务。  </p><br/><br/><h2 id="协作机制不是「堆模型」，而是「编排心智」"><a href="#协作机制不是「堆模型」，而是「编排心智」" class="headerlink" title="协作机制不是「堆模型」，而是「编排心智」"></a>协作机制不是「堆模型」，而是「编排心智」</h2><p>多 Agent 的价值在于协作机制，而不是数量。  </p><p>常见机制包括：  </p><ol><li><strong>角色定义</strong>：每个 Agent 有独立 Prompt 与目标（Planner &#x2F; Coder &#x2F; Tester）  </li><li><strong>通信协议</strong>：消息路由、对话规则（AutoGen 异步消息机制）  </li><li><strong>状态共享</strong>：外部记忆、数据库或上下文图（LangGraph）  </li><li><strong>自我审查</strong>：互评或辩论结构（CAMEL、Reflexion）  </li><li><strong>任务编排</strong>：从自然语言生成完整工作流（MetaGPT、CrewAI）</li></ol><p>工程参考：</p><ul><li>Microsoft AutoGen  </li><li>LangChain LangGraph  </li><li>MetaGPT  </li><li>CAMEL-AI  </li><li>CrewAI</li></ul><br/><br/><h2 id="争议：多-Agent-是过渡，还是未来？"><a href="#争议：多-Agent-是过渡，还是未来？" class="headerlink" title="争议：多 Agent 是过渡，还是未来？"></a>争议：多 Agent 是过渡，还是未来？</h2><p>目前学术界有两种声音：  </p><p>1️⃣ <strong>单体强化派</strong><br>认为随着大模型上下文与记忆增强（如 GPT-o3、Gemini 2.5），<br>未来单模型内部就能模拟多角色思维，不再需要外部 Agent。  </p><p>2️⃣ <strong>协作网络派</strong><br>认为未来智能系统会像社会那样，通过标准协议（如 MCP、A2A）让不同 Agent 协作，<br>形成一个“分布式智能生态”。  </p><p>无论是哪种，multi-agent 都是一个重要的中间态：它让 AI 学会如何组织智能、引导协作，为真正的“社会化 AI”打下基础。  </p><br/><br/><h2 id="结语：AI，也需要同事"><a href="#结语：AI，也需要同事" class="headerlink" title="结语：AI，也需要同事"></a>结语：AI，也需要同事</h2><p>多 Agent 的出现，不是因为模型不够强，而是因为<strong>智能本身就不是单线程的</strong>。  </p><p>人类的思考依靠分工协作——感知、记忆、计划、执行、反思。  </p><p>AI 也在重走这条路，只不过是以 Agent 的形式。  </p><br/><p>当我们不再把智能看作一个「模型」，  </p><p>而是一群「协作的心智」时，  </p><p>也许我们就更接近真正的智能社会。  </p><br/><br/><br/><br/><br/><h2 id="延伸阅读"><a href="#延伸阅读" class="headerlink" title="延伸阅读"></a>延伸阅读</h2><p><strong>学术论文：</strong>  </p><ul><li>Li et al. (2023) — <em>CAMEL: Communicative Agents for “Mind” Exploration of LLM Society</em>  </li><li>Hong et al. (2023) — <em>MetaGPT: Meta Programming for Multi-Agent Collaborative Framework</em>  </li><li>Shinn et al. (2023) — <em>Reflexion: Verbal Reinforcement Learning for LLMs</em>  </li><li>Park et al. (2023, Stanford) — <em>Generative Agents: Interactive Simulacra of Human Behavior</em>  </li><li>DeepMind (2024) — <em>Society of Mind for Large Language Models</em>  </li><li>Cemri et al. (2024) — <em>MAST: Multi-Agent System Taxonomy of Failures</em></li></ul><p><strong>开源工程：</strong>  </p><ul><li>Microsoft AutoGen  </li><li>LangChain LangGraph  </li><li>MetaGPT  </li><li>CAMEL-AI  </li><li>CrewAI  </li><li>OpenAI Swarm (实验性)</li></ul>]]></content:encoded>
+      
+      
+      
+      
+      <comments>https://blog.liluhui.cn/2025/10/15/What-Is-a-Multi-Agent-System-From-a-Single-LLM-to-Collaborative-Intelligence/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>什么是 Agent Memory？探索 AI 如何理解并记住你的话</title>
@@ -425,27 +450,6 @@
       
       
       <comments>https://blog.liluhui.cn/2024/12/01/202411/#disqus_thread</comments>
-      
-    </item>
-    
-    <item>
-      <title>2024/10 Review</title>
-      <link>https://blog.liluhui.cn/2024/10/31/202410/</link>
-      <guid>https://blog.liluhui.cn/2024/10/31/202410/</guid>
-      <pubDate>Wed, 30 Oct 2024 23:30:00 GMT</pubDate>
-      
-      <description>抛开社会语境下的爱，回归存在感体验的爱，确实是完满的溢出。</description>
-      
-      
-      
-      <content:encoded><![CDATA[<p>抛开社会语境下的爱，回归存在感体验的爱，确实是完满的溢出。</p><h2 id="这个月发生了什么？"><a href="#这个月发生了什么？" class="headerlink" title="这个月发生了什么？"></a>这个月发生了什么？</h2><ul><li>在筹备AI+播客系列，目前的计划是尝试语言学习和个人管理方面的，可期待下月开始正式运营！</li><li>我们团队的AI+数学教育产品即将上线MVP版本了，下个月初海外首发！</li><li>买了字节的豆包AI耳机 —— Ola Friend，讲真是好用的，尤其拿来练语言越来越熟练了。</li><li>精简了一波订阅信息，集合到 Follow 里了，确实好用！</li><li>给朋友部署了一套 WP 的全球博客，节后也走完了国内的各种备案。</li><li>和一波做AI的朋友碰了两天，和着他们的工作流干体验下，商业广告这块技术根本不是卡点，资源渠道和案例积累才是关键。</li><li>在探索更多样化的亲密关系，有人因为我的存在变得美好一点这件事情，实在是太美好了。虽然按理事情要复杂的多，感谢是我却也不是我，但很微妙的感觉，流淌的爱意。</li><li>趁着双十一进货了一波酒，还是葡萄酒为主，也开始尝试下威士忌，酒柜从50%直接变成110%了。</li></ul><br/><br/><h2 id="所见与所想"><a href="#所见与所想" class="headerlink" title="所见与所想"></a>所见与所想</h2><p>01<br><strong>焦虑的意义</strong></p><p>就像焦虑会摧毁我们的自我意识一样，自我意识也能够摧毁焦虑。这就是说，我们的自我意识越强大，就越能够抵制和战胜焦虑。像发烧一样，焦虑也是某种内在斗争正在进行的征兆。正如发烧是身体正在调动其生理力量与细菌感染作战的一种症状一样，焦虑也是心理或精神战争正在进行的证据。</p><p>它是一种信号，号召我们集中起我们的储备力量，与某种威胁进行斗争。</p><p>唯一标志我们失去战胜当前困难的是，陷入冷淡，不能建设性地感受和面对我们的焦虑。</p><br/><p>02<br><strong>朋友是什么？</strong></p><p>于我而言，<br>朋友不是向他人介绍时归类的那个“朋友”；<br>朋友不是曾经重要现在忽生忽死的存在；<br>朋友不是厉害的人、漂亮的人、成功的人、欣赏的人。</p><p>那么，朋友于我而言可能是什么呢？<br>朋友是那个我在意他的状态，我由衷希望他好，但也接受他不好的，具体的人；<br>朋友是始终在我生命里在场的人，他不必时时在，但我私心地，确实期望着；<br>朋友是可以彻夜闲谈、随机漫步、无所事事、不必像话，也可以很舒服的人；<br>朋友可以是互相鼓励追求理想的人，或也可以是，一起探索生活走向死亡的人。</p><p>但是我也得接受，<br>朋友不会总是在场，<br>大家都是一程又一程。</p><p>所以，更想好好珍惜朋友，想创造更多的可能性。<br>没人一直在这里，围绕着另一个人。<br>即使自己，也总是在抛弃一部分的自己。</p><br/><p>03<br><strong>stand up for myself</strong></p><p>不考虑别人的人很幸福，我行我素</p><p>考虑别人的人很容易不幸福，总以他人为主</p><p>考虑到别人但是为自己争取的人很勇敢，因为他爱自己</p><br/><p>04<br><strong>来自陌生人的善意</strong></p><p>一天打开话给信用卡的客服，非常顺利地搞定了年费抵扣，客服小姐姐说了一声”你的声音真好听“，真好，感谢。</p><br/><p>05<br><strong>货币</strong>是道德的补丁。<br><strong>市场</strong>是自由人的联合。<br><strong>估值</strong>是人的社会地位。<br><strong>时间</strong>是近期风险和远方机会的组合，中间起决定作用的，是人的主观能动性。</p><br/><p>06<br><strong>本月遇到的一些好内容推荐：</strong> </p><ul><li><a href="https://www.xiaoyuzhoufm.com/episode/671869330d2f24f289296578">金融 | 播客 | 赚到比赚过重要！行情是行情，自己是自己</a><ul><li>差别心才是牛市让人痛苦的根本，总有身边的人赚得比自己多，人很难不在这样环境里暗恼和贪婪。</li><li>交易系统的买卖点设计不要根据自己的成本价运作，市场不会考虑你的成本价，盯着翻倍、回本、10%等等不是一个好的策略。</li><li>信息平权正在影响散户们。每个人都想进来捞一笔，每个人都知道散户共识是什么。</li></ul></li><li><a href="https://www.xiaoyuzhoufm.com/episode/670647746c7f817786c9f7b2">金融 | 播客 | 退休、发钱、工作，这是三件完全不同的事</a><ul><li>面向养老目标的投资策略的关键应该是控制波动率，而不是追求高收益。</li><li>真正的养老是一种确定的可预测的现金流，所以年金产品和国家养老金虽然收益率不高，但确实是更好的养老形式。</li></ul></li><li><a href="https://mp.weixin.qq.com/s?__biz=MzIxODI3MjU5NA==&mid=2247483850&idx=1&sn=df32884c924761ea55abea36be12bd20">技术 | 文章 | 大模型驱动的产品范式创新研究与思考</a><ul><li>大模型技术正在推动计算、开发和交互范式的转变，这要求产品经理必须重新思考产品的设计和开发方式。</li><li>随着LUI的发展，传统的图形和触控界面可能会逐渐被更自然的交互方式所取代，这为产品设计提供了新的方向。</li><li>智能体和多模态交互的发展将使得产品能够更加直观和自然地理解和响应用户的需求。</li><li>产品经理需要开始考虑智能体的需求，设计出能够与智能体无缝协作的产品，这可能涉及到新的数据利用方式和产品形态。</li></ul></li><li><a href="https://t.me/c/1423485437/33124">杂谈 | 视频 | 清晰度不如4年前！视频变糊是你的错觉吗？| 影视飓风</a><ul><li>该视频已经全网下架，大up影响还是大了…</li></ul></li></ul><br/><br/><h2 id="学习与工作"><a href="#学习与工作" class="headerlink" title="学习与工作"></a>学习与工作</h2><p>01<br>十月差不多工作了半个月，前面连着国庆休假了。这两周实际落地的工作不多，除去项目管理上，数学解题AI在做一些新的尝试，但不会放到第一版MVP中。整体来说，一半以上的时间几乎都在看各种论文和测试讨论，看多了整个人也有点虚在空中的感觉。</p><p>核心关注的几篇paper</p><ul><li>GSM-Symbolic: Understanding the Limitations of Mathematical Reasoning in Large Language Models</li><li>Citation-Enhanced Generation for LLM-based Chatbot</li><li>MathCoder2: Better Math Reasoning from Continued Pretraining on Model-translated Mathematical Code</li><li>Augmented Math: Authoring AR-Based Explorable Explanations by Augmenting Static Math Textbooks</li></ul><br/><p>02<br>十一假期期间吧 DeepLearning 的一套课程学完，拿下证书。主要是 LLMs 在研发的个人生产力上的使用以及业务研发团队的使用场景上。确实现在AI+Coding的普及率明显上来了，但公司内其实粗了解还远远没过半，这块是需要布道者的。</p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/10/31/CERTIFICATE_LANDING_PAGE.jpg" class=""><br/><br/><h2 id="生活与社交"><a href="#生活与社交" class="headerlink" title="生活与社交"></a>生活与社交</h2><p>01<br>新一期的《再见爱人》这个画面真是充满嘲讽 ..<br>外面烟花绽放，里面一团乱麻。<br>但对于第三视角的我们来说，一切都未可知，都是我们的解读。</p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/10/31/20241030210546.png" class=""><p>节目组的立意片很美  </p><blockquote><p>当我们反复以爱情的名义</p><p>向爱人发起沉重的邀约</p><p>如同将黄金系在鸟翅上</p><p>却忘了鸟儿会失去展翅的力量</p><p>假如命运已经开始倾斜</p><p>我们敢于推开通向目己的门吗?</p><p>真爱 从无坦途</p></blockquote><br/><p>02<br>这个月见了好多朋友，也认识了不少新朋友，社交浓度极高的一个月。主要也是因为十一国庆自己出门远行了，遇到很多有意思的姐姐们。还有今年没见的伙伴，最近也都在约，想趁着天冷之前都重新见见。<br>让社交回归轻松一些，反而产生了很多奇怪的莫名的火花，慢慢探索吧 XD</p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/10/31/59d3735deb08c1e1993ddf829fb1629.jpg" class="" width="500"><br/><br/><br/><br/><br/>]]></content:encoded>
-      
-      
-      <category domain="https://blog.liluhui.cn/categories/%E7%94%9F%E6%B4%BB/">生活</category>
-      
-      
-      
-      <comments>https://blog.liluhui.cn/2024/10/31/202410/#disqus_thread</comments>
       
     </item>
     

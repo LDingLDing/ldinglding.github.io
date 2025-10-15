@@ -1,3 +1,4 @@
+https://blog.liluhui.cn/2025/10/15/What-Is-a-Multi-Agent-System-From-a-Single-LLM-to-Collaborative-Intelligence/
 https://blog.liluhui.cn/2025/10/10/Understanding_Agent_Memory_The_Mechanisms_Behind_AI%E2%80%99s_Ability_to_Remember/
 https://blog.liluhui.cn/2025/10/08/Memory-as-Thinking-How-Agents-Retrieve-What-Matters/
 https://blog.liluhui.cn/2025/10/03/Quick-Clarity-The-Key-Difference-Between-Agent-and-MCP/
