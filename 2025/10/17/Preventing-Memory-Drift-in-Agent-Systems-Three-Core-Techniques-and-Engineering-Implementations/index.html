@@ -1,0 +1,405 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Agent 如何避免记忆漂移：三大策略与工程实践 | Luhui's Personal Website</title><meta name="author" content="Luhui芦荟"><meta name="copyright" content="Luhui芦荟"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="TL;DR长期运行的 Agent 容易出现「记忆漂移」：随着时间推移，其记忆内容被反复重写、压缩、整合，逐渐偏离原始语义，进而导致自相矛盾、逻辑错乱或行为失常。 本篇文章总结了三种抵御记忆漂移的核心策略：  定期总结：定时摘要长对话内容，减少信息积压，保持上下文可控  批处理蒸馏：从多轮对话中提炼出用户偏好与抽象知识，提升记忆质量  冲突合并：发现重复或冲突内容，统一更新或标记失效，维持一致性">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Agent 如何避免记忆漂移：三大策略与工程实践">
+<meta property="og:url" content="https://blog.liluhui.cn/2025/10/17/Preventing-Memory-Drift-in-Agent-Systems-Three-Core-Techniques-and-Engineering-Implementations/index.html">
+<meta property="og:site_name" content="Luhui&#39;s Personal Website">
+<meta property="og:description" content="TL;DR长期运行的 Agent 容易出现「记忆漂移」：随着时间推移，其记忆内容被反复重写、压缩、整合，逐渐偏离原始语义，进而导致自相矛盾、逻辑错乱或行为失常。 本篇文章总结了三种抵御记忆漂移的核心策略：  定期总结：定时摘要长对话内容，减少信息积压，保持上下文可控  批处理蒸馏：从多轮对话中提炼出用户偏好与抽象知识，提升记忆质量  冲突合并：发现重复或冲突内容，统一更新或标记失效，维持一致性">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg">
+<meta property="article:published_time" content="2025-10-17T08:17:39.000Z">
+<meta property="article:modified_time" content="2025-10-17T08:27:13.369Z">
+<meta property="article:author" content="Luhui芦荟">
+<meta property="article:tag" content="李璐慧,芦荟,Aloea,技术博客,前端,Node">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg"><link rel="shortcut icon" href="https://i.loli.net/2017/11/26/5a19c0b50432e.png"><link rel="canonical" href="https://blog.liluhui.cn/2025/10/17/Preventing-Memory-Drift-in-Agent-Systems-Three-Core-Techniques-and-Engineering-Implementations/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>(()=>{
+      const saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+      
+      window.btf = {
+        saveToLocal: saveToLocal,
+        getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+          script.src = url
+          script.async = true
+          script.onerror = reject
+          script.onload = script.onreadystatechange = function() {
+            const loadState = this.readyState
+            if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+            script.onload = script.onreadystatechange = null
+            resolve()
+          }
+
+          Object.keys(attr).forEach(key => {
+            script.setAttribute(key, attr[key])
+          })
+
+          document.head.appendChild(script)
+        }),
+
+        getCSS: (url, id = false) => new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+          link.rel = 'stylesheet'
+          link.href = url
+          if (id) link.id = id
+          link.onerror = reject
+          link.onload = link.onreadystatechange = function() {
+            const loadState = this.readyState
+            if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+            link.onload = link.onreadystatechange = null
+            resolve()
+          }
+          document.head.appendChild(link)
+        }),
+
+        addGlobalFn: (key, fn, name = false, parent = window) => {
+          const pjaxEnable = false
+          if (!pjaxEnable && key.startsWith('pjax')) return
+
+          const globalFn = parent.globalFn || {}
+          const keyObj = globalFn[key] || {}
+    
+          if (name && keyObj[name]) return
+    
+          name = name || Object.keys(keyObj).length
+          keyObj[name] = fn
+          globalFn[key] = keyObj
+          parent.globalFn = globalFn
+        }
+      }
+    
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+      
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })()</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=8Z2NNDYTL9"></script><script>window.dataLayer = window.dataLayer || []
+function gtag(){dataLayer.push(arguments)}
+gtag('js', new Date())
+gtag('config', '8Z2NNDYTL9')
+btf.addGlobalFn('pjaxComplete', () => {
+  gtag('config', '8Z2NNDYTL9', {'page_path': window.location.pathname})
+}, 'google_analytics')
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":true,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Agent 如何避免记忆漂移：三大策略与工程实践',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-10-17 16:27:13'
+}</script><meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/rss2.xml" title="Luhui's Personal Website" type="application/rss+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">95</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" href="/process"><span> 建站历程</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/5W7DZ_A-ywM.jpg);"><nav id="nav"><span id="blog-info"><a href="/" title="Luhui's Personal Website"><span class="site-name">Luhui's Personal Website</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" href="/process"><span> 建站历程</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Agent 如何避免记忆漂移：三大策略与工程实践</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-10-17T08:17:39.000Z" title="发表于 2025-10-17 16:17:39">2025-10-17</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-10-17T08:27:13.369Z" title="更新于 2025-10-17 16:27:13">2025-10-17</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Agent 如何避免记忆漂移：三大策略与工程实践"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL;DR"></a>TL;DR</h2><p>长期运行的 Agent 容易出现「记忆漂移」：随着时间推移，其记忆内容被反复重写、压缩、整合，逐渐偏离原始语义，进而导致自相矛盾、逻辑错乱或行为失常。</p>
+<p>本篇文章总结了三种抵御记忆漂移的核心策略：</p>
+<ul>
+<li><p><strong>定期总结</strong>：定时摘要长对话内容，减少信息积压，保持上下文可控</p>
+</li>
+<li><p><strong>批处理蒸馏</strong>：从多轮对话中提炼出用户偏好与抽象知识，提升记忆质量</p>
+</li>
+<li><p><strong>冲突合并</strong>：发现重复或冲突内容，统一更新或标记失效，维持一致性</p>
+</li>
+</ul>
+<p>结合实际系统如 MemGPT、AWS AgentCore、LangChain 等，下文提供了对应的工程实现与开源项目指引，适合构建具备长期稳定记忆的 Agent 架构。</p>
+<br/>
+<br/>
+
+
+<h2 id="引言：智能体的「记忆漂移」现象"><a href="#引言：智能体的「记忆漂移」现象" class="headerlink" title="引言：智能体的「记忆漂移」现象"></a>引言：智能体的「记忆漂移」现象</h2><p>在构建具备长期行为一致性与任务连贯性的智能体（Agent）时，「记忆」机制成为不可或缺的一环。</p>
+<p>与静态函数调用或短程上下文不同，Agent 的长期记忆的目标是支持跨轮次对话、持续学习与经验积累。</p>
+<p>然而，随着记忆体量增长，「记忆漂移」问题逐渐显现：<strong>原始信息在多次重写、压缩、提取过程中偏离原意，导致 Agent 出现自相矛盾、事实错乱或行为不一致等现象</strong>。</p>
+<p>这一问题本质上源自智能体在长期运行中所面临的信息冗余、表达歧义与语义演化挑战。</p>
+<p>就像我们日常使用电脑，当桌面文件堆积如山、不及时分类整理，搜索效率降低、重复文件泛滥，最终反过来干扰工作。</p>
+<br/>
+
+<p>本文将深入探讨三种关键的抗记忆漂移策略：定期总结、批处理蒸馏、冲突合并。</p>
+<p>结合最新的开源实践与研究进展，为构建稳定可靠的 Agent Memory 系统提供参考路径。</p>
+<br/>
+<br/>
+
+<h2 id="策略一：定期总结-——-让记忆不过载"><a href="#策略一：定期总结-——-让记忆不过载" class="headerlink" title="策略一：定期总结 —— 让记忆不过载"></a>策略一：定期总结 —— 让记忆不过载</h2><p>如果你曾被对话窗口滚动到看不见开头、或者某个 Agent 总是健忘你提过的偏好，那大概率它缺了一套靠谱的定期总结机制。</p>
+<p><strong>定期总结（Periodic Summarization）</strong> 是让智能体隔一段时间就回头看看：我刚刚都经历了什么？有哪些是值得留下的？</p>
+<p>就像人写日记，不可能每句话都记，而是总结当日要点。</p>
+<br/>
+
+<p>工程实现示例：</p>
+<ul>
+<li><strong>LangChain SummaryBufferMemory</strong>：在上下文快要塞不下之前，自动将早期内容打包为摘要，留出空间给后续对话。</li>
+<li><strong>MemGPT 滚动摘要</strong>：采用分层内存结构，短期记忆用完就「递归摘要」进中期记忆，就像桌面上的临时文件转存进资料夹。</li>
+</ul>
+<br/>
+
+<p>一些提醒：</p>
+<ul>
+<li>连续多次摘要容易信息腐蚀，逐层失真。建议保留关键原句作为锚点。</li>
+<li>可引入 pin memory 机制，确保核心事实始终原样保留。</li>
+</ul>
+<br/>
+<br/>
+
+
+<h2 id="策略二：批处理蒸馏-——-从日志中提炼稳定认知"><a href="#策略二：批处理蒸馏-——-从日志中提炼稳定认知" class="headerlink" title="策略二：批处理蒸馏 —— 从日志中提炼稳定认知"></a>策略二：批处理蒸馏 —— 从日志中提炼稳定认知</h2><p>有没有遇到过这种情况：你和 AI 聊了十几次后，TA还是不了解你？</p>
+<p>这时，问题可能不在对话内容，而在于没有把那些碎片化记忆凝练为稳定认知。</p>
+<p><strong>批处理蒸馏（Batched Distillation）</strong> 就像是回顾一整个项目后，总结出规律、套路、偏好，存档到知识库中。</p>
+<br/>
+
+<p>工程实现示例</p>
+<ul>
+<li><strong>Generative Agents（Stanford）</strong>：每个模拟人每天睡觉前会进行反思，总结一天所学所感。</li>
+<li><strong>AWS AgentCore Memory</strong>：让新事件与历史记忆对话，LLM负责融合成一条高层认知。</li>
+<li><strong>Letta MemGPT 的睡眠代理</strong>：利用主线程空闲时间悄悄整理旧资料，像我们周末清理相册一样。</li>
+</ul>
+<br/>
+
+<p>提示模版示例</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">请阅读以下 N 段日志，总结出关于用户的稳定特征、目标与情绪倾向。</span><br></pre></td></tr></table></figure>
+
+<br/>
+<br/>
+
+
+<h2 id="策略三：冲突合并-——-去重与知识更新"><a href="#策略三：冲突合并-——-去重与知识更新" class="headerlink" title="策略三：冲突合并 —— 去重与知识更新"></a>策略三：冲突合并 —— 去重与知识更新</h2><p>Agent 说你喜欢喝美式，过一会儿又说你最讨厌咖啡？这不是它耍你，而是记忆没合并好的情况。</p>
+<p>长期运行的智能体一定会遇到记忆冲突：用户今天说“我吃素”，下个月说“这家烧烤真香”。</p>
+<br/>
+
+<p><strong>不消解这些冲突，Agent 就会陷入人格分裂式输出。</strong></p>
+<p>合并策略</p>
+<ul>
+<li><strong>语义合并</strong>：让 LLM判断两个说法是重复、矛盾还是递进。</li>
+<li><strong>失效机制</strong>：标记旧记忆为「历史版本」，不参与默认推理。</li>
+<li><strong>仲裁代理</strong>：在多智能体系统中，用专职 Agent 仲裁歧义事实。</li>
+</ul>
+<br/>
+
+<p>工程落地示例</p>
+<ul>
+<li><strong>AWS AgentCore Memory</strong>：每条新记忆自动触发冲突检测与合并逻辑。</li>
+<li><strong>Memori Memory Engine</strong>：具备版本控制与自动协调机制，适合长生命周期记忆管理。</li>
+</ul>
+<br/>
+<br/>
+
+<h2 id="拿来即用，策略对比与实践参考"><a href="#拿来即用，策略对比与实践参考" class="headerlink" title="拿来即用，策略对比与实践参考"></a>拿来即用，策略对比与实践参考</h2><table>
+<thead>
+<tr>
+<th>策略名称</th>
+<th>作用重点</th>
+<th>典型触发时机</th>
+<th>工程实现代表</th>
+<th>风险点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>定期总结</td>
+<td>控制体积，保存语境</td>
+<td>消息超过阈值</td>
+<td>LangChain、MemGPT</td>
+<td>摘要失真</td>
+</tr>
+<tr>
+<td>批量蒸馏</td>
+<td>抽象提炼，积累知识</td>
+<td>阶段归档或反思时刻</td>
+<td>AWS AgentCore、Generative Agents</td>
+<td>抽象过度</td>
+</tr>
+<tr>
+<td>冲突合并</td>
+<td>保持一致性，去重纠错</td>
+<td>新旧冲突产生时</td>
+<td>Memori、Letta、仲裁代理机制</td>
+<td>决策不透明</td>
+</tr>
+</tbody></table>
+<p><strong>组合建议</strong>：构建分层内存结构 + 批次反思 + 定期摘要 + 合并管道，能形成防漂移的“记忆治理闭环”。</p>
+<br/>
+
+<p>可用工具与开源实现一览：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>地址</th>
+<th>支持策略</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LangChain SummaryMemory</td>
+<td>工具库</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/langchain-ai/langchain">https://github.com/langchain-ai/langchain</a></td>
+<td>定期总结</td>
+</tr>
+<tr>
+<td>MemGPT &#x2F; Letta</td>
+<td>代理框架</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/letta-ai/letta">https://github.com/letta-ai/letta</a></td>
+<td>三者兼具</td>
+</tr>
+<tr>
+<td>AgentCore Memory</td>
+<td>云平台模块</td>
+<td><a target="_blank" rel="noopener" href="https://aws.amazon.com/bedrock/agents">https://aws.amazon.com/bedrock/agents</a></td>
+<td>蒸馏 + 合并</td>
+</tr>
+<tr>
+<td>Memori</td>
+<td>记忆服务</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/GibsonAI/memori">https://github.com/GibsonAI/memori</a></td>
+<td>冲突合并</td>
+</tr>
+<tr>
+<td>generative_agents</td>
+<td>模拟研究框架</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/joonspk-research/generative_agents">https://github.com/joonspk-research/generative_agents</a></td>
+<td>批量蒸馏</td>
+</tr>
+</tbody></table>
+<br/>
+<br/>
+
+
+<h2 id="写在最后：从记忆治理到认知形成"><a href="#写在最后：从记忆治理到认知形成" class="headerlink" title="写在最后：从记忆治理到认知形成"></a>写在最后：从记忆治理到认知形成</h2><p>智能体的记忆，终究不是日志数据库，而是它认知世界、理解人类、规划行动的基础。过去我们关注的是它记不记得；而现在，我们必须关心它记得对不对、准不准、合不合理。</p>
+<p>三类策略分别作用于记忆系统的不同阶段：<strong>定期总结</strong> 帮它活在有限当下，<strong>批量蒸馏</strong> 帮它形成抽象理解，<strong>冲突合并</strong> 让它在真伪之间保持清醒。</p>
+<p>三者结合，才可能走向真正可持续的 Agent 思维。</p>
+<br/>
+
+<p>我的观点是，未来 Agent 开发，不该再把 Memory 当附属功能，而应当作为核心设计范式来思考。</p>
+<p>就像我们在产品中设计信息架构一样，我们也应该设计 Agent 的认知架构。</p>
+<p>构建一个能学、能忘、能修的 Agent，不只是技术挑战，更是认知工程。</p>
+<p>根基不稳，智能难远。</p>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.liluhui.cn">Luhui芦荟</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.liluhui.cn/2025/10/17/Preventing-Memory-Drift-in-Agent-Systems-Three-Core-Techniques-and-Engineering-Implementations/">https://blog.liluhui.cn/2025/10/17/Preventing-Memory-Drift-in-Agent-Systems-Three-Core-Techniques-and-Engineering-Implementations/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.liluhui.cn" target="_blank">Luhui's Personal Website</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="next-post pull-full" href="/2025/10/15/What-Is-a-Multi-Agent-System-From-a-Single-LLM-to-Collaborative-Intelligence/" title="什么是多 Agent 系统？从单体模型到协作智能的进化"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">什么是多 Agent 系统？从单体模型到协作智能的进化</div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Luhui芦荟</div><div class="author-info-description">关于生活、学习、工作</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">95</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="/rss2.xml" target="_blank" title="RSS"><i class="fas fa-rss"></i></a><a class="social-icon" href="https://github.com/LDingLDing" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:liluhuizj@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#TL-DR"><span class="toc-number">1.</span> <span class="toc-text">TL;DR</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%A8%80%EF%BC%9A%E6%99%BA%E8%83%BD%E4%BD%93%E7%9A%84%E3%80%8C%E8%AE%B0%E5%BF%86%E6%BC%82%E7%A7%BB%E3%80%8D%E7%8E%B0%E8%B1%A1"><span class="toc-number">2.</span> <span class="toc-text">引言：智能体的「记忆漂移」现象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AD%96%E7%95%A5%E4%B8%80%EF%BC%9A%E5%AE%9A%E6%9C%9F%E6%80%BB%E7%BB%93-%E2%80%94%E2%80%94-%E8%AE%A9%E8%AE%B0%E5%BF%86%E4%B8%8D%E8%BF%87%E8%BD%BD"><span class="toc-number">3.</span> <span class="toc-text">策略一：定期总结 —— 让记忆不过载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AD%96%E7%95%A5%E4%BA%8C%EF%BC%9A%E6%89%B9%E5%A4%84%E7%90%86%E8%92%B8%E9%A6%8F-%E2%80%94%E2%80%94-%E4%BB%8E%E6%97%A5%E5%BF%97%E4%B8%AD%E6%8F%90%E7%82%BC%E7%A8%B3%E5%AE%9A%E8%AE%A4%E7%9F%A5"><span class="toc-number">4.</span> <span class="toc-text">策略二：批处理蒸馏 —— 从日志中提炼稳定认知</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AD%96%E7%95%A5%E4%B8%89%EF%BC%9A%E5%86%B2%E7%AA%81%E5%90%88%E5%B9%B6-%E2%80%94%E2%80%94-%E5%8E%BB%E9%87%8D%E4%B8%8E%E7%9F%A5%E8%AF%86%E6%9B%B4%E6%96%B0"><span class="toc-number">5.</span> <span class="toc-text">策略三：冲突合并 —— 去重与知识更新</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8B%BF%E6%9D%A5%E5%8D%B3%E7%94%A8%EF%BC%8C%E7%AD%96%E7%95%A5%E5%AF%B9%E6%AF%94%E4%B8%8E%E5%AE%9E%E8%B7%B5%E5%8F%82%E8%80%83"><span class="toc-number">6.</span> <span class="toc-text">拿来即用，策略对比与实践参考</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E%EF%BC%9A%E4%BB%8E%E8%AE%B0%E5%BF%86%E6%B2%BB%E7%90%86%E5%88%B0%E8%AE%A4%E7%9F%A5%E5%BD%A2%E6%88%90"><span class="toc-number">7.</span> <span class="toc-text">写在最后：从记忆治理到认知形成</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/17/Preventing-Memory-Drift-in-Agent-Systems-Three-Core-Techniques-and-Engineering-Implementations/" title="Agent 如何避免记忆漂移：三大策略与工程实践">Agent 如何避免记忆漂移：三大策略与工程实践</a><time datetime="2025-10-17T08:17:39.000Z" title="发表于 2025-10-17 16:17:39">2025-10-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/15/What-Is-a-Multi-Agent-System-From-a-Single-LLM-to-Collaborative-Intelligence/" title="什么是多 Agent 系统？从单体模型到协作智能的进化">什么是多 Agent 系统？从单体模型到协作智能的进化</a><time datetime="2025-10-15T08:11:28.000Z" title="发表于 2025-10-15 16:11:28">2025-10-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/10/Understanding_Agent_Memory_The_Mechanisms_Behind_AI%E2%80%99s_Ability_to_Remember/" title="什么是 Agent Memory？探索 AI 如何理解并记住你的话">什么是 Agent Memory？探索 AI 如何理解并记住你的话</a><time datetime="2025-10-10T08:18:47.000Z" title="发表于 2025-10-10 16:18:47">2025-10-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/08/Memory-as-Thinking-How-Agents-Retrieve-What-Matters/" title="Agent 记忆检索策略：怎样学会想起？">Agent 记忆检索策略：怎样学会想起？</a><time datetime="2025-10-08T09:32:32.000Z" title="发表于 2025-10-08 17:32:32">2025-10-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/03/Quick-Clarity-The-Key-Difference-Between-Agent-and-MCP/" title="把 MCP 放回它该在的位置">把 MCP 放回它该在的位置</a><time datetime="2025-10-03T12:08:10.000Z" title="发表于 2025-10-03 20:08:10">2025-10-03</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By Luhui芦荟</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn">浙ICP备19010836号</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const initGitalk = () => {
+    const gitalk = new Gitalk(Object.assign({
+      clientID: '4987f0fb0a509fb9f0af',
+      clientSecret: '7e264967a3ea557003aacdf795b9e57e36a56382',
+      repo: 'ldinglding.github.io',
+      owner: 'LDingLDing',
+      admin: ['LDingLDing'],
+      id: 'bbae2ca1782394842a0478f0616d6373',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  const loadGitalk = async() => {
+    if (typeof Gitalk === 'function') initGitalk()
+    else {
+      await btf.getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+      await btf.getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js')
+      initGitalk()
+    }
+  }
+  
+  const commentCount = n => {
+    const isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+    if (isCommentCount) {
+      isCommentCount.textContent= n
+    }
+  }
+
+  if ('Gitalk' === 'Gitalk' || !false) {
+    if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+    else loadGitalk()
+  } else {
+    window.loadOtherComment = loadGitalk
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

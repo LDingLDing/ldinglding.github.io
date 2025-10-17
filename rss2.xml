@@ -15,8 +15,30 @@
     <atom:link href="https://blog.liluhui.cn/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>关于生活、学习、工作 feedId:66855595489698816+userId:55886336755964928</description>
-    <pubDate>Wed, 15 Oct 2025 09:43:46 GMT</pubDate>
+    <pubDate>Fri, 17 Oct 2025 08:27:13 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>Agent 如何避免记忆漂移：三大策略与工程实践</title>
+      <link>https://blog.liluhui.cn/2025/10/17/Preventing-Memory-Drift-in-Agent-Systems-Three-Core-Techniques-and-Engineering-Implementations/</link>
+      <guid>https://blog.liluhui.cn/2025/10/17/Preventing-Memory-Drift-in-Agent-Systems-Three-Core-Techniques-and-Engineering-Implementations/</guid>
+      <pubDate>Fri, 17 Oct 2025 08:17:39 GMT</pubDate>
+      
+        
+        
+      <description>&lt;h2 id=&quot;TL-DR&quot;&gt;&lt;a href=&quot;#TL-DR&quot; class=&quot;headerlink&quot; title=&quot;TL;DR&quot;&gt;&lt;/a&gt;TL;DR&lt;/h2&gt;&lt;p&gt;长期运行的 Agent 容易出现「记忆漂移」：随着时间推移，其记忆内容被反复重写、压缩、整合，逐渐偏离原始语义，进而</description>
+        
+      
+      
+      
+      <content:encoded><![CDATA[<h2 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL;DR"></a>TL;DR</h2><p>长期运行的 Agent 容易出现「记忆漂移」：随着时间推移，其记忆内容被反复重写、压缩、整合，逐渐偏离原始语义，进而导致自相矛盾、逻辑错乱或行为失常。</p><p>本篇文章总结了三种抵御记忆漂移的核心策略：</p><ul><li><p><strong>定期总结</strong>：定时摘要长对话内容，减少信息积压，保持上下文可控</p></li><li><p><strong>批处理蒸馏</strong>：从多轮对话中提炼出用户偏好与抽象知识，提升记忆质量</p></li><li><p><strong>冲突合并</strong>：发现重复或冲突内容，统一更新或标记失效，维持一致性</p></li></ul><p>结合实际系统如 MemGPT、AWS AgentCore、LangChain 等，下文提供了对应的工程实现与开源项目指引，适合构建具备长期稳定记忆的 Agent 架构。</p><br/><br/><h2 id="引言：智能体的「记忆漂移」现象"><a href="#引言：智能体的「记忆漂移」现象" class="headerlink" title="引言：智能体的「记忆漂移」现象"></a>引言：智能体的「记忆漂移」现象</h2><p>在构建具备长期行为一致性与任务连贯性的智能体（Agent）时，「记忆」机制成为不可或缺的一环。</p><p>与静态函数调用或短程上下文不同，Agent 的长期记忆的目标是支持跨轮次对话、持续学习与经验积累。</p><p>然而，随着记忆体量增长，「记忆漂移」问题逐渐显现：<strong>原始信息在多次重写、压缩、提取过程中偏离原意，导致 Agent 出现自相矛盾、事实错乱或行为不一致等现象</strong>。</p><p>这一问题本质上源自智能体在长期运行中所面临的信息冗余、表达歧义与语义演化挑战。</p><p>就像我们日常使用电脑，当桌面文件堆积如山、不及时分类整理，搜索效率降低、重复文件泛滥，最终反过来干扰工作。</p><br/><p>本文将深入探讨三种关键的抗记忆漂移策略：定期总结、批处理蒸馏、冲突合并。</p><p>结合最新的开源实践与研究进展，为构建稳定可靠的 Agent Memory 系统提供参考路径。</p><br/><br/><h2 id="策略一：定期总结-——-让记忆不过载"><a href="#策略一：定期总结-——-让记忆不过载" class="headerlink" title="策略一：定期总结 —— 让记忆不过载"></a>策略一：定期总结 —— 让记忆不过载</h2><p>如果你曾被对话窗口滚动到看不见开头、或者某个 Agent 总是健忘你提过的偏好，那大概率它缺了一套靠谱的定期总结机制。</p><p><strong>定期总结（Periodic Summarization）</strong> 是让智能体隔一段时间就回头看看：我刚刚都经历了什么？有哪些是值得留下的？</p><p>就像人写日记，不可能每句话都记，而是总结当日要点。</p><br/><p>工程实现示例：</p><ul><li><strong>LangChain SummaryBufferMemory</strong>：在上下文快要塞不下之前，自动将早期内容打包为摘要，留出空间给后续对话。</li><li><strong>MemGPT 滚动摘要</strong>：采用分层内存结构，短期记忆用完就「递归摘要」进中期记忆，就像桌面上的临时文件转存进资料夹。</li></ul><br/><p>一些提醒：</p><ul><li>连续多次摘要容易信息腐蚀，逐层失真。建议保留关键原句作为锚点。</li><li>可引入 pin memory 机制，确保核心事实始终原样保留。</li></ul><br/><br/><h2 id="策略二：批处理蒸馏-——-从日志中提炼稳定认知"><a href="#策略二：批处理蒸馏-——-从日志中提炼稳定认知" class="headerlink" title="策略二：批处理蒸馏 —— 从日志中提炼稳定认知"></a>策略二：批处理蒸馏 —— 从日志中提炼稳定认知</h2><p>有没有遇到过这种情况：你和 AI 聊了十几次后，TA还是不了解你？</p><p>这时，问题可能不在对话内容，而在于没有把那些碎片化记忆凝练为稳定认知。</p><p><strong>批处理蒸馏（Batched Distillation）</strong> 就像是回顾一整个项目后，总结出规律、套路、偏好，存档到知识库中。</p><br/><p>工程实现示例</p><ul><li><strong>Generative Agents（Stanford）</strong>：每个模拟人每天睡觉前会进行反思，总结一天所学所感。</li><li><strong>AWS AgentCore Memory</strong>：让新事件与历史记忆对话，LLM负责融合成一条高层认知。</li><li><strong>Letta MemGPT 的睡眠代理</strong>：利用主线程空闲时间悄悄整理旧资料，像我们周末清理相册一样。</li></ul><br/><p>提示模版示例</p><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">请阅读以下 N 段日志，总结出关于用户的稳定特征、目标与情绪倾向。</span><br></pre></td></tr></table></figure><br/><br/><h2 id="策略三：冲突合并-——-去重与知识更新"><a href="#策略三：冲突合并-——-去重与知识更新" class="headerlink" title="策略三：冲突合并 —— 去重与知识更新"></a>策略三：冲突合并 —— 去重与知识更新</h2><p>Agent 说你喜欢喝美式，过一会儿又说你最讨厌咖啡？这不是它耍你，而是记忆没合并好的情况。</p><p>长期运行的智能体一定会遇到记忆冲突：用户今天说“我吃素”，下个月说“这家烧烤真香”。</p><br/><p><strong>不消解这些冲突，Agent 就会陷入人格分裂式输出。</strong></p><p>合并策略</p><ul><li><strong>语义合并</strong>：让 LLM判断两个说法是重复、矛盾还是递进。</li><li><strong>失效机制</strong>：标记旧记忆为「历史版本」，不参与默认推理。</li><li><strong>仲裁代理</strong>：在多智能体系统中，用专职 Agent 仲裁歧义事实。</li></ul><br/><p>工程落地示例</p><ul><li><strong>AWS AgentCore Memory</strong>：每条新记忆自动触发冲突检测与合并逻辑。</li><li><strong>Memori Memory Engine</strong>：具备版本控制与自动协调机制，适合长生命周期记忆管理。</li></ul><br/><br/><h2 id="拿来即用，策略对比与实践参考"><a href="#拿来即用，策略对比与实践参考" class="headerlink" title="拿来即用，策略对比与实践参考"></a>拿来即用，策略对比与实践参考</h2><table><thead><tr><th>策略名称</th><th>作用重点</th><th>典型触发时机</th><th>工程实现代表</th><th>风险点</th></tr></thead><tbody><tr><td>定期总结</td><td>控制体积，保存语境</td><td>消息超过阈值</td><td>LangChain、MemGPT</td><td>摘要失真</td></tr><tr><td>批量蒸馏</td><td>抽象提炼，积累知识</td><td>阶段归档或反思时刻</td><td>AWS AgentCore、Generative Agents</td><td>抽象过度</td></tr><tr><td>冲突合并</td><td>保持一致性，去重纠错</td><td>新旧冲突产生时</td><td>Memori、Letta、仲裁代理机制</td><td>决策不透明</td></tr></tbody></table><p><strong>组合建议</strong>：构建分层内存结构 + 批次反思 + 定期摘要 + 合并管道，能形成防漂移的“记忆治理闭环”。</p><br/><p>可用工具与开源实现一览：</p><table><thead><tr><th>名称</th><th>类型</th><th>地址</th><th>支持策略</th></tr></thead><tbody><tr><td>LangChain SummaryMemory</td><td>工具库</td><td><a href="https://github.com/langchain-ai/langchain">https://github.com/langchain-ai/langchain</a></td><td>定期总结</td></tr><tr><td>MemGPT &#x2F; Letta</td><td>代理框架</td><td><a href="https://github.com/letta-ai/letta">https://github.com/letta-ai/letta</a></td><td>三者兼具</td></tr><tr><td>AgentCore Memory</td><td>云平台模块</td><td><a href="https://aws.amazon.com/bedrock/agents">https://aws.amazon.com/bedrock/agents</a></td><td>蒸馏 + 合并</td></tr><tr><td>Memori</td><td>记忆服务</td><td><a href="https://github.com/GibsonAI/memori">https://github.com/GibsonAI/memori</a></td><td>冲突合并</td></tr><tr><td>generative_agents</td><td>模拟研究框架</td><td><a href="https://github.com/joonspk-research/generative_agents">https://github.com/joonspk-research/generative_agents</a></td><td>批量蒸馏</td></tr></tbody></table><br/><br/><h2 id="写在最后：从记忆治理到认知形成"><a href="#写在最后：从记忆治理到认知形成" class="headerlink" title="写在最后：从记忆治理到认知形成"></a>写在最后：从记忆治理到认知形成</h2><p>智能体的记忆，终究不是日志数据库，而是它认知世界、理解人类、规划行动的基础。过去我们关注的是它记不记得；而现在，我们必须关心它记得对不对、准不准、合不合理。</p><p>三类策略分别作用于记忆系统的不同阶段：<strong>定期总结</strong> 帮它活在有限当下，<strong>批量蒸馏</strong> 帮它形成抽象理解，<strong>冲突合并</strong> 让它在真伪之间保持清醒。</p><p>三者结合，才可能走向真正可持续的 Agent 思维。</p><br/><p>我的观点是，未来 Agent 开发，不该再把 Memory 当附属功能，而应当作为核心设计范式来思考。</p><p>就像我们在产品中设计信息架构一样，我们也应该设计 Agent 的认知架构。</p><p>构建一个能学、能忘、能修的 Agent，不只是技术挑战，更是认知工程。</p><p>根基不稳，智能难远。</p><br/><br/><br/><br/><br/>]]></content:encoded>
+      
+      
+      
+      
+      <comments>https://blog.liluhui.cn/2025/10/17/Preventing-Memory-Drift-in-Agent-Systems-Three-Core-Techniques-and-Engineering-Implementations/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>什么是多 Agent 系统？从单体模型到协作智能的进化</title>
@@ -429,27 +451,6 @@
       
       
       <comments>https://blog.liluhui.cn/2025/01/01/202412/#disqus_thread</comments>
-      
-    </item>
-    
-    <item>
-      <title>2024/11 Review</title>
-      <link>https://blog.liluhui.cn/2024/12/01/202411/</link>
-      <guid>https://blog.liluhui.cn/2024/12/01/202411/</guid>
-      <pubDate>Sun, 01 Dec 2024 11:38:10 GMT</pubDate>
-      
-      <description>自体永远在寻找客体，我永远在寻找你，人永远需要在关系中认识自己。被人在乎的感觉很好。</description>
-      
-      
-      
-      <content:encoded><![CDATA[<p>自体永远在寻找客体，<br>我永远在寻找你，<br>人永远需要在关系中认识自己。<br>被人在乎的感觉很好。</p><br/><h2 id="这个月发生了什么？"><a href="#这个月发生了什么？" class="headerlink" title="这个月发生了什么？"></a>这个月发生了什么？</h2><ol><li>到处找人聊AI落地的一个月，个体独立做项目的可行性越来越高了。同步开始考虑远程工作的可行性了，被蛊惑去做数字游民，还没想明白。</li><li>团队在做的项目目前进度delay，作为数学教学方向的AI产品目前搞得有点不尴不尬的，时间窗口还在，但效率太慢了，规划也没梳理明白地瞎干着。总之，我这边是跟进AI相关领域的落地实践，调整优化教学＋AI的流程，不过迟迟没有数据也很难办。</li><li>整体资产配置调整中，十月这波仓位推高太多，搞得心也比较浮躁，拿回一定的筹码，静待机会了。现在的局势也看不清，经济数据能否好转得等到明年三四月份的数据了，依然是谨慎乐观吧。</li><li>这个月回看了黑塞的两本书，还有武老师的新书，接受自我人性中的恶，构建完满，充分体验，勇敢试错。</li><li>看了电影《完美的日子》《好东西》和《某种物质》这个月三个片子都很不错，想和女孩子过养老的日子了 （思想开始危险起来哈哈。</li></ol><br/><br/><h2 id="所见与所想"><a href="#所见与所想" class="headerlink" title="所见与所想"></a>所见与所想</h2><p>01<br>教育太难做了，人们需要的是教训。真金白银的教训、皮卡肉绽的教训。<br>人们不会因为那些糟糕的故事而停下脚步，警惕的思维不如身边暴富的人来得刺激，贪婪，再贪婪一些，不做把控的贪婪有一天会变成极端的恐惧。<br>就像运动锻炼中的进步一样迷人，直到受伤的那天。<br>就像学习竞赛中的排名一样迷人，直到淘汰的那天。<br>承认自己不行？<br>撞了南墙再说。<br>什么都还没做就知足常乐的人，不知道是永远正确的理性派，还是接受无能的逃避者。</p><br/><p>02<br>这天的唱诵中，感受到的被包裹的爱，小小的教室里10个人的共振，自己的身体和头脑都淹没在这个空间里，这个集体之中，这声音充满杂质，胆怯的，洪亮的，偏离的，但是共振出的却是如此美好，显而易见它并不完美，但很幸福。  </p><p>我必须参与，才能共振。<br>我现在充满了想要创作的冲动。</p><p><strong>We are all antennae for creative thought.</strong><br>Some transmissions come on strong, others are more faint.<br>If your antenna isn’t sensitively tuned, you’re likely to lose the data in the noise.<br>Particularly since the signals coming through are often more subtle than the content we collect through sensory awareness.<br>They are energetic more than tactile, intuitively perceived more than consciously recorded.</p><br/><p>03<br><strong>这个世界向我们承诺，我的生命中有美好的事物，不是因为我值得，甚至不是因为我为之努力，而是因为这些美好的事物，与破坏和失去一样，是这个世界混乱的一部分。</strong>  </p><p>生命的展开满是混沌，但也充满力量 💗</p><br/><p>04<br>很多女性一生都走不出的谎言，就是去一味经营婚姻和家庭。女性在自我感动中，也以为这样就能得到救赎。当付出足够多的沉没成本后，女性失去了最美年华，也丧失飞翔力量后，悲哀地发现：试图沉浸于经营单一亲密关系，而谋取幸福，是个伪命题。因为幸福，无法假借他人之手。唯有自己一开始就像鸟儿那样，展翅飞往自己的山，爱与自由、钱与尊重，都会随之而来。  </p><p><strong>梁永安老师的这段话不就是诗人鲁米所说的“万物生而有翼”。而我们的身边却总是有人希望我们如虫蚁一般匍匐前进，围绕着他人的意志而活。</strong></p><br/><p>05<br><strong>本月遇到的一些好内容推荐：</strong> </p><ul><li><a href="https://www.xiaoyuzhoufm.com/episode/6720836fbad346ebe6399017">书籍|播客|鱼不存在</a> 从这本书出发谈论对于人生的思考，语言命名赋予我们力量也成为我们的桎梏，时刻质疑实体存在的命名依赖性，这个世界本就无限可能，在我们目之所及的每个生命体内，都藏着我们无法理解的复杂属性。</li><li><a href="https://www.xiaoyuzhoufm.com/episode/6735a29af373fe5d4d3a2627">职业|播客|对话半佛仙人：搞懂这八个字，人生，易如反掌🤚🏻</a> 人生职业选择的成本管理和风险管理，这个时代每个人都可以把自己自媒体化。</li><li><a href="https://www.bilibili.com/video/BV1Jx4y1s7G7/">教育|视频|这群中国教育制度下的优胜者，正在被成功学反噬｜刘云杉 一席</a> 过去在教育体系下我们问为什么龟兔赛跑非得比赛跑步，今天我们反思了这个问题，但是现状是我们不得不面对新的问题，为什么有越来越多开着宝马入场的乌龟了呢？</li><li><a href="#">金融|文件|《2024 年年终回顾和 2025 年展望——对冲风险VS软着陆》——付鹏</a> 内部资料，从给出的过程和数据推导的未来很不乐观，虽然没法直说。</li></ul><br/><br/><h2 id="学习与工作"><a href="#学习与工作" class="headerlink" title="学习与工作"></a>学习与工作</h2><p>01<br>一个公司的项目、一个自己的项目，都还在保密阶段 。<br>最近都没有好好整理技术向的东西，反思反思。</p><br/><p>02<br>关注的几个项目</p><ul><li>阿里千问团队开源推理模型 <a href="https://huggingface.co/Qwen/QwQ-32B-Preview">QwQ-32B-preview</a> 对标 OpenAI o1。</li><li>苹果发布开源通用视觉编码器 <a href="https://github.com/apple/ml-aim">AIMV2</a>。</li><li>阿里发布基于 Flux 的 <a href="https://ali-vilab.github.io/In-Context-LoRA-Page/">In-Context-LoRA</a>，基于 ai-toolkit 的文生图微调框架。</li><li>Codeium推出的新的AI代码编辑器 —— <a href="https://codeium.com/windsurf">Windsurf Editor</a> 用了半个月了，比 cursor 确实更好用了。</li><li>Google Research 推出的基于视频扩散模型（VDM）的虚拟试穿模型 <a href="https://johannakarras.github.io/Fashion-VDM/">Fashion-VDM</a>。</li><li>谷歌推出交互式人工智能学习体验 <a href="https://learning.google.com/experiments/learn-about">Learn About</a>。用了两天，并不顺手。</li></ul><br/><br/><h2 id="生活与社交"><a href="#生活与社交" class="headerlink" title="生活与社交"></a>生活与社交</h2><p>01<br>本月看的电影都挺不错 ~</p><p>《完美的日子》非常细腻的日本片，简单的生活，每天认真做好手头的事，好好地吃饭，给可爱的花花草草浇灌，合着音乐穿梭在熙熙攘攘的街道，发呆时透过树影间看看阳光，幸福本身就简单得耀眼。</p><p>《好东西》好玩的东西、好奇怪的东西，生活确实就是挺好玩的。因为自身的存在被人在乎，就可以更安心地闯荡了，这种感情像友情也像亲情，或许就如《爱的艺术》中所讲的，抛开社会语境下的爱只是我充分地看见你。</p><p>《某种物质》恐怖片，血浆横飙的那种，算是人体恐怖？总之剧情很紧凑，恐怖地很猎奇，一群人看津津有味，脑袋上掉个🐻下来可太行了。至于上价值探讨的社会对青春美貌的迷恋和女性歧视，I dont care。</p><br/><p>02<br>这个月的瑜伽练习频率下来了，身体有些倦怠，可能进入了某种调整期，也或许是因为精神力被太多其他事情牵引走了。不过，我倒是蛮想发泄的，想练习打拳了。</p><br/><p>03<br>终究还是年纪大了，熬夜的功夫不如以前，连着2天就姨妈混乱了。但，和好朋友待在一起的感觉很好，深夜喝喝酒聊聊天，有一搭没一搭东扯西扯，把那些心底的恶意充分地交流，就能让人舒坦不少，更加确定自己该做什么了。多和年轻人呆在一起，感觉自己都变得更有活力了 😄。</p><br/><p>04<br>没想到这届的美国大选是压倒式胜利，世界终究还是要大动荡 …<br><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2024/12/01/20241201185706.png"></p><br/><br/><br/><br/><br/>]]></content:encoded>
-      
-      
-      <category domain="https://blog.liluhui.cn/categories/%E7%94%9F%E6%B4%BB/">生活</category>
-      
-      
-      
-      <comments>https://blog.liluhui.cn/2024/12/01/202411/#disqus_thread</comments>
       
     </item>
     
