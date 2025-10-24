@@ -1,0 +1,422 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Agent Memory 评估测试方案：从指标体系到开源基准 | Luhui's Personal Website</title><meta name="author" content="Luhui芦荟"><meta name="copyright" content="Luhui芦荟"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="给那些正在构建智能体的开发者的一份记忆体检指南     前段时间，我在调试一个几何 Agent。 这个 Agent 能自动分析几何题、推理定理、调用绘图工具，看上去颇有点“自主学习”的影子。   但问题也随之而来——它太健忘了。 有时候明明刚在上文证明过某个结论，下一步又开始怀疑它自己。 我给它接上了向量数据库、加了摘要器、甚至写了个小型索引器，但效果依旧不稳定。   那时候我开始意识到： 我们都">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Agent Memory 评估测试方案：从指标体系到开源基准">
+<meta property="og:url" content="https://blog.liluhui.cn/2025/10/24/Agent-Memory-Evaluation-Framework-From-Metrics-to-Open-Benchmarks/index.html">
+<meta property="og:site_name" content="Luhui&#39;s Personal Website">
+<meta property="og:description" content="给那些正在构建智能体的开发者的一份记忆体检指南     前段时间，我在调试一个几何 Agent。 这个 Agent 能自动分析几何题、推理定理、调用绘图工具，看上去颇有点“自主学习”的影子。   但问题也随之而来——它太健忘了。 有时候明明刚在上文证明过某个结论，下一步又开始怀疑它自己。 我给它接上了向量数据库、加了摘要器、甚至写了个小型索引器，但效果依旧不稳定。   那时候我开始意识到： 我们都">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg">
+<meta property="article:published_time" content="2025-10-24T08:38:29.000Z">
+<meta property="article:modified_time" content="2025-10-24T08:41:50.905Z">
+<meta property="article:author" content="Luhui芦荟">
+<meta property="article:tag" content="李璐慧,芦荟,Aloea,技术博客,前端,Node">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg"><link rel="shortcut icon" href="https://i.loli.net/2017/11/26/5a19c0b50432e.png"><link rel="canonical" href="https://blog.liluhui.cn/2025/10/24/Agent-Memory-Evaluation-Framework-From-Metrics-to-Open-Benchmarks/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>(()=>{
+      const saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+      
+      window.btf = {
+        saveToLocal: saveToLocal,
+        getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+          script.src = url
+          script.async = true
+          script.onerror = reject
+          script.onload = script.onreadystatechange = function() {
+            const loadState = this.readyState
+            if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+            script.onload = script.onreadystatechange = null
+            resolve()
+          }
+
+          Object.keys(attr).forEach(key => {
+            script.setAttribute(key, attr[key])
+          })
+
+          document.head.appendChild(script)
+        }),
+
+        getCSS: (url, id = false) => new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+          link.rel = 'stylesheet'
+          link.href = url
+          if (id) link.id = id
+          link.onerror = reject
+          link.onload = link.onreadystatechange = function() {
+            const loadState = this.readyState
+            if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+            link.onload = link.onreadystatechange = null
+            resolve()
+          }
+          document.head.appendChild(link)
+        }),
+
+        addGlobalFn: (key, fn, name = false, parent = window) => {
+          const pjaxEnable = false
+          if (!pjaxEnable && key.startsWith('pjax')) return
+
+          const globalFn = parent.globalFn || {}
+          const keyObj = globalFn[key] || {}
+    
+          if (name && keyObj[name]) return
+    
+          name = name || Object.keys(keyObj).length
+          keyObj[name] = fn
+          globalFn[key] = keyObj
+          parent.globalFn = globalFn
+        }
+      }
+    
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+      
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })()</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=8Z2NNDYTL9"></script><script>window.dataLayer = window.dataLayer || []
+function gtag(){dataLayer.push(arguments)}
+gtag('js', new Date())
+gtag('config', '8Z2NNDYTL9')
+btf.addGlobalFn('pjaxComplete', () => {
+  gtag('config', '8Z2NNDYTL9', {'page_path': window.location.pathname})
+}, 'google_analytics')
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":true,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Agent Memory 评估测试方案：从指标体系到开源基准',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-10-24 16:41:50'
+}</script><meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/rss2.xml" title="Luhui's Personal Website" type="application/rss+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">96</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" href="/process"><span> 建站历程</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/5W7DZ_A-ywM.jpg);"><nav id="nav"><span id="blog-info"><a href="/" title="Luhui's Personal Website"><span class="site-name">Luhui's Personal Website</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" href="/process"><span> 建站历程</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Agent Memory 评估测试方案：从指标体系到开源基准</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-10-24T08:38:29.000Z" title="发表于 2025-10-24 16:38:29">2025-10-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-10-24T08:41:50.905Z" title="更新于 2025-10-24 16:41:50">2025-10-24</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Agent Memory 评估测试方案：从指标体系到开源基准"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p><em>给那些正在构建智能体的开发者的一份记忆体检指南</em></p>
+<br/>
+<br/>
+
+
+<p>前段时间，我在调试一个几何 Agent。</p>
+<p>这个 Agent 能自动分析几何题、推理定理、调用绘图工具，看上去颇有点“自主学习”的影子。</p>
+<br/>
+
+<p>但问题也随之而来——它太健忘了。</p>
+<p>有时候明明刚在上文证明过某个结论，下一步又开始怀疑它自己。</p>
+<p>我给它接上了向量数据库、加了摘要器、甚至写了个小型索引器，但效果依旧不稳定。</p>
+<br/>
+
+<p>那时候我开始意识到：</p>
+<p><strong>我们都在拼命强化 Agent 的“行动力”，却很少认真测量它的“记忆力”。</strong></p>
+<br/>
+
+<p>于是我决定系统地研究一下，怎么评估一个 Agent 的 Memory 模块。</p>
+<p>今天这篇文章，写给所有已经或准备构建 Agent 工程的人。</p>
+<p>希望帮你找到一套可落地、可复现的记忆评测方案。</p>
+<br/>
+<br/>
+
+<h2 id="为什么要测记忆？"><a href="#为什么要测记忆？" class="headerlink" title="为什么要测记忆？"></a>为什么要测记忆？</h2><p>如果说大模型是 Agent 的大脑，那 Memory 就是它的长期神经系统。</p>
+<p>没有记忆，再聪明的模型也只能“现想”而无法“积累”。</p>
+<br/>
+
+<p>在工程实践里，这会表现为：</p>
+<ul>
+<li>对话几轮后开始失忆</li>
+<li>任务中重复提问</li>
+<li>自相矛盾的人设</li>
+<li>一旦上下文超过 10K，就变成另一位陌生 AI</li>
+</ul>
+<p>在我构建数学 Agent 的过程中，这种现象尤其明显。</p>
+<p>模型在第一轮中记得“点 A 在圆上”，到了第五轮，它却开始假设“点 A 在圆外”。</p>
+<p>一开始我以为问题在于 prompt 太短，后来才发现，真正的原因是<strong>缺乏系统的 Memory 测试</strong>。</p>
+<p>没有量化，就无法优化。</p>
+<p>于是，记忆评测成了我“修 Agent 心智”的重要一步。</p>
+<br/>
+<br/>
+
+
+<h2 id="我们到底要测什么？"><a href="#我们到底要测什么？" class="headerlink" title="我们到底要测什么？"></a>我们到底要测什么？</h2><p>衡量 Agent 的记忆，其实可以借鉴人类心理学：</p>
+<p>人类记忆分为短时、长时、情节、语义……</p>
+<p>在工程里，我们可以把测试拆成几个核心问题：</p>
+<ul>
+<li><p><strong>能不能想起来？（Recall）</strong></p>
+<p>例如：“用户之前提到的定理叫什么？”</p>
+<p>对应指标 Recall@K。</p>
+</li>
+<li><p><strong>说得一致吗？（Consistency）</strong></p>
+<p>“你昨天说角 A 等于 60°，今天怎么变 45° 了？”</p>
+</li>
+<li><p><strong>更新正确吗？（Update）</strong></p>
+<p>“如果条件改变，旧记忆是否被覆盖？”</p>
+</li>
+<li><p><strong>能承认不知道吗？（Calibration）</strong></p>
+<p>当没见过的信息出现，模型是否会拒答而不是胡编。</p>
+</li>
+<li><p><strong>记忆会不会膨胀？（Forgetting）</strong></p>
+<p>随着交互增多，Agent 是否会被冗余记忆拖慢。</p>
+</li>
+<li><p><strong>多模态下是否还记得？（Multimodal Memory）</strong></p>
+<p>看过的图、听过的指令，在下次提问时还能匹配回来吗？</p>
+</li>
+</ul>
+<p>这六个维度几乎涵盖了所有常见的 Memory 问题。</p>
+<p>我自己在调试几何 Agent 时，最常暴露的是前两个：</p>
+<p>模型常常能“记得关键词”，却丢失了几何关系；</p>
+<p>它能复述公式，但忘了变量的含义。</p>
+<br/>
+
+<p>这时候如果没有 Recall 或 Consistency 的量化指标，根本无法判断是哪一环在失灵。</p>
+<br/>
+<br/>
+
+
+<h2 id="市面上能用的评测基准"><a href="#市面上能用的评测基准" class="headerlink" title="市面上能用的评测基准"></a>市面上能用的评测基准</h2><p>我查阅了近两年的研究，发现业界其实已经有了几套相当成熟的 Memory 评测基准。</p>
+<p>只是大部分人没注意到它们可以直接上手。</p>
+<br/>
+
+<p>第一个是 <strong>LoCoMo</strong> —— Snap Research 的长对话评测。</p>
+<p>它用上百轮对话测试模型的“长期记忆力”，</p>
+<p>问题涵盖事实回忆、时间因果、甚至多模态对话。</p>
+<p>在官方结果里，GPT-4 的 F1 分数只有 32，而人类平均是 88。</p>
+<p>也就是说，我们距离真正的长期记忆，还差一整个物种的距离。</p>
+<br/>
+
+<p>第二个是 <strong>LongMemEval</strong> —— UCLA 团队的系统性基准。</p>
+<p>它更像一个“记忆体检表”，从信息提取、跨会话推理、知识更新到拒答未知，一共五项指标。</p>
+<p>如果你的 Agent 是任务型（比如客服、知识问答），</p>
+<p>LongMemEval 是最值得尝试的那套测试。</p>
+<br/>
+
+
+<p>第三类是 <strong>多会话记忆集</strong>，如 Facebook 的 MSC 和百度的 Persona-Long。</p>
+<p>它们主要考察“角色一致性”，模型是否能记住用户和自己的设定。</p>
+<p>这对陪伴型、教育型 Agent 尤其重要。</p>
+<p>这类基准就能帮你精确量化这种人格断层。</p>
+<br/>
+<br/>
+
+
+<h2 id="评测指标背后的逻辑"><a href="#评测指标背后的逻辑" class="headerlink" title="评测指标背后的逻辑"></a>评测指标背后的逻辑</h2><p>这些基准的数据再多，也离不开几个核心指标：</p>
+<ul>
+<li><strong>Recall@K</strong> —— 检索召回率。衡量从记忆库中找到正确信息的能力。</li>
+<li><strong>QA Accuracy &#x2F; F1</strong> —— 回答是否正确。最终看的是能否“说对话”。</li>
+<li><strong>Consistency Score</strong> —— 是否前后矛盾。可以人工或自动打分。</li>
+<li><strong>Rejection Rate</strong> —— 面对未知是否拒答，防止“假记忆”。</li>
+<li><strong>ROUGE &#x2F; BLEU &#x2F; FactScore</strong> —— 用于生成式摘要或事件回忆任务。</li>
+</ul>
+<p>在工程里我发现，<strong>指标越细，越能暴露 Memory 模块的真实问题</strong>。</p>
+<p>比如我的几何 Agent 在 Recall 很高时，QA 准确率却低；</p>
+<p>这说明它能检索出正确片段，但推理时用错了。</p>
+<p>有时候优化 Memory，不是改数据库，而是改检索策略。</p>
+<br/>
+<br/>
+
+<h2 id="如何在自己的工程中测试记忆"><a href="#如何在自己的工程中测试记忆" class="headerlink" title="如何在自己的工程中测试记忆"></a>如何在自己的工程中测试记忆</h2><p>如果你已经有一个可运行的 Agent，不妨这样操作：</p>
+<p><strong>第一步：准备测试集。</strong></p>
+<p>可以直接使用 LoCoMo 或 LongMemEval 的公开数据，也可以用自己系统中的聊天日志，人工标几个“记忆点”。</p>
+<p><strong>第二步：定义 Memory 模块接口。</strong></p>
+<p>无论你用的是 LangChain 的 <code>ConversationBufferMemory</code>，还是自研的像 MemGPT 那样的分页机制，确保你能随时 dump 出它“记住了什么”。</p>
+<p><strong>第三步：运行评测脚本。</strong></p>
+<p>LoCoMo 官方仓库里有 <code>evaluate_qa.py</code>，只需改一下模型接口，就能测你的 Agent 的 QA F1。</p>
+<p>LongMemEval 也有现成脚本，可以测 Recall、拒答率等。</p>
+<p><strong>第四步：观察与反思。</strong></p>
+<p>别只看准确率，更要看错误类型。</p>
+<p>有些错误是检索不到，有些是检索到但没用。</p>
+<p>如果可能，把指标接入 CI 流程，每次更新记忆逻辑时自动跑一轮。</p>
+<p>当你第一次看到自己的 Agent 在 LoCoMo 上得分只有二十几，那种“原来它根本没记住我”的感觉，会比任何 bug 都真实。</p>
+<br/>
+<br/>
+
+
+<h2 id="可直接上手的评测-Demo"><a href="#可直接上手的评测-Demo" class="headerlink" title="可直接上手的评测 Demo"></a>可直接上手的评测 Demo</h2><p>如果你不想从零开始，可以直接试这几个项目：</p>
+<ul>
+<li><p><strong>LoCoMo 官方评测工具</strong>：<br><a target="_blank" rel="noopener" href="https://github.com/snap-research/locomo">https://github.com/snap-research/locomo</a></p>
+<p>包含超长对话数据和 QA 评测脚本。</p>
+</li>
+<li><p><strong>LongMemEval 基准</strong>：<br><a target="_blank" rel="noopener" href="https://github.com/xiaowu0162/LongMemEval">https://github.com/xiaowu0162/LongMemEval</a></p>
+<p>五维记忆测试模板，支持 HuggingFace 模型。</p>
+</li>
+<li><p><strong>MemoryBank &#x2F; SiliconFriend</strong>：<br><a target="_blank" rel="noopener" href="https://github.com/zhongwanjun/MemoryBank-SiliconFriend">https://github.com/zhongwanjun/MemoryBank-SiliconFriend</a></p>
+<p>内置遗忘机制，可在本地启动一个有“长期记忆”的中文聊天机器人。</p>
+</li>
+<li><p><strong>Reflexion Agent</strong>：<br><a target="_blank" rel="noopener" href="https://github.com/noahshinn/reflexion">https://github.com/noahshinn/reflexion</a></p>
+<p>教你如何让 Agent 自己反思并记录经验。</p>
+</li>
+</ul>
+<p>我个人推荐先跑 LongMemEval。</p>
+<p>它轻量、指标明确、结果易解释。</p>
+<p>如果你的 Agent 通过了它，再挑战 LoCoMo。</p>
+<p>后者是真正的“长对话炼狱”，我第一次跑完时 GPU 都快烤化了。</p>
+<br/>
+<br/>
+
+<h2 id="评测之外的坑与反思"><a href="#评测之外的坑与反思" class="headerlink" title="评测之外的坑与反思"></a>评测之外的坑与反思</h2><p>我最深的感触是：<strong>记忆问题不是硬件问题，是认知问题。</strong></p>
+<br/>
+
+<p>我曾花一周时间优化索引算法，却忽略了最根本的逻辑——Agent 根本不知道“什么时候该想起某件事”。</p>
+<p>它拥有庞大的向量库，却缺乏触发机制。</p>
+<p>那一刻我突然明白：真正需要评测的，不仅是“记得多少”，更是“何时想起”。</p>
+<br/>
+
+<p>另外一个坑是“假记忆”。</p>
+<p>我曾让模型复盘教师一天的教学日志，它开始一本正经地编造“我今天教了学生三角函数”。</p>
+<p>这时拒答率指标就很关键。</p>
+<p>一个 Agent 不该无所不答，<strong>能承认不知道，本身就是记忆成熟的表现。</strong></p>
+<br/>
+<br/>
+
+<h2 id="未来的方向"><a href="#未来的方向" class="headerlink" title="未来的方向"></a>未来的方向</h2><p>目前的基准都还停留在文本和问答层面。</p>
+<p>未来的评测一定会走向更真实的多模态场景——让 Agent 看图、听音、记住空间位置，甚至在几天后的任务中回忆它曾经画过的图。</p>
+<br/>
+
+<p>我相信未来的开发工具里，会出现一种新的概念：<strong>MemoryOps</strong>。</p>
+<p>就像今天的 DevOps 管理部署一样，MemoryOps 将监控和测试 Agent 的记忆健康。</p>
+<p>到那时候，我们或许可以做到：“每次模型上线前，都跑一份记忆体检报告。”</p>
+<br/>
+<br/>
+
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>写这篇文章时，我想到一个比喻：</p>
+<p>训练模型像造大脑，但让它拥有记忆，才是赋予它灵魂。</p>
+<p>所以，在你下一次调试 Agent 时，<br>别只盯着推理精度和响应速度，<br>也问问它一句：</p>
+<blockquote>
+<p>“你还记得我们第一次对话吗？”</p>
+</blockquote>
+<p><strong>没有被测过的记忆，终将变成幻觉。</strong></p>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.liluhui.cn">Luhui芦荟</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.liluhui.cn/2025/10/24/Agent-Memory-Evaluation-Framework-From-Metrics-to-Open-Benchmarks/">https://blog.liluhui.cn/2025/10/24/Agent-Memory-Evaluation-Framework-From-Metrics-to-Open-Benchmarks/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.liluhui.cn" target="_blank">Luhui's Personal Website</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="next-post pull-full" href="/2025/10/17/Preventing-Memory-Drift-in-Agent-Systems-Three-Core-Techniques-and-Engineering-Implementations/" title="Agent 如何避免记忆漂移：三大策略与工程实践"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Agent 如何避免记忆漂移：三大策略与工程实践</div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Luhui芦荟</div><div class="author-info-description">关于生活、学习、工作</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">96</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="/rss2.xml" target="_blank" title="RSS"><i class="fas fa-rss"></i></a><a class="social-icon" href="https://github.com/LDingLDing" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:liluhuizj@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%B5%8B%E8%AE%B0%E5%BF%86%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">为什么要测记忆？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%91%E4%BB%AC%E5%88%B0%E5%BA%95%E8%A6%81%E6%B5%8B%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text">我们到底要测什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%82%E9%9D%A2%E4%B8%8A%E8%83%BD%E7%94%A8%E7%9A%84%E8%AF%84%E6%B5%8B%E5%9F%BA%E5%87%86"><span class="toc-number">3.</span> <span class="toc-text">市面上能用的评测基准</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%84%E6%B5%8B%E6%8C%87%E6%A0%87%E8%83%8C%E5%90%8E%E7%9A%84%E9%80%BB%E8%BE%91"><span class="toc-number">4.</span> <span class="toc-text">评测指标背后的逻辑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%9C%A8%E8%87%AA%E5%B7%B1%E7%9A%84%E5%B7%A5%E7%A8%8B%E4%B8%AD%E6%B5%8B%E8%AF%95%E8%AE%B0%E5%BF%86"><span class="toc-number">5.</span> <span class="toc-text">如何在自己的工程中测试记忆</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AF%E7%9B%B4%E6%8E%A5%E4%B8%8A%E6%89%8B%E7%9A%84%E8%AF%84%E6%B5%8B-Demo"><span class="toc-number">6.</span> <span class="toc-text">可直接上手的评测 Demo</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%84%E6%B5%8B%E4%B9%8B%E5%A4%96%E7%9A%84%E5%9D%91%E4%B8%8E%E5%8F%8D%E6%80%9D"><span class="toc-number">7.</span> <span class="toc-text">评测之外的坑与反思</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AA%E6%9D%A5%E7%9A%84%E6%96%B9%E5%90%91"><span class="toc-number">8.</span> <span class="toc-text">未来的方向</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E"><span class="toc-number">9.</span> <span class="toc-text">写在最后</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/24/Agent-Memory-Evaluation-Framework-From-Metrics-to-Open-Benchmarks/" title="Agent Memory 评估测试方案：从指标体系到开源基准">Agent Memory 评估测试方案：从指标体系到开源基准</a><time datetime="2025-10-24T08:38:29.000Z" title="发表于 2025-10-24 16:38:29">2025-10-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/17/Preventing-Memory-Drift-in-Agent-Systems-Three-Core-Techniques-and-Engineering-Implementations/" title="Agent 如何避免记忆漂移：三大策略与工程实践">Agent 如何避免记忆漂移：三大策略与工程实践</a><time datetime="2025-10-17T08:17:39.000Z" title="发表于 2025-10-17 16:17:39">2025-10-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/15/What-Is-a-Multi-Agent-System-From-a-Single-LLM-to-Collaborative-Intelligence/" title="什么是多 Agent 系统？从单体模型到协作智能的进化">什么是多 Agent 系统？从单体模型到协作智能的进化</a><time datetime="2025-10-15T08:11:28.000Z" title="发表于 2025-10-15 16:11:28">2025-10-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/10/Understanding_Agent_Memory_The_Mechanisms_Behind_AI%E2%80%99s_Ability_to_Remember/" title="什么是 Agent Memory？探索 AI 如何理解并记住你的话">什么是 Agent Memory？探索 AI 如何理解并记住你的话</a><time datetime="2025-10-10T08:18:47.000Z" title="发表于 2025-10-10 16:18:47">2025-10-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/08/Memory-as-Thinking-How-Agents-Retrieve-What-Matters/" title="Agent 记忆检索策略：怎样学会想起？">Agent 记忆检索策略：怎样学会想起？</a><time datetime="2025-10-08T09:32:32.000Z" title="发表于 2025-10-08 17:32:32">2025-10-08</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By Luhui芦荟</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn">浙ICP备19010836号</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const initGitalk = () => {
+    const gitalk = new Gitalk(Object.assign({
+      clientID: '4987f0fb0a509fb9f0af',
+      clientSecret: '7e264967a3ea557003aacdf795b9e57e36a56382',
+      repo: 'ldinglding.github.io',
+      owner: 'LDingLDing',
+      admin: ['LDingLDing'],
+      id: '08dff7d8298671a2107b7f120efbe000',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  const loadGitalk = async() => {
+    if (typeof Gitalk === 'function') initGitalk()
+    else {
+      await btf.getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+      await btf.getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js')
+      initGitalk()
+    }
+  }
+  
+  const commentCount = n => {
+    const isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+    if (isCommentCount) {
+      isCommentCount.textContent= n
+    }
+  }
+
+  if ('Gitalk' === 'Gitalk' || !false) {
+    if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+    else loadGitalk()
+  } else {
+    window.loadOtherComment = loadGitalk
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
