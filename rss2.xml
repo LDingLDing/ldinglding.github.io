@@ -15,8 +15,30 @@
     <atom:link href="https://blog.liluhui.cn/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>关于生活、学习、工作 feedId:66855595489698816+userId:55886336755964928</description>
-    <pubDate>Wed, 29 Oct 2025 07:41:45 GMT</pubDate>
+    <pubDate>Fri, 31 Oct 2025 09:26:49 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>AI 如何自主管理记忆？三种前沿架构详解 A-MEM / Mem-α / Mem0</title>
+      <link>https://blog.liluhui.cn/2025/10/31/Agentic-Memory-in-AI-A-MEM-Mem-%CE%B1-and-Mem0-Explained/</link>
+      <guid>https://blog.liluhui.cn/2025/10/31/Agentic-Memory-in-AI-A-MEM-Mem-%CE%B1-and-Mem0-Explained/</guid>
+      <pubDate>Fri, 31 Oct 2025 09:23:13 GMT</pubDate>
+      
+        
+        
+      <description>&lt;h1 id=&quot;AI-自主决定记忆：探索-A-MEM、Mem-α-和-Mem0&quot;&gt;&lt;a href=&quot;#AI-自主决定记忆：探索-A-MEM、Mem-α-和-Mem0&quot; class=&quot;headerlink&quot; title=&quot;AI 自主决定记忆：探索 A-MEM、Mem-α 和 Mem</description>
+        
+      
+      
+      
+      <content:encoded><![CDATA[<h1 id="AI-自主决定记忆：探索-A-MEM、Mem-α-和-Mem0"><a href="#AI-自主决定记忆：探索-A-MEM、Mem-α-和-Mem0" class="headerlink" title="AI 自主决定记忆：探索 A-MEM、Mem-α 和 Mem0"></a><strong>AI 自主决定记忆：探索 A-MEM、Mem-α 和 Mem0</strong></h1><h2 id="引言：AI-的记忆问题"><a href="#引言：AI-的记忆问题" class="headerlink" title="引言：AI 的记忆问题"></a>引言：AI 的记忆问题</h2><p>我们常常说 AI 越来越像人类，但在“记忆”这一环节，现有的系统仍然远未达到真正的类人能力。</p><p>在之前的文章《Agent 如何避免记忆漂移：三大策略与工程实践》中，我们讨论了如何设计一个稳定且高效的记忆系统，并分享了三大策略帮助解决记忆一致性和长期记忆问题。</p><p>然而，这些策略多侧重于工程实践，强调了如何避免记忆的失真、漂移和过度遗忘。</p><p>今天，我们要深入探讨一个更前沿的课题：<strong>AI 如何自主决定自己的记忆？</strong> </p><p>这一问题不仅挑战了传统的记忆存储方式，也为智能系统提供了更高的灵活性和自适应能力。</p><br/><p>通过 AI 系统根据任务需求和经验，自主更新和优化记忆，AI 可以更智能地应对复杂的任务。</p><p>在这篇文章中，我们将介绍三种突破性的记忆管理方案——<strong>A-MEM、Mem-α 和 Mem0</strong>，并讨论它们如何通过创新的记忆架构，推动 AI 系统在长期任务中的表现。</p><br/><br/><h2 id="记忆管理的基本概念"><a href="#记忆管理的基本概念" class="headerlink" title="记忆管理的基本概念"></a>记忆管理的基本概念</h2><p>在深入这三种方案之前，我们先简单回顾一下 AI 记忆管理的基本概念。</p><p>通常，AI 系统的记忆可以分为两大类：</p><ol><li><p><strong>工作记忆</strong></p><p> 类似于人类的短期记忆，用于存储和处理当前任务的信息。它是即时性的，帮助 AI 快速做出决策。</p></li><li><p><strong>长期记忆</strong></p><p> 涉及 AI 系统在长时间内积累的知识和经验，帮助其从过去的经验中学习并做出更好的决策。</p></li></ol><p>然而，AI 的“记忆”常常是静态的，即记忆的内容一旦储存，就不会再变化或更新。</p><p>这种设计使得 AI 在面对长期任务或多轮交互时，常常面临记忆的局限性，容易忘记先前的重要信息，甚至陷入“记忆漂移”的问题——记忆内容的过时或错误。</p><br/><p>为了解决这一问题，<strong>Agentic Memory</strong> 提出了一个新思路：<strong>让 AI 系统自主决定记忆内容、何时更新以及如何检索</strong>。</p><p>换句话说，AI 具备了像人类一样选择性记忆的能力，能根据任务需求动态调整记忆内容。</p><br/><br/><h2 id="A-MEM：基于-Zettelkasten-方法的动态记忆"><a href="#A-MEM：基于-Zettelkasten-方法的动态记忆" class="headerlink" title="A-MEM：基于 Zettelkasten 方法的动态记忆"></a>A-MEM：基于 Zettelkasten 方法的动态记忆</h2><p>A-MEM 是一种创新的记忆架构，借鉴了 Zettelkasten 方法——一种常用于知识管理的笔记方法。</p><p>在 Zettelkasten 中，信息被分解为多个“笔记块”，每个笔记块都与其他笔记块建立联系，从而形成一个有机的知识网络。</p><p>A-MEM 将这一概念引入 AI 记忆管理，创建了一个动态的记忆系统，让 AI 根据当前的任务需求，灵活地选择和组织记忆。</p><br/><p>核心设计：</p><ul><li><p><strong>结构化记忆笔记</strong></p><p>每条记忆以结构化笔记形式存储，包含上下文摘要、关键词、标签和嵌入向量。</p></li><li><p><strong>动态链接与演化</strong></p><p>新记忆加入后，系统基于共享属性和语义相似度，自动与历史记忆建立连接，并触发对旧记忆的内容和属性更新。</p></li><li><p><strong>自组织记忆网络</strong></p><p>系统通过记忆之间的链接持续优化知识结构，无需手动提示即可逐步演化出连贯的认知网络。</p></li></ul><br/><p>在实际应用中，A-MEM 被用来提高多任务学习和推理系统的表现。</p><p>比如，假设一个 AI 需要完成一个多轮对话任务，它不仅能记住每轮对话的内容，还能根据对话的上下文，动态调整记忆结构，避免遗漏重要信息。</p><br/><p><strong>GitHub 项目</strong>：</p><p><a href="https://github.com/agiresearch/A-mem">https://github.com/agiresearch/A-mem</a></p><br/><br/><h2 id="Mem-α：强化学习驱动的记忆管理"><a href="#Mem-α：强化学习驱动的记忆管理" class="headerlink" title="Mem-α：强化学习驱动的记忆管理"></a>Mem-α：强化学习驱动的记忆管理</h2><p>Mem-α 采用了强化学习（Reinforcement Learning, RL）来优化记忆管理。</p><p>与传统的静态记忆方式不同，Mem-α 通过奖励机制，帮助 AI 代理选择和存储最有价值的记忆。</p><p>AI 代理会根据任务的反馈信号，自动决定哪些记忆应该被强化，哪些应该被忽视或删除。</p><br/><p>核心设计：</p><ul><li><p><strong>多类型记忆系统</strong></p><p>模型支持三类记忆：核心记忆（如身份、偏好）、情节记忆（带时间标签的事件）和语义记忆（抽象知识），分别支持更新、插入、删除等操作。</p></li><li><p><strong>序列决策训练机制</strong></p><p>记忆构建被建模为一个序列决策过程，模型使用强化学习逐步学习如何构建和使用记忆。</p></li><li><p><strong>多重奖励优化目标</strong></p><p>包括回答准确性、操作规范性、记忆压缩效率和信息质量等指标，确保记忆系统在效率与表现之间取得平衡。</p></li></ul><br/><p>Mem-α 在长时间的任务执行中表现得尤为出色。</p><p>例如，在一个需要多轮决策的任务中，AI 代理能够通过强化学习逐步选择性记忆，将更多的注意力集中在当前决策需要的关键经验上。</p><br/><p><strong>GitHub 项目</strong>：</p><p><a href="https://github.com/wangyu-ustc/Mem-alpha">https://github.com/wangyu-ustc/Mem-alpha</a></p><br/><br/><h2 id="Mem0：图数据库驱动的记忆系统"><a href="#Mem0：图数据库驱动的记忆系统" class="headerlink" title="Mem0：图数据库驱动的记忆系统"></a>Mem0：图数据库驱动的记忆系统</h2><p>Mem0 是一个基于图数据库的记忆系统。通过图数据库，Mem0 将记忆内容模块化，允许不同记忆块之间通过关系连接，形成一个可以灵活查询的记忆网络。这个设计使得 AI 能够在复杂任务中有效检索和管理记忆内容。</p><p>核心设计：</p><ul><li><p><strong>两阶段记忆机制</strong></p><p>首先由 LLM 从用户交互中提取“候选记忆”（结构化事实或摘要），然后与历史记忆比对后，智能决定添加、更新、删除或跳过。</p></li><li><p><strong>多层次记忆结构</strong></p><p>支持用户级、会话级和代理级的记忆管理，确保跨场景、跨时间段的记忆一致性。</p></li><li><p><strong>成本控制与响应效率</strong></p><p>与传统将全部历史放入上下文的方式相比，Mem0 显著降低 token 消耗与响应延迟，并提高答案准确率。</p></li></ul><br/><p>Mem0 在多轮对话和长期任务中表现得尤为出色。</p><p>在实际应用中，Mem0 能够根据对话历史或任务进展，快速检索到相关的记忆内容，并作出更加智能的反应。</p><br/><p><strong>GitHub 项目</strong>：</p><p><a href="https://github.com/mem0ai/mem0">https://github.com/mem0ai/mem0</a></p><br/><br/><h2 id="其他自主记忆方案"><a href="#其他自主记忆方案" class="headerlink" title="其他自主记忆方案"></a>其他自主记忆方案</h2><p>除了 A-MEM、Mem-α 和 Mem0 之外，还有一些其他方案也在探索 AI 自主决定记忆的方向。</p><p>例如，<strong>Episodic Memory</strong> 关注的是通过情节记忆来支持 AI 的长时记忆能力，<strong>Vision-Language Episodic Memory（VLEM）</strong> 则通过结合视觉和语言模态，增强了记忆系统的多模态能力。而 <strong>Memory-as-Action</strong> 则通过将记忆管理视为可学习的行为，提升了系统的自适应性。</p><br/><br/><h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>随着 AI 技术的进步，记忆管理 将不再是简单的存储和检索任务，而是演变 <strong>AI 自主决策</strong>的动态过程。</p><p>展望未来，记忆的自我更新机制、跨模态记忆整合和长期记忆优化等技术将进一步推动 AI 系统更智能地管理和利用自己的记忆，不断提升其处理长期任务的能力。</p><p>然而，这种记忆自主权的提高也引发了一个耐人寻味的思考：<strong>我们真的要把“选择记忆”的权力交给算法吗？</strong></p><p>当 AI 可以自主决定保留什么、遗忘什么，它在某种意义上也开始塑造自己的“身份认同”。</p><p>而人类最终或许只是那个在幕后制定基本规则的系统设计者。</p><p>这不禁让人想起科幻电影《银翼杀手》中复制人罗伊的临终独白：</p><blockquote><p>所有这些时刻终将流失在时光中，<br/>一如眼泪消失在雨中。</p></blockquote><br/><br/><br/><br/><br/><br/><h2 id="延伸阅读"><a href="#延伸阅读" class="headerlink" title="延伸阅读"></a>延伸阅读</h2><ol><li><strong>A-MEM 论文</strong>：<a href="https://arxiv.org/abs/2502.12110?utm_source=chatgpt.com">A-MEM: Agentic Memory for LLM Agents</a></li><li><strong>Mem-α 论文</strong>：<a href="https://arxiv.org/abs/2509.25911">Mem-α: Learning Memory Construction via Reinforcement Learning</a></li><li><strong>Mem0 论文</strong>：<a href="https://arxiv.org/abs/2504.19413">Mem0: Building Production-Ready AI Agents with Scalable Long-Term Memory</a></li></ol>]]></content:encoded>
+      
+      
+      
+      
+      <comments>https://blog.liluhui.cn/2025/10/31/Agentic-Memory-in-AI-A-MEM-Mem-%CE%B1-and-Mem0-Explained/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>了解和 AI 对话时真正发生了什么（你可能一直理解错了）</title>
@@ -443,27 +465,6 @@
       
       
       <comments>https://blog.liluhui.cn/2025/05/03/202504/#disqus_thread</comments>
-      
-    </item>
-    
-    <item>
-      <title>2025/02 Review</title>
-      <link>https://blog.liluhui.cn/2025/03/03/202502/</link>
-      <guid>https://blog.liluhui.cn/2025/03/03/202502/</guid>
-      <pubDate>Mon, 03 Mar 2025 12:27:42 GMT</pubDate>
-      
-      <description>凡是墙皆是门。</description>
-      
-      
-      
-      <content:encoded><![CDATA[<p>凡是墙皆是门。<br>所有不可能，恰恰是通往另一个新可能的大门。<br>我们需要积聚能量和能力去重构，<br>耐心，<br>静心，<br>平常心。</p><br/><br/><h2 id="这个月发生了什么？"><a href="#这个月发生了什么？" class="headerlink" title="这个月发生了什么？"></a>这个月发生了什么？</h2><ol><li>针对学生数学教学的AI+教育APP：大角讲题，接入DeepSeek 满血版上线了。</li><li>春天回暖了，开始回归加强运动安排了。</li><li>春节期间到处走走吃吃喝喝，养神，调整生活。</li></ol><br/><br/><h2 id="所见与所想"><a href="#所见与所想" class="headerlink" title="所见与所想"></a>所见与所想</h2><p>01<br>解决自己受阻的地方，解决他人受阻的地方。前置关键的一环是，深入探索受阻的地方，不是遇到了就下意识地绕过去，不是难受了就不去看它。</p><p><strong>所有不可能，恰恰是通往另一个新可能的大门。</strong><br>有些路太难，就拆开一步步走。</p><br/><p>02<br>克尔凯郭尔老师说人生有三大绝望：不知道有自己，不能够有自己，不愿意有自己。我后来又看到一种说法，克老师所说的第一种绝望不是“不知道有自己”，而是“知道有自己”。天啊，只有三十多岁的人才知道，这两种说法都血淋淋的对。</p><br/><p>03<br>南海之帝为儵（音：叔）北海之帝为忽，中央之帝为浑沌。<br>儵与忽时相与遇于浑沌之地，浑沌待之甚善。<br>儵与忽谋报浑沌之德，曰：“人皆有七窍以视听食息此独无有，尝试凿之。”<br>日凿一窍，七日而浑沌死。</p><br/><p>04<br>人们想要捕捉美好的画面，只是就这一点，心意很美好。<br>多看多想美好的，世界就会美好起来。<br>一定会吧。<br><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/03/03/20250303164057.png" alt="image"></p><br/><br/><h2 id="学习与工作"><a href="#学习与工作" class="headerlink" title="学习与工作"></a>学习与工作</h2><p>01<br>DeepSeek 的火爆和出圈远超想象，年后上来的一周，各种抓紧测试，后面又因为要找到稳定可靠的服务供应商折腾了一周，等到2月底各家云厂商才稳定运行起来，我们产品端也第一时间接入了DS的思考模型和常规模型。问题还是有不少的，实测效果在我们的数学题目交流场景下，效果要明显好于 gpt4o，但在分类器和格式转化上却远不及 gpt4o。</p><p>本月技术关注关键词：DeepSeek、Deep Reasearch</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/03/03/20250303164606.png" alt="image"></p><br/><p>02<br>把远程向日葵迁移到 Tailsacles+ WIndow Remote Desktop，Windows专业版提供的系统级别的 RDP 远控协议真好用，丝滑，优雅，省了向日葵的会员费了 b(￣▽￣)d<br>其中 tailsacles 用 NAT 穿透技术把不同网络下的设备连接到一个局域网内。RDP则直接继承在 Windows 内核上，延迟低爽歪歪。</p><br/><p>03<br>推荐两个新发现的好用工具服务</p><ul><li>开源 Mac 应用及数据清理 ：<a href="https://github.com/alienator88/Pearcleaner">Pearcleaner</a></li><li>多端文件互传工具 Win&#x2F;Mac&#x2F;Linux&#x2F;IOS&#x2F;Android：<a href="https://github.com/localsend/localsend">LocalSend</a><ul><li>LTS1.3 加密协议</li><li>千兆网络局域网内 100MB&#x2F;s 传输</li></ul></li></ul><br/><br/><h2 id="生活与社交"><a href="#生活与社交" class="headerlink" title="生活与社交"></a>生活与社交</h2><p>01<br>尝试和朋友去跳舞，是没玩过的运动，连着跳了几天只感觉自己的不协调和潦草，身体不累，但要动脑子，记动作好陌生，大家甩头起来让我怕怕，但是蹦跶起来很快乐。</p><br/><p>02<br>一个春节假期过去，身体变得僵硬了，后弯不舒畅，倒立支楞不起来，是倦怠的身体，紧张、不安，不好掌控的身体的细节。对自身的不信任感下，每个动作都在求稳，放不开也绕不过去。<br><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/03/03/mmexport1740535784238.jpg" alt="image"></p><br/><p>03<br>从朋友那学来的芝麻汤圆淋上浓缩咖啡液，咖啡的苦涩平衡了粘腻的芝麻还增加了醇厚的香气，好妙呀！<br><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/03/03/97be1561f5fd62c672e82c7a7deddf8.jpg" alt="image"></p><br/><p>04<br>月末的双休杭州忽然就30度了，春暖花开，去赏梅花！<br>人好多的，全城都复苏了。<br><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/03/03/retouch_2025030215193271.jpg" alt="image"></p><br/><p>05<br>家里的绿植们：<br>一号富贵籽，比冬天秃了但还绿绿葱葱地活着。<br>二号蓝花楹，天气回暖光秃的枝干上开始长小芽了。<br>三号常春藤，生长的非常好，一直在开出新叶片。<br>四号春雨，黄了几片叶子摘了，没啥变化。<br>五号石榴树，新来的冒名顶替来的。</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/03/03/02dca515da198211eb358c5aa727b54.jpg" alt="image"></p><br/><br/><br/><br/><br/>]]></content:encoded>
-      
-      
-      <category domain="https://blog.liluhui.cn/categories/%E7%94%9F%E6%B4%BB/">生活</category>
-      
-      
-      
-      <comments>https://blog.liluhui.cn/2025/03/03/202502/#disqus_thread</comments>
       
     </item>
     

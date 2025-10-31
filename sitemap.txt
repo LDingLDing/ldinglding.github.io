@@ -1,3 +1,4 @@
+https://blog.liluhui.cn/2025/10/31/Agentic-Memory-in-AI-A-MEM-Mem-%CE%B1-and-Mem0-Explained/
 https://blog.liluhui.cn/2025/10/29/What-really-happens-when-you-talk-to-an-AI/
 https://blog.liluhui.cn/2025/10/24/Agent-Memory-Evaluation-Framework-From-Metrics-to-Open-Benchmarks/
 https://blog.liluhui.cn/2025/10/17/Preventing-Memory-Drift-in-Agent-Systems-Three-Core-Techniques-and-Engineering-Implementations/
