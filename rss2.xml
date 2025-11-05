@@ -15,8 +15,31 @@
     <atom:link href="https://blog.liluhui.cn/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>关于生活、学习、工作 feedId:66855595489698816+userId:55886336755964928</description>
-    <pubDate>Sat, 01 Nov 2025 13:55:25 GMT</pubDate>
+    <pubDate>Wed, 05 Nov 2025 14:28:02 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>突破 MoE 限制，PEER 架构如何推动超级智能的未来发展</title>
+      <link>https://blog.liluhui.cn/2025/11/05/Breaking-the-Limitations-of-MoE-How-PEER-Architecture-Drives-the-Future-of-Superintelligence/</link>
+      <guid>https://blog.liluhui.cn/2025/11/05/Breaking-the-Limitations-of-MoE-How-PEER-Architecture-Drives-the-Future-of-Superintelligence/</guid>
+      <pubDate>Wed, 05 Nov 2025 14:26:33 GMT</pubDate>
+      
+        
+        
+      <description>&lt;h2 id=&quot;引言：大模型架构的“困境”&quot;&gt;&lt;a href=&quot;#引言：大模型架构的“困境”&quot; class=&quot;headerlink&quot; title=&quot;引言：大模型架构的“困境”&quot;&gt;&lt;/a&gt;引言：大模型架构的“困境”&lt;/h2&gt;&lt;p&gt;这两年，大模型的风头正劲。&lt;/p&gt;
+&lt;p&gt;大家都在谈</description>
+        
+      
+      
+      
+      <content:encoded><![CDATA[<h2 id="引言：大模型架构的“困境”"><a href="#引言：大模型架构的“困境”" class="headerlink" title="引言：大模型架构的“困境”"></a>引言：大模型架构的“困境”</h2><p>这两年，大模型的风头正劲。</p><p>大家都在谈 <strong>MoE（Mixture of Experts）</strong> ——它被认为是突破大模型计算瓶颈的关键方向。</p><p>通过<strong>稀疏激活</strong>，只激活少量专家节点，让计算开销成比例下降，而模型能力却可以继续增长。听上去完美无缺。</p><br/><p>不过，真正尝试将 MoE&#x2F;SMoE 架构落地时，问题随之而来。</p><p>专家池一多，计算分配就变得不平衡；某些专家被频繁调用，而其他专家几乎闲置。系统扩展起来也不再优雅，想加新领域，常常意味着“推倒重来”。</p><p>MoE 虽然高效，却还远没到“万能”的阶段。</p><p>尤其对于我们这些做 <strong>多领域智能 Agent</strong> 的人来说——客服、教育、企业知识管理——系统要在不同任务之间灵活切换、持续学习，这套架构似乎仍有点笨重。</p><br/><p>然而，《<strong>Mixture of A Million Experts</strong>》论文带来了新的思路，打破了行业普遍认为大模型计算瓶颈无法突破的常规认知。</p><p>研究者提出了一个颠覆性的观点：<strong>专家数量并非瓶颈</strong>，而是可以突破的限制。</p><p>通过 <strong>PEER 架构（Product Key Expert Retrieval）</strong>，模型可以在保持轻盈的同时，拥有百万级专家容量，彻底改变大模型的设计和扩展方式。</p><p><strong>大模型的未来，不再是一颗大脑，而是无数个微专家在协同工作。</strong></p><br/><br/><h2 id="MoE-架构：风光背后的隐忧"><a href="#MoE-架构：风光背后的隐忧" class="headerlink" title="MoE 架构：风光背后的隐忧"></a>MoE 架构：风光背后的隐忧</h2><p>MoE 的设计初衷其实很优雅：</p><p>与其让一个庞大的模型处理所有问题，不如分工合作——不同专家解决不同任务。</p><p>这样既能减少计算，又能扩展模型容量。</p><br/><p>但问题是，当“专家”变多，管理它们本身就成了一门学问。<br>MoE 模型在训练时容易出现负载不均：</p><ul><li>某些专家被反复选中，工作超载；</li><li>某些专家几乎从不被调用，形同虚设。</li></ul><p>而且专家数量也存在“物理极限”。几百个模块听起来不少，但放到一个需要多领域、多任务的 Super Agent 系统中，很快就会捉襟见肘。</p><p>MoE 的结构像是一栋办公楼——房间足够多，但一旦某几层太忙、几层太空，效率就会被拖垮。</p><p>MoE 的问题不是不聪明，而是不够灵活。它像一台巨大的机器，而不是一个会生长的生态系统。</p><br/><br/><h2 id="PEER-架构：突破-MoE-限制的那一把钥匙"><a href="#PEER-架构：突破-MoE-限制的那一把钥匙" class="headerlink" title="PEER 架构：突破 MoE 限制的那一把钥匙"></a>PEER 架构：突破 MoE 限制的那一把钥匙</h2><p>在这篇论文里，研究者提出了一个更激进的设想：</p><p>既然“专家”是瓶颈，那我们不如把它拆得更小、更细。</p><p>于是便有了 <strong>PEER（Product Key Expert Retrieval）</strong> 架构——一个拥有 <strong>百万级微专家</strong> 的系统。</p><br/><h3 id="1-百万级-experts-：打破扩展的上限"><a href="#1-百万级-experts-：打破扩展的上限" class="headerlink" title="1. 百万级 experts ：打破扩展的上限"></a>1. 百万级 experts ：打破扩展的上限</h3><p>MoE 的专家通常是完整的子网络，庞大且昂贵；</p><p>而 PEER 则反其道而行，每个专家只保留 <strong>一个神经元（one-neuron MLP）</strong>。</p><br/><p>这种极简设计的好处是：</p><ul><li>可以容纳上百万个专家；</li><li>每次推理只需激活极少一部分；</li><li>模型容量得到几何级提升，但计算量几乎不变。</li></ul><p>这就像把庞大的知识体系拆成了无数个“知识细胞”，<br>每个细胞只在特定输入下工作，真正实现了“用多少、算多少”。</p><p>PEER 不追求更强的单体智能，而是让微小的智慧汇聚成群体的力量。</p><br/><h3 id="2-极致稀疏激活：从-O-N-到-O-√N"><a href="#2-极致稀疏激活：从-O-N-到-O-√N" class="headerlink" title="2. 极致稀疏激活：从 O(N) 到 O(√N)"></a>2. 极致稀疏激活：从 O(N) 到 O(√N)</h3><p>传统 MoE 的瓶颈之一是路由复杂度。</p><p>每次输入都要计算与 N 个专家的匹配度，复杂度是 O(N)。</p><p>当专家数量达到百万级时，这几乎不可接受。</p><p>PEER 用 <strong>Product Key Routing（产品键路由）</strong> 巧妙地把这个问题降到了 **O(√N)**。</p><br/><p>想象一下专家池是一个二维表格。</p><p>每个专家的“键”被拆成两部分，分别属于两个子空间。</p><p>当输入到来时，只需：</p><ol><li>在每个子空间里各自检索 top-k；</li><li>再组合成候选专家集合。</li></ol><p>最终，模型只需从少量候选中选择真正相关的专家。</p><p>这样既避免了全量扫描，又保持了高匹配率。</p><p>PEER 的路由逻辑更像搜索引擎，而非广播通知。它只找需要的人，而不是通知所有人。</p><br/><h3 id="3-Product-Key-Routing：专家调度的自组织"><a href="#3-Product-Key-Routing：专家调度的自组织" class="headerlink" title="3. Product Key Routing：专家调度的自组织"></a>3. Product Key Routing：专家调度的自组织</h3><p>PEER 的路由不仅高效，还具备“自组织”的特性。</p><p>每个专家的键是可学习的，随着训练推进，模型会自然地将相似任务分配给相近的专家集合。</p><br/><p>久而久之，系统内部形成了类似“语义社区”的结构：</p><p>不同类型的问题，倾向激活不同区域的专家群落。</p><p>这让模型在面对多任务学习时，既能共享知识，又能保持分工明确。</p><p>PEER 让模型像一个自我成长的城市，不同街区专注不同产业，但彼此之间又保持联通。</p><br/><h3 id="4-动态扩展专家池：支持持续学习与多领域适应"><a href="#4-动态扩展专家池：支持持续学习与多领域适应" class="headerlink" title="4. 动态扩展专家池：支持持续学习与多领域适应"></a>4. 动态扩展专家池：支持持续学习与多领域适应</h3><p>另一个令人惊喜的点在于，PEER 支持 <strong>专家池的动态扩展</strong>。</p><p>也就是说，模型训练完后，仍然可以按需增加新专家，而无需重训全体网络。</p><p>这对于多领域智能 Agent 来说，是一种质变。</p><p>想象一个助手AI：</p><ul><li>初期专注电商；</li><li>后来扩展到金融、旅游、医疗领域；</li><li>不需要“重生”，只需“长出新神经元”。</li></ul><p>这种能力让 AI 系统能像产品一样，持续成长，而不是一成不变的快照,不断去迭代新的版本。</p><br/><br/><h2 id="PEER-架构的产品启示"><a href="#PEER-架构的产品启示" class="headerlink" title="PEER 架构的产品启示"></a>PEER 架构的产品启示</h2><p>从产品角度看，PEER 的价值不仅在于“能跑得更快”，而在于“<strong>能持续成长</strong>”。</p><ol><li><p><strong>可扩展性</strong></p><p>新领域到来时，不需要重训全模型，只需新增专家池。</p><p>这让产品拥有真正的 <strong>演进式架构</strong>。</p></li><li><p><strong>计算效率与成本控制</strong></p><p>极致稀疏激活意味着按需使用算力，推理成本显著降低。</p><p>对 SaaS 型 AI Agent 平台尤为重要——既能大规模服务，又能保持性价比。</p></li><li><p><strong>长期学习与知识积累</strong></p><p>PEER 的设计天然支持 <strong>持续学习</strong>。</p><p>这意味着 AI Agent 不会像旧模型那样被“冻住”，而是能随着使用场景的变化，积累新知识。</p></li></ol><br/><br/><h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>PEER 架构最打动我的地方，是它代表了一种新的思维方式：</p><p>我们不再把智能看成一个中心化的大脑，而是一张能自我生长、不断优化的网络。</p><p>对于 Super Agent 的未来而言，这正是我们缺失的那一环。</p><p>也许下一个时代的智能，不是更大的模型，而是更会生长的系统。</p><br/><br/><br/><br/><br/><br/>]]></content:encoded>
+      
+      
+      
+      
+      <comments>https://blog.liluhui.cn/2025/11/05/Breaking-the-Limitations-of-MoE-How-PEER-Architecture-Drives-the-Future-of-Superintelligence/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>2025/10 Review</title>
@@ -442,27 +465,6 @@
       
       
       <comments>https://blog.liluhui.cn/2025/07/03/202506/#disqus_thread</comments>
-      
-    </item>
-    
-    <item>
-      <title>2025/05 Review</title>
-      <link>https://blog.liluhui.cn/2025/06/02/202505/</link>
-      <guid>https://blog.liluhui.cn/2025/06/02/202505/</guid>
-      <pubDate>Sun, 01 Jun 2025 16:00:00 GMT</pubDate>
-      
-      <description>我不是一个乐观主义者，我只是一个非常严肃的可能主义者。</description>
-      
-      
-      
-      <content:encoded><![CDATA[<br/><p><em>我不是一个乐观主义者，我只是一个非常严肃的可能主义者。</em></p><br/><h2 id="所见与所想"><a href="#所见与所想" class="headerlink" title="所见与所想"></a>所见与所想</h2><p>01<br>幸福在每天流淌着<br>床边的狗头<br>被窝的温暖<br>无理取闹<br>放下聪明</p><br/><p>02<br>个体的价值观不是头脑中的想法，不是静坐着头脑定义的价值观。<br>人必须按照某种方式行动，价值观正是在行动中动态发展出来的。<br>在行动中，人会发展出优势，优势会产出价值，在循环中人会不断加强和认可其优势与价值。</p><br/><p>03<br>和朋友相处要保持距离，有些人不可交流就不要硬交流，这样还能互相欣赏对方的可爱之处。</p><p>不可交流在于，有些人只是沉浸在自己观察到的世界，自己认为的真理，认定这些真理高高在上，捍卫其就是捍卫个人的意志，探讨变成了攻击，变成了不友好。这种抗拒某种意义上也是在保护这个世界的粉红泡泡，保护某种懒惰与不勇敢。</p><br/><p>04<br>离开了这段关系一段时间，再回过头看，我的身体也进入了某种需要安神和内收的阶段。那些别扭的感觉都消失了，思考也变顺畅不少，抛开了一些沉甸甸的约束，也少了习以为常的依赖，生活变得慵懒了一些，不需要承担什么，信任自己的直觉去全身投入建设这个世界。</p><p>习惯于某种忙碌是不好的，麻木的感觉是种信号，总该停下来重新整顿，照顾好内心的小火苗。</p><br/><br/><h2 id="学习与工作"><a href="#学习与工作" class="headerlink" title="学习与工作"></a>学习与工作</h2><p>01<br>这个月重构了APP的产品逻辑，把数学教育这个场景下的子功能从 ALL IN Chat 拆到主入口，重新测试1.0版本提供的拍照解题、一卷批改等功能。目前的产品规划上重构安排的时间不太合理，1.1版本的规划有几个方向还在内部探讨纠结中，对教育领域目前的数据服务商进行了全面地调研，市场的已有数据都比较传统，云服务商场提供的能力准确性差异还蛮大的，这块可以做封装的可能行很多，希望团队能沉下心来做好一件事。</p><br/><p>02<br>开始构建自己的产品，6月顺利能全部备案完成就能上线了！<br>新的产品围绕生活数据的记录和分析，是从我自己的需求出发的，想做点小而美的好东西。<br>另外饰品品牌-闻补也正式上线了，初代的四款产品已经确定下来，是我和朋友跑了小三个月的市场调研选定的，目前设计和产研都是我们一手在把控，线上商场预计会在六月下旬到七月上旬启动。</p><br/><br/><h2 id="生活与社交"><a href="#生活与社交" class="headerlink" title="生活与社交"></a>生活与社交</h2><p>01<br>入手了圣手三代，奶酪绿真好看啊，敲击感很丝滑，工作都得劲了。<br><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/06/02/RZ007507.jpg" alt="image"></p><br/><p>02<br>安静下来和茶人一起品味的过程蛮新奇的，心动了2025蜜兰单枞，想回味下武夷山的岩茶了。</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/06/02/RZ007551.jpg" alt="image"></p><br/><p>03<br>国家地理摄影展，从洞穴、丛林、草原、雪山、冰川到无尽的天空，好看，更想去看看这些地方了，想更多支持3D拟世界美景产品的发展，这样我和朋友们都能更方便舒适地享受到。</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/06/02/IMG_20250601_221722.jpg" alt="image"><br><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/06/02/IMG_20250601_190814.jpg" alt="image"></p><br/><p>04<br>收到好多朋友的投喂来的新鲜水果和特产，好爱大家呀，一起躺着度过悠闲的周末。<br><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/06/02/IMG_20250501_142755.jpg" alt="image"></p><br/><br/><br/><br/><br/>]]></content:encoded>
-      
-      
-      <category domain="https://blog.liluhui.cn/categories/%E7%94%9F%E6%B4%BB/">生活</category>
-      
-      
-      
-      <comments>https://blog.liluhui.cn/2025/06/02/202505/#disqus_thread</comments>
       
     </item>
     
