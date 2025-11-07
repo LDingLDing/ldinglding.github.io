@@ -15,8 +15,33 @@
     <atom:link href="https://blog.liluhui.cn/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>关于生活、学习、工作 feedId:66855595489698816+userId:55886336755964928</description>
-    <pubDate>Wed, 05 Nov 2025 14:41:43 GMT</pubDate>
+    <pubDate>Fri, 07 Nov 2025 13:39:15 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>当几何遇上 CodeAct 范式：从语言理解到可执行推理的跃迁</title>
+      <link>https://blog.liluhui.cn/2025/11/07/When-Geometry-Meets-CodeAct/</link>
+      <guid>https://blog.liluhui.cn/2025/11/07/When-Geometry-Meets-CodeAct/</guid>
+      <pubDate>Fri, 07 Nov 2025 13:36:31 GMT</pubDate>
+      
+        
+        
+      <description>&lt;p&gt;&lt;em&gt;面向 Agent 开发者的工程与范式探索&lt;/em&gt;&lt;/p&gt;
+&lt;br/&gt;
+
+&lt;h2 id=&quot;引言：从“语言理解”到“执行推理”&quot;&gt;&lt;a href=&quot;#引言：从“语言理解”到“执行推理”&quot; class=&quot;headerlink&quot; title=&quot;引言：从“语言理解”到“执行</description>
+        
+      
+      
+      
+      <content:encoded><![CDATA[<p><em>面向 Agent 开发者的工程与范式探索</em></p><br/><h2 id="引言：从“语言理解”到“执行推理”"><a href="#引言：从“语言理解”到“执行推理”" class="headerlink" title="引言：从“语言理解”到“执行推理”"></a>引言：从“语言理解”到“执行推理”</h2><p>在我的几何 AI 项目中，模型第一次尝试“画一个等腰三角形”时，图形看似完美，实际上两边长度并不相等。</p><p><strong>AI画得像，却没画对。</strong></p><p>几何画图任务并非自然语言理解，而是 <strong>构造 + 约束 + 验证</strong> 的闭环过程。</p><p>传统的 “Planner + DSL + Verifier” 体系虽然可控，但在动态构造与反复验证中显得笨重。</p><p>我开始思考：</p><p>如果让 AI 不再只是描述，而是<strong>直接写出代码、执行代码、并根据结果再思考</strong>呢？</p><p>这正是 CodeAct（<em>Executable Code Actions Elicit Better LLM Agents</em>）所提出的核心理念。</p><p>CodeAct 不再让语言模型“说怎么做”，而是让它“自己去做”。</p><br/><br/><h2 id="CodeAct-的底层机制解析"><a href="#CodeAct-的底层机制解析" class="headerlink" title="CodeAct 的底层机制解析"></a>CodeAct 的底层机制解析</h2><p>让模型写代码只是表象，真正的关键是形成一个可执行的闭环思维循环。</p><h3 id="1-ReAct-与-CodeAct"><a href="#1-ReAct-与-CodeAct" class="headerlink" title="1. ReAct 与 CodeAct"></a>1. ReAct 与 CodeAct</h3><table><thead><tr><th>对比项</th><th>ReAct</th><th>CodeAct</th></tr></thead><tbody><tr><td>表达形式</td><td>Thought + Action + Observation（文本）</td><td>Thought + <code>&lt;execute&gt;</code> + Observation（代码执行）</td></tr><tr><td>动作实现</td><td>由外部解析器调用预定义工具</td><td>直接生成并执行函数</td></tr><tr><td>控制流</td><td>受限（多步靠多轮调用）</td><td>原生支持 if &#x2F; for &#x2F; try</td></tr><tr><td>可观察性</td><td>文本输出</td><td>代码执行结果（return&#x2F;stdout&#x2F;error）</td></tr><tr><td>优势</td><td>安全、可控</td><td>执行力强、贴合训练分布</td></tr><tr><td>局限</td><td>动作空间有限</td><td>执行安全、调试成本高</td></tr></tbody></table><br/><p>CodeAct 的核心在于：让 LLM 的输出<strong>成为可直接执行的程序</strong>，并用执行结果作为新的输入。</p><p>这种结构让模型不仅描述动作，而是直接拥有动作。</p><br/><h3 id="2-执行循环机制"><a href="#2-执行循环机制" class="headerlink" title="2. 执行循环机制"></a>2. 执行循环机制</h3><h4 id="典型逻辑（伪代码）"><a href="#典型逻辑（伪代码）" class="headerlink" title="典型逻辑（伪代码）"></a>典型逻辑（伪代码）</h4><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (!done) &#123;</span><br><span class="line">  <span class="keyword">const</span> thought = llm.<span class="title function_">generate</span>(context)</span><br><span class="line">  <span class="keyword">const</span> code = <span class="title function_">extractExecuteBlock</span>(thought)</span><br><span class="line">  <span class="keyword">const</span> result = sandbox.<span class="title function_">run</span>(code)</span><br><span class="line">  context.<span class="title function_">push</span>(<span class="string">`Execution Output:\n<span class="subst">$&#123;result&#125;</span>`</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>执行过程包含四个核心步骤：</p><ol><li><strong>抽取代码块</strong>：识别 <code>&lt;execute&gt;...&lt;/execute&gt;</code> 中的代码片段</li><li><strong>沙箱执行</strong>：运行在受限函数或容器中</li><li><strong>结果反馈</strong>：stdout &#x2F; return &#x2F; error 都回写上下文</li><li><strong>下一轮推理</strong>：模型读取结果、修复代码、继续执行</li></ol><p>CodeAct 通过这个循环，实现了 “思考 → 执行 → 观察 → 再思考” 的闭环，而这正是传统 ReAct 模式所缺乏的。</p><br/><br/><h2 id="几何-AI：CodeAct-的落地场景"><a href="#几何-AI：CodeAct-的落地场景" class="headerlink" title="几何 AI：CodeAct 的落地场景"></a>几何 AI：CodeAct 的落地场景</h2><p>几何画图任务天然契合 CodeAct，因为它具备以下特征：</p><ul><li><strong>构造性</strong>：点、线、圆的依赖顺序明确；</li><li><strong>约束性</strong>：角度、平行、对称等条件必须验证；</li><li><strong>可验证性</strong>：每次执行都能计算验证结果。</li></ul><p>在我的项目中，LLM 会直接生成 TypeScript 代码来驱动几何引擎：</p><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">execute</span>&gt;</span></span><br><span class="line">const A = point(0, 0)</span><br><span class="line">const B = point(2, 0)</span><br><span class="line">const C = perpendicular(A, B, 1.5)</span><br><span class="line">drawTriangle(A, B, C)</span><br><span class="line">return checkIsosceles(A, B, C)</span><br><span class="line"><span class="tag">&lt;/<span class="name">execute</span>&gt;</span></span><br></pre></td></tr></table></figure><p>执行结果会返回布尔值或错误信息（如“点C未定义”），再交回给模型进行下一步思考。<br>这使得“构造—验证—修正”形成完整闭环。</p><br/><br/><h2 id="五、范式比较与适用场景"><a href="#五、范式比较与适用场景" class="headerlink" title="五、范式比较与适用场景"></a>五、范式比较与适用场景</h2><p>当然，CodeAct 不是所有场景的答案，而是执行密集型任务的最优解。</p><table><thead><tr><th>范式</th><th>核心思想</th><th>典型场景</th><th>优势</th><th>局限</th></tr></thead><tbody><tr><td><strong>ReAct</strong></td><td>Text-based reasoning + action schema</td><td>工具调用、问答代理</td><td>结构简单、安全</td><td>不支持循环、执行力弱</td></tr><tr><td><strong>CodeAct</strong></td><td>代码即行动，可执行推理</td><td>几何、数据分析、自动化流程</td><td>灵活、图灵完备</td><td>安全与可控性挑战</td></tr><tr><td><strong>Planner + DSL + Verifier</strong></td><td>高层规划 + 安全执行</td><td>企业工作流、合规系统</td><td>可治理性强</td><td>扩展性低</td></tr></tbody></table><br/><p>这些范式不是“演化关系”，而是“任务匹配曲线”：</p><ul><li>若你需要<strong>稳定且可控</strong>的 Agent，ReAct 足够；</li><li>若你希望<strong>模型主动执行与验证</strong>，CodeAct 更高效；</li><li>若你构建<strong>大型协作系统</strong>，PEER&#x2F;Planner 才是路径。</li></ul><br/><br/><h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>CodeAct 的潜力在于它把 “生成式 AI” 推向 “行动式 AI”。<br>今天我们已经看到：</p><ul><li><strong>Runtime 自检（Self-checking Runtime）</strong>：模型生成代码 → 执行 → 自动生成测试样例验证输出；</li><li><strong>静态分析 + 动态执行结合</strong>：利用 AST 检查危险调用；</li><li><strong>跨语言统一执行层</strong>：JS&#x2F;Python&#x2F;Go 均可成为 Action carrier；</li><li><strong>Agent Runtime 生态</strong>：不同 CodeAct 系统可互通共享执行上下文。</li></ul><p>CodeAct 让模型拥有代码生成力、执行力与修正力。</p><p>在几何 AI 的世界里，这意味着从 “我能解释几何” 到 “我能构造几何”。</p><p>也意味着从<strong>语言智能</strong>迈向<strong>行动智能</strong>的转折。</p><br/><br/><br/><br/><br/><br/><h2 id="延申阅读"><a href="#延申阅读" class="headerlink" title="延申阅读"></a>延申阅读</h2><ul><li><strong>Wang, Xingyao et al.</strong> <em>Executable Code Actions Elicit Better LLM Agents.</em> ICML 2024. <a href="https://arxiv.org/abs/2402.01030">PDF</a> &#x2F; <a href="https://proceedings.mlr.press/v235/wang24h.html">PMLR</a></li><li><strong>CodeAct GitHub 实现</strong> – <a href="https://github.com/xingyaoww/code-act">github.com&#x2F;xingyaoww&#x2F;code-act</a> <a href="https://github.com/langchain-ai/langgraph-codeact">github.com&#x2F;langchain-ai&#x2F;langgraph-codeact</a></li><li><strong>Mohsin Mubarak</strong>, <a href="https://medium.com/@mohsin.sk.9820/paper-explained-blog-codeact-revolutionizing-llm-agents-with-executable-code-actions-c960cc5e30eb">CodeAct: Revolutionizing LLM Agents with Executable Code Actions</a> <em>Medium</em>, 2024.</li><li><strong>Survey:</strong> <a href="https://openreview.net/pdf?id=ekl6Z88uQj">Code Reasoning for Code Tasks: A Survey and A Call to Action.</a> OpenReview 2024</li></ul>]]></content:encoded>
+      
+      
+      
+      
+      <comments>https://blog.liluhui.cn/2025/11/07/When-Geometry-Meets-CodeAct/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>突破 MoE 限制，PEER 架构如何推动超级智能的未来发展</title>
@@ -444,27 +469,6 @@
       
       
       <comments>https://blog.liluhui.cn/2025/08/02/202507/#disqus_thread</comments>
-      
-    </item>
-    
-    <item>
-      <title>2025/06 Review</title>
-      <link>https://blog.liluhui.cn/2025/07/03/202506/</link>
-      <guid>https://blog.liluhui.cn/2025/07/03/202506/</guid>
-      <pubDate>Thu, 03 Jul 2025 14:02:47 GMT</pubDate>
-      
-      <description>自我实现是一个持续发生的过程。它意味着，每一次都在诚实与欺瞒、正义与偷懒之间做出选择；意味着让每一次选择，都成为成长的机会。</description>
-      
-      
-      
-      <content:encoded><![CDATA[<p><em>自我实现是一个持续发生的过程。它意味着，每一次都在诚实与欺瞒、正义与偷懒之间做出选择；意味着让每一次选择，都成为成长的机会。</em></p><h2 id="大声嚷嚷"><a href="#大声嚷嚷" class="headerlink" title="大声嚷嚷"></a>大声嚷嚷</h2><ul><li>正式开始运营技术向的 Twitter 账号 <a href="https://x.com/aloea_1">@aloea_1</a>，用于分享我的小产品进展，欢迎互粉互动～</li><li>筹备了小半年的轻养生香文化品牌 <a href="https://www.xiaohongshu.com/user/profile/66cc807b000000000b033c1b">@闻补</a>，终于在小红书开张，欢迎成为我们的创始支持官！</li></ul><br/><h2 id="所见与所想"><a href="#所见与所想" class="headerlink" title="所见与所想"></a>所见与所想</h2><h3 id="01"><a href="#01" class="headerlink" title="01"></a>01</h3><p>目前的生活状态：</p><p>少评论，少内耗。该战斗时就战斗，该行动时就行动。偶尔停下脚步，感受自然的风，指尖的温度，空气的味道，还有此刻的呼吸。<br>可以享受慵懒，但不沉溺其中。休息好就继续往前走。<br>警惕“连续作战”的兴奋感，每天留一点时间练瑜伽，觉察情绪的变化，少些理性地判断。<br>用理性兜底，让感性来引路。</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/07/03/20250703172221.png" alt="image"><br><br/></p><h3 id="02"><a href="#02" class="headerlink" title="02"></a>02</h3><p>遇到许多厉害的人，看上去光鲜亮丽，能量满满，似乎总想要更多。</p><p>有人在硅谷扎根，全球飞行，体验各地文化；<br>有人带家人移居日本，过上高保障的生活；<br>有人在技术圈里游刃有余，轻松将人脉牵连起来，走到哪里都有朋友；<br>有人拥有自己的团队，身边拥有一群情绪价值拉满的伙伴；<br>有人开设了瑜伽馆，经常收到学员的反馈和感谢。</p><p>但我越来越清楚地知道：我当下的生活，其实已经很幸福了。我未必想要那样。</p><p>那些光鲜亮丽的苦楚与代价就在那里。<br>有人夜夜应酬，醉到天亮；<br>有人随时待命，时刻留意工作消息，精力被分割；<br>有人面对难缠的客户，遭遇无理甚至恶意；<br>有人在系统面前无能为力，财产归零；<br>有人迷失方向，不知去往何处；<br>有人拼命四五年，落下一身病痛。</p><p>这些让我明白：有些路要慢慢走，不需要着急奔向前线。作品细水长流，财富一点点积累。不追头部，不比速度，只要保持活着，时间就成了最强的护城河。<br><br/></p><h3 id="03"><a href="#03" class="headerlink" title="03"></a>03</h3><p>在瑜伽课堂里体验被声音包围的感觉太好了，不论是阿汤的唱诵还是简单的 OM，怪不得那么多文化都有诵经、吟唱。</p><p>那种感觉，真真切切我被包裹了，包裹在一片美好的秩序之中，这里我没有念头，他人也没有念头。我们共同唱诵着同一种声音，我的四面八方都是同我一样的声音。它们不厌恶我、不喜爱我、不评论我，它们都没有注视着我。我同它们一起平和安稳地感激此刻的存在。<br><br/><br><br/></p><h2 id="学习与工作"><a href="#学习与工作" class="headerlink" title="学习与工作"></a>学习与工作</h2><h3 id="01-1"><a href="#01-1" class="headerlink" title="01"></a>01</h3><p>新项目【大角几何】正式上线！<br>这是一款结合自然语言绘图、逻辑验证、智能纠错的几何工具，既服务教育教学，也支持专业研究。<br>首版已上线，具备 AI 辅助构图、几何关系推理、图形实时反馈等功能，效果初显。我们正持续迭代，拓展更复杂的图形与代数定义支持。</p><p>相关动态我会持续更新在 <a href="https://x.com/aloea_1">Twitter</a>。<br><br/></p><h3 id="02-1"><a href="#02-1" class="headerlink" title="02"></a>02</h3><p>同时也在孵化另外两个项目。最近半年就是“超忙人”状态，也有中途放弃的方向。现实告诉我：脚踏实地去做事，到处都是细节。进度总是被各种预期外的事情打乱，每一步都想做好。</p><p>事情越做越多，见到的同行也越来越多，忙碌而充实。但也会因为时间紧张，挤压了瑜伽的练习，阅读也变少了。<br>自责时常出现——没时间沉下心来输入与整理。<br>所以我常提醒自己：每段旅程都有主线任务，精力有限，要学会取舍。<br><br/><br><br/></p><h2 id="生活与社交"><a href="#生活与社交" class="headerlink" title="生活与社交"></a>生活与社交</h2><h3 id="01-2"><a href="#01-2" class="headerlink" title="01"></a>01</h3><p>书：没读。<br>电影：看了《还有明天》（民主政治这话题我们可不敢多说）。<br>惭愧中。<br>不过淘到了一本数独书，还有岸部真明的黑胶，开心！<br><br/></p><h3 id="02-2"><a href="#02-2" class="headerlink" title="02"></a>02</h3><p>最近去了一趟日本，在异国他乡聚会的感觉很特别。</p><p>感谢佳伦和 Anne 的组局，在东京湾边烤肉、吹风，体验了一场精致的晚风社交。也和姐妹们在迪士尼疯玩了一整天，累趴但超级满足。买了人生第一只琳娜贝儿，傻傻开心了一整天。</p><p>一个人在东京到处瞎逛，逛到很多稀奇古怪的东西，挑了些新玩意，到处拍拍照。初夏的日本，处处是绿色的生命力。</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/07/03/20250703215855.png" alt="image"></p><p>小狗子在老家也玩得很开心，在好朋友家里每天蹦蹦跳跳。虽然被投喂得圆圆的，但看得我心动，想给它整个小院子了。</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/07/03/20250703215904.png" alt="image"></p><br/><br/><br/><br/><br/>]]></content:encoded>
-      
-      
-      <category domain="https://blog.liluhui.cn/categories/%E7%94%9F%E6%B4%BB/">生活</category>
-      
-      
-      
-      <comments>https://blog.liluhui.cn/2025/07/03/202506/#disqus_thread</comments>
       
     </item>
     
