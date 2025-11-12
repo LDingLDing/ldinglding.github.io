@@ -15,8 +15,32 @@
     <atom:link href="https://blog.liluhui.cn/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>关于生活、学习、工作 feedId:66855595489698816+userId:55886336755964928</description>
-    <pubDate>Fri, 07 Nov 2025 13:39:15 GMT</pubDate>
+    <pubDate>Wed, 12 Nov 2025 08:16:39 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>deepseek-ocr 的几何识别，真的成立吗？</title>
+      <link>https://blog.liluhui.cn/2025/11/12/DeepSeek-OCR-and-Geometry-Recognition/</link>
+      <guid>https://blog.liluhui.cn/2025/11/12/DeepSeek-OCR-and-Geometry-Recognition/</guid>
+      <pubDate>Wed, 12 Nov 2025 07:55:24 GMT</pubDate>
+      
+        
+        
+      <description>&lt;p&gt;最近，deepseek 又引爆了一波热度。&lt;/p&gt;
+&lt;p&gt;他们新发布的 &lt;strong&gt;deepseek-ocr 模型&lt;/strong&gt;，不仅能识别文字，还号称能看懂 &lt;strong&gt;化学分子式、数学公式、几何图形&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;对我这个正好在做几何图形</description>
+        
+      
+      
+      
+      <content:encoded><![CDATA[<p>最近，deepseek 又引爆了一波热度。</p><p>他们新发布的 <strong>deepseek-ocr 模型</strong>，不仅能识别文字，还号称能看懂 <strong>化学分子式、数学公式、几何图形</strong>。</p><p>对我这个正好在做几何图形识别和重绘生成的人来说，这当然是个好消息。</p><p>所以我开始了一轮针对 deepseek-ocr 几何图识别的测试。</p><p>结果嘛，只能说，<strong>方向没错，但距离真正可用，还差得远。</strong></p><br/><br/><h2 id="论文里描绘的“理想图景”"><a href="#论文里描绘的“理想图景”" class="headerlink" title="论文里描绘的“理想图景”"></a>论文里描绘的“理想图景”</h2><p>在官方论文中，deepseek-ocr 展示了不少让人兴奋的例子。<br>比如它能从图片中识别出几何图形，并输出可直接渲染的图形定义：</p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/11/12/2.png" class=""><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/11/12/1.png" class=""><p>看起来好像 AI 真的“理解”了几何结构。</p><p>而且论文提到，它在训练中使用了带几何、化学等多模态的专用数据集，覆盖了公式与图形的双模态信息。</p><p>理论上，这意味着：</p><p>未来我们拍一张几何题图，就能直接生成结构化定义，甚至自动画出图。</p><p>听起来很美好。</p><br/><br/><h2 id="我的测试结果：模型确实“看见了”，但没“理解”"><a href="#我的测试结果：模型确实“看见了”，但没“理解”" class="headerlink" title="我的测试结果：模型确实“看见了”，但没“理解”"></a>我的测试结果：模型确实“看见了”，但没“理解”</h2><p>我选了几张相对简单的几何图形来测试，左侧为模型识别出的代码定义，右侧为渲染结果。</p><p>case 1:</p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/11/12/3.png" class=""><p>case 2:</p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/11/12/4.png" class=""><p>case 3:</p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/11/12/5.png" class=""><p>case 4:</p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/11/12/6.png" class=""><p>case 5:</p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/11/12/7.png" class=""><p>case 6:</p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/11/12/8.png" class=""><p>case 7:</p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/11/12/9.png" class=""><br/><p>模型确实能识别出圆、线、点这些基础元素，但问题在于它只停留在“形似”的层面。</p><br/><br/><h2 id="存在的主要问题："><a href="#存在的主要问题：" class="headerlink" title="存在的主要问题："></a>存在的主要问题：</h2><ol><li><p><strong>元素类型太少</strong></p><p>目前几乎只能识别「圆、直线、点」三类对象。</p><p>没有弧线、角度等基础构造，复杂图形几乎全失真。</p></li><li><p><strong>没有样式信息</strong></p><p>模型输出完全忽略了虚线、颜色、标记这些样式描述，而这些恰恰是几何图表达逻辑关系的关键。</p></li><li><p><strong>缺乏约束与推理链路</strong></p><p>从上面的测试案例能很明显看到，作为 OCR 模型，它并不理解几何推理。</p><p>比如在识别一个多边形的图后，它会画出所有的边，但产生了不闭合的情况。</p><p>对它而言，交点、垂直等等只是形状，不是满足约束的结构。</p></li></ol><p>deepseek-ocr 目前的几何识别，像是一个会抄图的学生——会画样子，但不会推理。</p><br/><br/><h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>虽然模型结果不理想，但我认为这是一个重要的信号：<strong>OCR 模型正在从“识别文字”走向“理解结构”。</strong></p><p>几何识别比文字识别复杂得多，它需要同时理解<strong>视觉结构</strong>和<strong>逻辑约束</strong>。</p><p>deepseek 这次的尝试，说明主流大模型团队开始意识到这一方向的重要性。</p><p>对我来说，这正好验证了我在做的另一件事——让 AI 不只是识别几何图，而是能<strong>构造 + 约束 + 验证</strong>整个几何过程。</p><p>在我开发的大角几何画板中，我们的目标不是“识别图像”，而是让 AI 具备“几何理解能力”。</p><p>当用户上传一张图时，系统不仅要知道“有圆、有直线”，还要能<strong>自动重建几何关系</strong>：</p><ul><li>哪些线是垂直的？</li><li>哪些点在同一条线上？</li><li>这两个圆相切还是相交？</li><li>哪条辅助线是解题关键？</li></ul><p>这些才是“理解”层面的能力。</p><br/><br/><h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>deepseek-ocr 的几何识别，还远不算成立。</p><p>但它标志着一个趋势：<strong>AI 正在学习去“看懂”图形的结构世界。</strong></p><p>也许几年后，我们真的能拍下几何题图，AI 自动识别、重构、推理、作答。</p><p>但在那之前，我们还要继续探索 <strong>几何语言、推理逻辑与可执行构造</strong> 的结合方式。</p><p>如果你也对 “AI 如何真正理解数学” 感兴趣，欢迎关注我，一起见证这场变化。</p><br/><br/><br/><br/><br/><br/>]]></content:encoded>
+      
+      
+      
+      
+      <comments>https://blog.liluhui.cn/2025/11/12/DeepSeek-OCR-and-Geometry-Recognition/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>当几何遇上 CodeAct 范式：从语言理解到可执行推理的跃迁</title>
@@ -448,27 +472,6 @@
       
       
       <comments>https://blog.liluhui.cn/2025/08/18/googleio/#disqus_thread</comments>
-      
-    </item>
-    
-    <item>
-      <title>2025/07 Review</title>
-      <link>https://blog.liluhui.cn/2025/08/02/202507/</link>
-      <guid>https://blog.liluhui.cn/2025/08/02/202507/</guid>
-      <pubDate>Sat, 02 Aug 2025 13:47:49 GMT</pubDate>
-      
-      <description>你不应先学习，再开始；而应先开始，再学习。</description>
-      
-      
-      
-      <content:encoded><![CDATA[<p><em>你不应先学习，再开始；而应先开始，再学习。</em></p><br/><h2 id="所见与所想"><a href="#所见与所想" class="headerlink" title="所见与所想"></a>所见与所想</h2><p>01<br>毕业工作也有八个年头了，曾经以为自己是个蛮冒险的人，其实也并不是，公司一共两家，坐标一直在杭州，就行为上来说，是在安稳地积累。这些年累计的金融理财实践也让我有了蛮确定的安全感，有一两门手艺，有健康的身体，人生其实还是有蛮多拓展选项的。想学习想看看年轻人都在做什么，不想像那些老顽固已经不愿意相信了，总是自嘲“老了“，拿着一套老模式一直做下去。我觉得沉浸投入的时候就投入，到一定时候，就该抬头看看新世界了，等一个十年！</p><br/><p>01<br>和瑜伽的姐妹们约定，80 岁的人生也一起爬山！<br>在这里反而让人不畏老了，不出意外的话，我们都会一直一直练下去，每天活络我们的经脉。<br>越来越感受到健康的身体才是精气神的底气，同龄人已经天天腰疼肩颈疼了，我们这群人还在疯狂找事来动，不动就浑身难受。养神又养身的运动真好，总是能把我从烦躁的状态中释放出来。</p><br/><br/><h2 id="学习与工作"><a href="#学习与工作" class="headerlink" title="学习与工作"></a>学习与工作</h2><p>01<br>在学习自媒体经营中，目前个人号<a href="https://x.com/LuhuiDev">推特@LuhuiDev</a> 和<a href="https://www.xiaohongshu.com/user/profile/5678ff4a50c4b4434936b793">小红书@Luhui Dev</a>，欢迎互动。<br>做这件事情的起源是在筹备个人的独立项目，未来除了公司的业务部分，想把个人的作品和产品都一步步建立起来。这一年学习使用 AI 下来很明显的感受是，自己的能力边界被大大拓宽了，时间效率也提供了，两三个人能很快合作交付出专业且完整的小项目。展望未来来说，我倾向于和不同的人合作更多的项目，我需要去碰撞和交流更多合得来的人。</p><br/><p>02<br>团队的<a href="https://www.xiaohongshu.com/discovery/item/686394740000000023004278?source=webshare&xhsshare=pc_web&xsec_token=ABK3VRE_HBxbzrWAqv93Rtnny__pUdBrObJFZgTCrYjrQ=&xsec_source=pc_share">大角几何画板项目</a>已经完整上线了，服务于数学内容创作者和数学教师的几何绘图需求。目前国内产品的几何画板已经是个非常老旧的产品了，在新的 AI 时代，大角几何画板算是重新思考交互方式，包括人与 AI、人与画板不同的协作方式。我在<a href="https://www.xiaohongshu.com/discovery/item/687e44730000000023005124?source=webshare&xhsshare=pc_web&xsec_token=ABLAPYNqJHWtb3YO-Sw9pXm47NwSXriyefHIly3SxRJio=&xsec_source=pc_share">开发日志系列</a>持续更新功能动态，另外不定时会发视频按理，有兴趣地来看看吧。</p><br/><p>03<br>接朋友的需求做了个硬核科技风的个人主页项目，灵感来源于 console 和 黑客帝国，整个项目的实现全靠 AI 干活我 review，整体完成度极好，<a href="https://x.com/LuhuiDev/status/1948016244788969519">效果看这 🔗</a>。</p><br/><p>04<br><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/02/Pasted%20image%2020250802212319.png" alt="image"><br>把我手头的运维工作进行了一次大重构优化，终于实现了线上小机器 10 秒以内的停机切换，非常满意。实现上主要是把 docker 构建流程进行了重构，实现一个 自动备份数据库 -&gt; 拉取代码 -&gt; 构建镜像 -&gt; 停止服务 -&gt; 启动服务 -&gt; 健康检查。然后和 AI 合作整了套管理脚本，方便我直接查看状态、回滚和更新。</p><br/><br/><h2 id="生活与社交"><a href="#生活与社交" class="headerlink" title="生活与社交"></a>生活与社交</h2><p>01<br><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/02/IMG_20250719_200128.jpg" alt="image"></p><p>月中给超好的朋友过生日，难得的一大聚，想想也是蛮神奇的，认识二十多年，饭桌上的人变了许多，但总还有老面孔。生活也过得越来越丰富，探索新的美食、新的旅途、新的同路人。<br><br/></p><p>02<br><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/02/IMG_20250714_102813.jpg" alt="image"><br>搞到多儿的周边，很开心 XD<br>已经打卡 600 多天啦，每天都离不开的小绿鸟<br><br/></p><p>03<br><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/02/IMG_20250708_201225.jpg" alt="image"><br>陪朋友夜访了趟灵隐，晚上的灵隐人很少，近距离欣赏一尊尊高大的佛像和雄伟的大殿，这体验还是蛮推荐的。说起来在杭州十年还是第一次去，夏天的晚上除了蚊子多整个都很舒服，小路昏暗静谧，可以站在佛像前感受那种“压迫感”，或者说“保护感”，大家是认认真真在祈愿，这种精神氛围蛮有意思。<br><br/><br><br/><br><br/><br><br/><br><br/></p>]]></content:encoded>
-      
-      
-      <category domain="https://blog.liluhui.cn/categories/%E7%94%9F%E6%B4%BB/">生活</category>
-      
-      
-      
-      <comments>https://blog.liluhui.cn/2025/08/02/202507/#disqus_thread</comments>
       
     </item>
     
