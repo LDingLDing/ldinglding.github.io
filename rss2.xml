@@ -15,8 +15,34 @@
     <atom:link href="https://blog.liluhui.cn/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>关于生活、学习、工作 feedId:66855595489698816+userId:55886336755964928</description>
-    <pubDate>Wed, 12 Nov 2025 08:16:39 GMT</pubDate>
+    <pubDate>Thu, 13 Nov 2025 12:37:45 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>Claude Multi-Agent 的核心经验精华（面向工程与产品）</title>
+      <link>https://blog.liluhui.cn/2025/11/14/Key-Insights-from-Claude-Multi-Agent-Architecture/</link>
+      <guid>https://blog.liluhui.cn/2025/11/14/Key-Insights-from-Claude-Multi-Agent-Architecture/</guid>
+      <pubDate>Fri, 14 Nov 2025 00:00:00 GMT</pubDate>
+      
+        
+        
+      <description>&lt;p&gt;最近读了 Claude 团队做 Research 功能的工程文章，感觉被点醒了。&lt;/p&gt;
+&lt;p&gt;多智能体并不是我们想象的“多模型乱跑”，而是一套非常讲究实战经验的工程体系。&lt;/p&gt;
+&lt;br/&gt;
+
+&lt;p&gt;把我觉得最值钱的点分享出来，算是备忘，也给正在做 Agent 的朋友一些</description>
+        
+      
+      
+      
+      <content:encoded><![CDATA[<p>最近读了 Claude 团队做 Research 功能的工程文章，感觉被点醒了。</p><p>多智能体并不是我们想象的“多模型乱跑”，而是一套非常讲究实战经验的工程体系。</p><br/><p>把我觉得最值钱的点分享出来，算是备忘，也给正在做 Agent 的朋友一些灵感。</p><p>我把那些读完后想立刻拿来用的部分整理成了下面这 12 条思考。</p><br/><br/><h2 id="01-多智能体的终极价值：扩大-token-x3D-扩大智力"><a href="#01-多智能体的终极价值：扩大-token-x3D-扩大智力" class="headerlink" title="01. 多智能体的终极价值：扩大 token &#x3D; 扩大智力"></a>01. 多智能体的终极价值：扩大 token &#x3D; 扩大智力</h2><p>Claude 的团队给出的最本质 insight：</p><blockquote><p>多智能体 &#x3D; 安全地扩大 Token、上下文、探索路径的规模。</p><p>Token 消耗解释了 80% 的性能差异。</p></blockquote><p>也就是说：</p><p>单智能体的局限是 线性推理 + 有限上下文。</p><p>多智能体通过 并行上下文窗口 → 撑大推理深度与覆盖面积</p><p>这比提升模型本身更具收益（Sonnet 3.7 → 4 不如多智能体带来的收益）</p><br/><br/><h2 id="02-最适合多智能体的任务：高并行-信息巨量-方向不确定"><a href="#02-最适合多智能体的任务：高并行-信息巨量-方向不确定" class="headerlink" title="02. 最适合多智能体的任务：高并行 + 信息巨量 + 方向不确定"></a>02. 最适合多智能体的任务：高并行 + 信息巨量 + 方向不确定</h2><p>Claude 总结多智能体真正的 sweet spot：</p><p>✔ 开放式研究</p><p>✔ 多方向并行探索</p><p>✔ 信息分散、来源多样</p><p>✔ 工具链复杂</p><p>✔ 单一 agent 无法“一次性抓全”的任务</p><br/><p>不适合：</p><p>✘ 代码生成（依赖共享上下文）</p><p>✘ 强依赖一致状态的任务（你必须 every turn 同步）</p><br/><br/><h2 id="03-Orchestrator-→-Subagents，是目前最稳的架构"><a href="#03-Orchestrator-→-Subagents，是目前最稳的架构" class="headerlink" title="03.Orchestrator → Subagents，是目前最稳的架构"></a>03.Orchestrator → Subagents，是目前最稳的架构</h2><p>这是 Claude 的生产结论：</p><blockquote><p>主智能体 orchestrate</p><p>子智能体 parallel explore</p><p>Lead 聚合、校验、再规划</p></blockquote><p>自由协作的多智能体会发疯，有“主智能体 orchestration + 子智能体执行”能稳定落地。</p><p>原因：</p><ul><li><p>控制爆炸性增长</p></li><li><p>容易设任务边界</p></li><li><p>清晰的错误恢复机制</p></li></ul><br/><br/><h2 id="04-工具-x3D-智能体的世界边界-——-工具设计比提示更重要"><a href="#04-工具-x3D-智能体的世界边界-——-工具设计比提示更重要" class="headerlink" title="04. 工具 &#x3D; 智能体的世界边界 —— 工具设计比提示更重要"></a>04. 工具 &#x3D; 智能体的世界边界 —— 工具设计比提示更重要</h2><p>Claude 的一个很核心观点：</p><blockquote><p>工具就是智能体的世界模型。</p><p>工具描述不清 &#x3D; 智能体理解现实错误。</p></blockquote><p>他们发现：</p><p>工具描述稍微差一点，agent 会持续犯错。</p><p>改好工具描述，性能可提升 40%。</p><br/><p>工具需要：</p><p>一句话说清楚用途（“解决什么问题”）。</p><p>明确输入类型、输出结构。</p><p>明确错误提示。</p><p>明确边界。</p><br/><p>我们写工具的时候自以为很清楚，但对于模型来说，模糊一点点它都会理解成完全不同的事情。</p><p>Anthropic 团队甚至专门做了一个工具文档自动优化智能体。<br>光是重写工具描述就能让任务完成速度提升 40%。</p><p>所以工具不是提供一个 API，而是为智能体定义一个可理解的物理世界。</p><br/><br/><h2 id="05-Prompt-的重点不是“指令”，而是“合作框架”"><a href="#05-Prompt-的重点不是“指令”，而是“合作框架”" class="headerlink" title="05. Prompt 的重点不是“指令”，而是“合作框架”"></a>05. Prompt 的重点不是“指令”，而是“合作框架”</h2><p>很多人会把 prompt 写成执行流程：“你应该这样做：A → B → C”</p><p>Anthropic 团队指出你不该告诉智能体：“怎么做”，你应该告诉它们“角色、目标、边界、资源预算”。</p><p>即：多智能体系统最有效的 prompts 是 “<strong>协作准则 + 协作结构</strong>”。</p><p>包括：</p><ul><li>如何划分任务</li><li>什么时候扩展方向</li><li>怎么评估来源质量</li><li>子智能体之间不互相重复</li><li>什么时候该停止</li></ul><p>把智能体看成同事，而不是员工。</p><br/><br/><h2 id="06-智能体永远不知道任务难度，需要“努力预算”"><a href="#06-智能体永远不知道任务难度，需要“努力预算”" class="headerlink" title="06. 智能体永远不知道任务难度，需要“努力预算”"></a>06. 智能体永远不知道任务难度，需要“努力预算”</h2><p>特别有意思的一点：</p><blockquote><p>Agent 不知道任务是简单还是困难，你必须告诉它“要投入多少 effort”。</p></blockquote><p>比如：</p><ul><li><p>简单问题：1 个 agent + 3–10 次工具</p></li><li><p>中等问题：3–4 个 agent 并行</p></li><li><p>大复杂问题：10+ 个 agent 全线铺开</p></li></ul><p>不然 Agent 会：</p><ul><li><p>简单问题开几十个 subagent（真实发生）</p></li><li><p>大问题敷衍一下（也真实发生）</p></li></ul><p>这种 Effort Guideline 很像我们给新人做任务时说的那句“这个别搞太久”。</p><br/><br/><h2 id="07-没有观测，就没有多智能体"><a href="#07-没有观测，就没有多智能体" class="headerlink" title="07. 没有观测，就没有多智能体"></a>07. 没有观测，就没有多智能体</h2><p>他们花了大量篇幅讲 observability。</p><p>因为多智能体有个很要命的特征：</p><p>同样输入，同样 prompt，走出来的路径不一定一样。</p><br/><p>要调试这种系统，你必须能看到：</p><ul><li>每次搜索什么</li><li>为什么这么做</li><li>工具结果是什么</li><li>哪个 subagent 决策不合理</li><li>Lead 是怎么汇总结果的</li></ul><p>说白了：<br>没有 trace，就没办法 debug 多智能体。</p><p>Anthropic 团队构建了一套观测系统：全量工具调用 trace + 每一步的思考过程 + 决策链路图 。</p><br/><br/><h2 id="08-分布式上下文管理：长任务必须总结-刷新上下文"><a href="#08-分布式上下文管理：长任务必须总结-刷新上下文" class="headerlink" title="08. 分布式上下文管理：长任务必须总结 + 刷新上下文"></a>08. 分布式上下文管理：长任务必须总结 + 刷新上下文</h2><p>一句话概括：</p><p><strong>多智能体的本质，是“多个干净上下文窗口接力工作”。</strong></p><p>Claude 的策略：</p><ul><li>阶段性总结</li><li>存入 Memory</li><li>创建新子智能体继续，避免上下文爆炸</li><li>主智能体通过 Memory 保持连贯性</li></ul><p>这才能让 200k token 的限制变成可管理问题。</p><br/><br/><h2 id="09-并行工具调用才是性能提升的真王道"><a href="#09-并行工具调用才是性能提升的真王道" class="headerlink" title="09. 并行工具调用才是性能提升的真王道"></a>09. 并行工具调用才是性能提升的真王道</h2><p>他们的最终结果很夸张：</p><p>研究任务的速度，比顺序执行快了 90%。</p><p>就因为主智能体一次性创建多个 subagent，每个 subagent 内部又同时调用多个工具。</p><p>这个结构本质上把任务从“串行堆积”变成“分布式计算”。</p><br/><p>用他们的话说：</p><p>Multi-Agent 的意义不是“多个模型”，而是“把模型拆成多核并行”。</p><br/><p>三大并行：</p><ul><li>Lead 同时创建多个 Subagents</li><li>Subagents 内部同时用多个工具</li><li>工具链内部也可并行</li></ul><br/><br/><h2 id="10-评估必须是“结果优先”，而不是“过程对不对”"><a href="#10-评估必须是“结果优先”，而不是“过程对不对”" class="headerlink" title="10. 评估必须是“结果优先”，而不是“过程对不对”"></a>10. 评估必须是“结果优先”，而不是“过程对不对”</h2><p>因为多智能体每次走的路都不一样，所以 Claude 直接用 LLM-as-judge，只看：</p><ul><li>结果是否正确</li><li>覆盖是否完整</li><li>引用是否准确</li><li>工具数量是否合理</li><li>来源质量是否高</li></ul><p>这是一种对复杂系统更健康的评估方式。</p><br/><br/><h2 id="11-错误不可避免，但必须能“从中断点恢复”"><a href="#11-错误不可避免，但必须能“从中断点恢复”" class="headerlink" title="11. 错误不可避免，但必须能“从中断点恢复”"></a>11. 错误不可避免，但必须能“从中断点恢复”</h2><p>多智能体是有生命周期的。<br>一次工具报错，如果你让它重来整个任务，用户直接爆炸。</p><p>Claude 的工程经验：</p><ul><li>智能体是长生命周期、持续状态的</li><li>工具失败 → 不能重来，只能继续</li><li>系统必须保存中间状态（checkpoints）</li><li>同时智能体自身可 adapt 错误</li></ul><p>这是所有 Agent 系统都需要的“耐用性设计”。</p><br/><br/><h2 id="12-多智能体不是-prompt-玩具，是系统工程"><a href="#12-多智能体不是-prompt-玩具，是系统工程" class="headerlink" title="12. 多智能体不是 prompt 玩具，是系统工程"></a>12. 多智能体不是 prompt 玩具，是系统工程</h2><p>文章的最后一句大意是：</p><p><strong>Multi-Agent 的困难在“最后一公里”，工程化程度远超我们过去想象。</strong></p><p>我也越来越觉得：工具、可观测性、容错、执行链路、协作协议、Memory 管理、分布式上下文、并行执行，这些比“让模型聪明”更难，也更关键。</p><p>Multi-Agent 是生产级工程，它是工程系统 + 协作协议 + 工具生态。</p><br/><br/><br/><br/><br/><br/>]]></content:encoded>
+      
+      
+      
+      
+      <comments>https://blog.liluhui.cn/2025/11/14/Key-Insights-from-Claude-Multi-Agent-Architecture/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>deepseek-ocr 的几何识别，真的成立吗？</title>
@@ -449,29 +475,6 @@
       
       
       <comments>https://blog.liluhui.cn/2025/08/22/Traps-of-Methodology-in-Agent-Development/#disqus_thread</comments>
-      
-    </item>
-    
-    <item>
-      <title>48 小时小工具实录：我做了个大会助手</title>
-      <link>https://blog.liluhui.cn/2025/08/18/googleio/</link>
-      <guid>https://blog.liluhui.cn/2025/08/18/googleio/</guid>
-      <pubDate>Mon, 18 Aug 2025 15:11:51 GMT</pubDate>
-      
-        
-        
-      <description>&lt;p&gt;&lt;img src=&quot;https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/18/asdaweq.png&quot; alt=&quot;image&quot;&gt;&lt;/p&gt;
-&lt;h3 id=&quot;起心动念&quot;&gt;&lt;a href=&quot;#起心动念&quot;</description>
-        
-      
-      
-      
-      <content:encoded><![CDATA[<p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/18/asdaweq.png" alt="image"></p><h3 id="起心动念"><a href="#起心动念" class="headerlink" title="起心动念"></a>起心动念</h3><p>周一晚上，本来想早点休息，结果脑子突然冒出个念头：</p><blockquote><p>“要是有个离线可用、免登录的大会日程助手就好了。”</p></blockquote><p>于是干脆一口气写了 5 个小时，把一个可用版本搞了出来。核心约束很明确：免登录、离线、轻交互。目标很单纯，就是现场能救急。</p><br/><h3 id="临时开工"><a href="#临时开工" class="headerlink" title="临时开工"></a>临时开工</h3><p>整个技术方案非常 indie：</p><ul><li>React + PWA + Vercel 一键部署</li><li>数据靠 GPT 整理的大会官网，然后导入 JSON</li><li>没有后台，没有账号，全在前端跑</li></ul><p>代码写得像夜宵拼盘，能跑就行。为什么选纯前端？为了离线和快速交付。上线第一天就接到 iOS 用户反馈打不开，着急忙慌修问题，才发现自己紧急开发没有充分测试设备的问题。那一晚边修边想：“这样上线真的有人用吗？”</p><h3 id="上线与运营"><a href="#上线与运营" class="headerlink" title="上线与运营"></a>上线与运营</h3><p>周二白天，我赶紧补了点运营内容。发到 v2ex，几乎没人理；同时小红书，反而慢慢起来了。陆陆续续有人私信问“怎么用”，我只好一边当客服一边补文案。没想到借着这件事，还面基了不少人。</p><p>这让我意识到：即便是独立开发的小工具，找到合适的分发渠道也比想象中重要。</p><h3 id="两天的数据"><a href="#两天的数据" class="headerlink" title="两天的数据"></a>两天的数据</h3><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/18/zxcqsa.png" alt="image"></p><p>结果出来后有点意外：</p><ul><li>76 位用户</li><li>841 次访问</li><li>平均使用时长 2 分 10 秒</li><li>主题页 438 次访问，详情页 93 次</li></ul><p>比我自己刷朋友圈的时长还长，说明不是点开就走人。尤其主题页访问量很高，说明用户确实想“逛全局”，不是只搜一场。</p><br/><h3 id="What-went-well"><a href="#What-went-well" class="headerlink" title="What went well"></a>What went well</h3><ul><li><strong>免登录 + 离线可用</strong>：如设想成了最大卖点。</li><li><strong>需求真实驱动</strong>：临时上线也有人用，证明确实解决了痛点。</li><li><strong>小红书意外带量</strong>：运营不是我擅长的，但确实帮我接住了用户。</li></ul><br/><h3 id="What-didn’t-go-well"><a href="#What-didn’t-go-well" class="headerlink" title="What didn’t go well"></a>What didn’t go well</h3><ul><li><strong>预热不足</strong>：要是提前一周发布，效果可能翻倍。</li><li><strong>数据采集缺失</strong>：只接了 GA4 页面浏览，没法更准确地知道预约行为。</li></ul><p>结果就是：复盘时我只能靠各个页面数据来猜激活。根因很简单：我当时的“成功定义”还停留在“能上线可用”，而不是“被看见、被采用”。</p><br/><h3 id="反思-amp-下一步"><a href="#反思-amp-下一步" class="headerlink" title="反思 &amp; 下一步"></a>反思 &amp; 下一步</h3><p>这次实验让我真正意识到，复盘在于两件事：<strong>如何更快挖掘真实需求</strong>，以及<strong>如何把运营节奏踩准</strong>。</p><ul><li><strong>需求发现</strong>：这次是自己用痛点驱动临时开发，下次应该提前去看不同社区、社交平台上用户在哪些地方吐槽过类似问题，尽早发现“隐形需求”，最好提前一周留出验证窗口。</li><li><strong>运营节奏</strong>：节奏感比功能更关键。T-72 小时就该放预热帖，T-24 小时要有“一图一文案”准备好，正式开幕当天要能推出“今日变更&#x2F;热门场次”的内容。</li><li><strong>分发优先级</strong>：这次 v2ex 没起量，小红书反而爆发，说明不同渠道效果差异巨大，下次要更明确主力渠道，少浪费子弹。</li></ul><p>下一步的方向：</p><ol><li><strong>继续验证不同类型大会</strong>：看看这个模式在学术会议、技术沙龙、大规模大会上效果是否一致。</li><li><strong>优化快速部署能力</strong>：缩短从临时起意到可上线的时间，把常用组件和脚手架打包好。</li><li><strong>打磨一套数据解析与生成工具</strong>：针对不同大会的日程结构，统一导入、解析和生成，避免重复劳动。</li></ol><br/><h3 id="收尾"><a href="#收尾" class="headerlink" title="收尾"></a>收尾</h3><p>说白了，这 76 个用户不是因为我运营厉害，而是需求实在强烈。上线前一晚还在修 bug，上线后疯狂回私信解释。典型 indie dev：<strong>边做边慌，边慌边学</strong>。</p><p>但这次让我明白了一件事：上线不等于成功。下次要把“被看见、被采用”写进 Definition of Done。</p><br/><br/><br/><br/><br/>]]></content:encoded>
-      
-      
-      
-      
-      <comments>https://blog.liluhui.cn/2025/08/18/googleio/#disqus_thread</comments>
       
     </item>
     
