@@ -15,8 +15,30 @@
     <atom:link href="https://blog.liluhui.cn/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>关于生活、学习、工作 feedId:66855595489698816+userId:55886336755964928</description>
-    <pubDate>Thu, 13 Nov 2025 12:37:45 GMT</pubDate>
+    <pubDate>Wed, 19 Nov 2025 02:55:55 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>为什么李飞飞说：AI 真正的进步取决于世界模型</title>
+      <link>https://blog.liluhui.cn/2025/11/19/Why-Fei-Fei-Li-Says-the-Future-of-AI-Progress-Depends-on-World-Models/</link>
+      <guid>https://blog.liluhui.cn/2025/11/19/Why-Fei-Fei-Li-Says-the-Future-of-AI-Progress-Depends-on-World-Models/</guid>
+      <pubDate>Wed, 19 Nov 2025 00:00:25 GMT</pubDate>
+      
+        
+        
+      <description>&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;最近，“人工智能之母”李飞飞发布了新产品 &lt;strong&gt;Marble&lt;/strong&gt;——一个可以用一句话生成完整 3D 场景、可探索、可</description>
+        
+      
+      
+      
+      <content:encoded><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近，“人工智能之母”李飞飞发布了新产品 <strong>Marble</strong>——一个可以用一句话生成完整 3D 场景、可探索、可编辑的世界模型原型。</p><p>我花了整个周末把访谈、演示与背景研究都看完，<br>再回头想想我过去几年在做的几何 AI、空间计算、Agent 系统……<br>意识到一个很深的事：</p><p><strong>世界模型不是一个功能升级，而是下一代智能的底层逻辑。</strong></p><p>但与其说我们离 AGI 又近了一步，不如说，我们可能再一次看到“世界模型时代”的新起点。</p><br/><br/><h2 id="为什么世界模型突然被重提？"><a href="#为什么世界模型突然被重提？" class="headerlink" title="为什么世界模型突然被重提？"></a>为什么世界模型突然被重提？</h2><p>因为所有人都发现了一个共同的瓶颈：<br><strong>语言大模型无法突破“世界理解”。</strong></p><p>它们能说、能编、能解释、能写论文……</p><p>但一旦进入真实世界场景——空间、物体、动态、因果就频繁翻车：</p><ul><li>看不懂遮挡</li><li>分不清前后关系</li><li>无法从二维视频推断三维结构</li><li>对物理规律毫无概念</li><li>机器人操作路线像在瞎撞</li><li>视频生成 3 秒开始“世界解体”</li></ul><br/><p>LLM 的本质是 <strong>按语言统计模式预测文本</strong>。</p><p>而物理世界不是语言，它是空间、物体、动力学、连续性、约束和因果的组合系统。</p><p>语言模型建不出这个系统。</p><p>于是“世界模型”再次成为前沿的焦点，不是替代 LLM，而是补齐它的最重要短板 <strong>理解和模拟真实世界。</strong></p><br/><br/><h2 id="别急，路……长得很"><a href="#别急，路……长得很" class="headerlink" title="别急，路……长得很"></a>别急，路……长得很</h2><p>但我们不要幻觉：世界模型不是几年内就能商业化的奇迹。</p><p>李飞飞在访谈里讲了一个极其关键、但外界经常忽略的事实：</p><blockquote><p>自动驾驶从 2005 年 DARPA Grand Challenge 到现在，20 年了。</p><p>到 2025 年都还没完全落地。</p><p>而机器人，比自驾车难得多。</p></blockquote><br/><p>为什么？</p><br/><p><strong>原因一：自驾车 &#x3D; 2D 问题，机器人 &#x3D; 3D + 操作问题</strong></p><p>自驾车在二维地面移动，世界就是一个平面导航问题，它的主要目标是 <strong>不碰东西</strong>。</p><p>而机器人在三维世界操作物体，这是一个高度维度的连续控制问题，它的目标是 <strong>准确地“碰东西”</strong>。</p><p>当你要抓一个杯子，需要知道：杯子的位置、你的手的位置、碰撞边界、重力与摩擦、运动预测、遮挡中的可见性…<br>这不是“统计语言能处理的任务”。</p><br/><p><strong>原因二：难度指数级上升</strong></p><p>即便自驾的硬件+软件+数据+供应链都成熟到极致了，但还是没完全落地。</p><p>你要机器人落地，难度指数级上升：机械臂成本、伺服精度、力反馈传感器、三维视觉、安全规范、工业供应链、电池与运算成本、云端协作的可靠性 …</p><p>世界模型只是其中的一个关键环节，而非全部。</p><br/><p><strong>所以我认为，世界模型是正确方向，但绝不会在一两年内重塑社会。</strong> 这是一个十年级别的技术大周期。</p><br/><br/><h2 id="那么世界模型到底是什么？"><a href="#那么世界模型到底是什么？" class="headerlink" title="那么世界模型到底是什么？"></a>那么世界模型到底是什么？</h2><p>我看完 Marble 和这次访谈后，最深刻的变化就是：</p><p><strong>世界模型既不是“视频模型升级版”，也不是“3D 重建工具”。</strong></p><p><strong>它是一个生成性、可交互、可预测的空间模拟器</strong>。</p><p>下面我从工程角度拆三个关键误区。</p><br/><h3 id="误解-1：世界模型-x3D-更强的视频生成"><a href="#误解-1：世界模型-x3D-更强的视频生成" class="headerlink" title="误解 1：世界模型 &#x3D; 更强的视频生成"></a><strong>误解 1：世界模型 &#x3D; 更强的视频生成</strong></h3><p>不对。</p><p>视频生成解决的是帧一致性、光影与纹理和动态连续性，但它依然是<strong>像素层面的预测</strong>。</p><p>世界模型不是预测像素，而是预测：</p><ul><li>物体布局</li><li>空间结构</li><li>深度关系</li><li>物理状态</li><li>动作后果</li><li>多主体交互</li><li>能走、能转身、能碰撞的世界状态</li></ul><p>视频模型生成的是“视觉表面”，世界模型生成的是“场景语义与物理状态”。</p><p>这完全不同。</p><br/><h3 id="误解-2：世界模型-x3D-3D-重建"><a href="#误解-2：世界模型-x3D-3D-重建" class="headerlink" title="误解 2：世界模型 &#x3D; 3D 重建"></a><strong>误解 2：世界模型 &#x3D; 3D 重建</strong></h3><p>如果世界模型只是重建现实，那就没意义了。</p><p><strong>真正的世界模型是基于语言输入生成一个可探索的“虚拟物理世界”。</strong></p><p>我理解它至少需要满足以下几点：</p><ul><li>一个 prompt → 生成完整世界</li><li>世界包含路径、遮挡、可导航性</li><li>你可以走进去</li><li>你可以探索意料之外的角落</li><li>你可以修改它</li></ul><p>这比 3D 建模工具强太多。</p><br/><h3 id="误解-3：世界模型只是视觉系统"><a href="#误解-3：世界模型只是视觉系统" class="headerlink" title="误解 3：世界模型只是视觉系统"></a>误解 3：世界模型只是视觉系统</h3><p>不，<strong>它是 “行动智能” 的前置层</strong>。</p><p>如果 AGI 最终要在世界中执行动作（agent &#x2F; robot &#x2F; embodied intelligence），那么它必须知道：</p><ul><li>如果我推一下这个盒子会怎样</li><li>如果我走两步会撞到谁</li><li>如果我换一个视角能看到墙后什么</li></ul><p>语言模型做不到这些。</p><br/><p><strong>世界模型 &#x3D; AI 的世界状态表示层（world state representation）</strong></p><p>它不是为了生成漂亮的画面，而是为了让模型知道自己在哪里、在做什么、接下来可能发生什么。</p><br/><br/><h3 id="Marble-为什么是一个重要的标志？"><a href="#Marble-为什么是一个重要的标志？" class="headerlink" title="Marble 为什么是一个重要的标志？"></a>Marble 为什么是一个重要的标志？</h3><p>不是因为它能“做 3D”，</p><p>而是它证明了世界模型的三个核心能力：</p><br/><p><strong>能力一：世界结构可生成</strong></p><p>不是 mesh 拼贴，而是真正的结构化世界：可行走、有空间层级、有碰撞逻辑、多视角一致。</p><p>这在模型层面意味着需要在 latent space 内表示“世界状态”。</p><br/><p><strong>能力二：世界可重建 + 可编辑</strong></p><p>这意味着：</p><ul><li>世界表示是显性的（explicit）</li><li>状态之间是连续的（stateful）</li><li>可以“世界状态 → 修改 → 再渲染”</li></ul><p>这非常接近游戏引擎内部的数据结构。</p><br/><p><strong>能力三：世界可探索</strong></p><p>这是最关键的突破。</p><p>如果你能自由移动摄像机、走进去、转视角，意味着模型内部必须有“空间一致性”（spatial coherence）和“三维世界的持久性”（persistence）。</p><p>这是第一次有模型具备这种能力。</p><br/><br/><h2 id="真正的革命在哪里？"><a href="#真正的革命在哪里？" class="headerlink" title="真正的革命在哪里？"></a>真正的革命在哪里？</h2><p>我认为世界模型会沿着“由易到难”的路径影响技术。</p><br/><p><strong>阶段一</strong>：</p><p>创意行业（已开始），这些都已经能玩。</p><ul><li>虚拟影棚</li><li>游戏关卡自动生成</li><li>场景草图 → 3D 世界</li><li>教育模拟世界</li><li>AR&#x2F;VR 内容生产</li></ul><br/><p><strong>阶段二</strong>：</p><p>模拟与科学计算（中期），这部分需要更数学化、更结构化的世界模型。</p><ul><li>物理规则推演</li><li>世界状态预测</li><li>动态优化任务</li><li>机器人策略模拟</li><li>多主体交互的虚拟环境</li></ul><br/><p><strong>阶段三</strong>：</p><p>机器人与具身智能（长期），这是最难的领域。</p><ul><li>空间理解</li><li>动作规划</li><li>能力校准</li><li>实时感知</li><li>多模态世界状态对齐</li><li>连续控制策略</li></ul><p>世界模型只是其中一环。<br>硬件、算力、传感器、数据都必须一起进化。</p><br/><br/><h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>如果世界模型真能在未来十年成熟，它可能会成为人类第一次接近 <strong>重写生物智能基线</strong> 的尝试。</p><p>但站在今天回头看，我们依然不得不承认：</p><p>一个婴儿跌跌撞撞学走路时，他体内的世界模型，对重力的直觉、对遮挡的理解、对物体持久性的把握、对路径的预测，其学习效率、鲁棒性、泛化能力，都远在任何人工模型之上。</p><p>我们用数十亿帧视频训练“空间一致性”，自然界却用几个月的探索让孩子具备稳定的三维世界感知。</p><p>我们为状态持久性、渲染一致性、物理约束痛苦堆砌 priors，生物神经系统却将它们作为默认配置。</p><p><strong>世界模型之难，也正因此而迷人。</strong></p><p>它不是明年就会落地的革命，</p><p>不是可以替代所有智能的银弹，</p><p>而是一条明确但漫长的技术长坡。</p><p>好消息是：我们终于知道坡在哪；</p><p>更好的消息是：我们正站在坡的起点。</p><p>而在每一个技术突破的间隙，我们也会不断重新意识到：<strong>生物智能本身，就是我们正在努力复现的那套终极世界模型。</strong></p><br/><br/><br/><br/><br/><br/><h2 id="延伸阅读"><a href="#延伸阅读" class="headerlink" title="延伸阅读"></a>延伸阅读</h2><ul><li><p>从文字到世界：空间智能是 AI 的下一个前沿<br><a href="https://drfeifei.substack.com/p/from-words-to-worlds-spatial-intelligence">drfeifei.substack.com&#x2F;p&#x2F;from-words-to-worlds-spatial-intelligence</a></p></li><li><p>李飞飞在 X 上关于 AI 的言论<br><a href="https://x.com/drfeifei/status/963564896225918976">x.com&#x2F;drfeifei&#x2F;status&#x2F;963564896225918976</a></p></li><li><p>The Godmother of AI on jobs, robots &amp; why world models are next | Dr. Fei-Fei Li<br><a href="https://youtu.be/Ctjiatnd6Xk?si=J1Gdz3lnFiaKbF9y">youtu.be&#x2F;Ctjiatnd6Xk?si&#x3D;J1Gdz3lnFiaKbF9y</a></p></li><li><p>When Do Neural Networks Learn World Models?<br><a href="https://arxiv.org/abs/2502.09297">arxiv.org&#x2F;abs&#x2F;2502.09297</a></p></li></ul>]]></content:encoded>
+      
+      
+      
+      
+      <comments>https://blog.liluhui.cn/2025/11/19/Why-Fei-Fei-Li-Says-the-Future-of-AI-Progress-Depends-on-World-Models/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>Claude Multi-Agent 的核心经验精华（面向工程与产品）</title>
@@ -456,25 +478,6 @@
       
       
       <comments>https://blog.liluhui.cn/2025/09/02/202508/#disqus_thread</comments>
-      
-    </item>
-    
-    <item>
-      <title>构建 Agent 中的方法论陷阱</title>
-      <link>https://blog.liluhui.cn/2025/08/22/Traps-of-Methodology-in-Agent-Development/</link>
-      <guid>https://blog.liluhui.cn/2025/08/22/Traps-of-Methodology-in-Agent-Development/</guid>
-      <pubDate>Fri, 22 Aug 2025 03:49:54 GMT</pubDate>
-      
-      <description>看似聪明的 Agent 方法论，可能是陷阱。少即是多。</description>
-      
-      
-      
-      <content:encoded><![CDATA[<p><em>看似聪明的 Agent 方法论，可能是陷阱。少即是多。</em></p><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前几天在刷推的时候，看到了 cline 的开发者 Ara 提到的一段话。<br>他说，在构建 AI Agent 时，有三种听起来很聪明的想法，其实常常是「思维毒药」。</p><p>“思维毒药” 这个词总归怪怪的，我觉得“陷阱”这个比喻让我更有共鸣。因为这些思维确实很有吸引力，就像远远看去是一条捷径，但走进去才发现，里面布满了泥潭。</p><p>作为一个开发者，我一边读，一边在回想自己做 Agent 的过程——踩过的坑，走过的弯路，几乎都能在这里找到影子。</p><h2 id="一、关于多代理编排"><a href="#一、关于多代理编排" class="headerlink" title="一、关于多代理编排"></a>一、关于多代理编排</h2><p>想象一下这样的画面：<br>有一支虚拟团队，里面有“分析员 Agent”“执行员 Agent”“总调度 Agent”。它们像人类小组一样，分工协作、互相传递消息，最后汇总出完美的结果。</p><p>听上去是不是很酷？我当初也实践过。</p><p>可现实是：<strong>大多数真正有价值的 Agent 工作，本质上还是单线程的</strong>。</p><p>复杂的编排，不仅增加了技术上的不确定性，还让我们更难解释模型的行为。<br>换句话说，它让项目背上了两份负担：<strong>实现复杂度 + 解释复杂度</strong>。</p><p>曾经做过一个 Team Demo 来完成 AI Coding 这件事，尝试用多个 Agent 分工协作。结果没走几步，就被“状态同步”和“出错恢复”折腾得焦头烂额。调试的时候，根本不知道到底是哪个 Agent 在搞鬼。</p><p>到最后，我还是把逻辑简化掉，留给一个更强的单体 Agent 去完成。意外的是，效果比多代理方案还要稳定。</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/22/2.png"></p><h2 id="二、关于-RAG-的补丁效应"><a href="#二、关于-RAG-的补丁效应" class="headerlink" title="二、关于 RAG 的补丁效应"></a>二、关于 RAG 的补丁效应</h2><p>过去两年，RAG（检索增强生成）几乎成了构建 Agent 的标配。好像不加上它，整个系统就“不完整”。</p><p>但真实的情况是：<strong>RAG 更像是一块补丁</strong>。<br>很多时候，一个简单的 grep 命令，或者一张设计良好的数据库表，就能解决问题。<br>如果你的数据和知识管理一团乱，RAG 只会把混乱放大，它不是万能钥匙。重要的数据，数据，还是 TMD 数据。</p><p>我刚开始用 RAG 的时候，觉得它是“救命稻草”。模型终于可以“记住”外部知识了。可随着项目复杂度增加，我发现问题并没有减少，反而多了新的麻烦：检索不准、上下文过载、延迟变高…… 慢慢我意识到：<strong>真正重要的，其实是信息组织方式</strong>。</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/22/3.png"></p><h2 id="三、关于「更多指令-x3D-更好结果」"><a href="#三、关于「更多指令-x3D-更好结果」" class="headerlink" title="三、关于「更多指令 &#x3D; 更好结果」"></a>三、关于「更多指令 &#x3D; 更好结果」</h2><p>还有一个陷阱，是很多人都会踩的：<br>我们常常相信，只要写更长、更详细的 prompt，模型就会更聪明。</p><p>现实往往相反。<br>长 prompt 增加了 token 成本，响应速度更慢，结果也不一定更好。更糟糕的是，它掩盖了真正的问题：<strong>模型本身的能力边界</strong>。</p><p>我刚开始玩 LLM 的时候，我也写过像“说明书”一样长的 prompt，把能想到的规则全堆上去。<br>但最后发现，简洁、清晰的三句话，往往比十段废话更有效。</p><p>现在我更看重的是 <strong>任务建模和上下文管理</strong>。<br>比如明确拆分任务，合理设计输入输出，这些往往比写一个“超级提示词”来得靠谱。</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/22/4.png"></p><h2 id="总结：少即是多"><a href="#总结：少即是多" class="headerlink" title="总结：少即是多"></a>总结：少即是多</h2><p>回顾这三点：</p><ul><li><strong>多代理编排</strong>：是幻觉，现实里常常多余。</li><li><strong>RAG</strong>：是补丁，价值有限，不该当成金科玉律。</li><li><strong>长 prompt</strong>：是迷思，解决不了模型的根本限制。</li></ul><p>别被“听起来聪明”的概念绑架，真正有效的，往往是简单、直接、可解释的方案。<br>作为开发者，我更愿意拥抱这种“少即是多”的原则。<br>因为时间和资源有限，每一行代码、每一个设计选择，都需要指向真正的核心价值。</p>]]></content:encoded>
-      
-      
-      
-      
-      <comments>https://blog.liluhui.cn/2025/08/22/Traps-of-Methodology-in-Agent-Development/#disqus_thread</comments>
       
     </item>
     
