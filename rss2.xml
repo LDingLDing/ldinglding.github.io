@@ -15,8 +15,30 @@
     <atom:link href="https://blog.liluhui.cn/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>关于生活、学习、工作 feedId:66855595489698816+userId:55886336755964928</description>
-    <pubDate>Wed, 19 Nov 2025 02:55:55 GMT</pubDate>
+    <pubDate>Fri, 21 Nov 2025 08:00:41 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>从顶流开源 Kimi K2-Thinking 学习：什么是推理模型？</title>
+      <link>https://blog.liluhui.cn/2025/11/21/Understanding-Reasoning-Models-Exploring-Kimi-K2-Thinking-and-Its-Breakthrough/</link>
+      <guid>https://blog.liluhui.cn/2025/11/21/Understanding-Reasoning-Models-Exploring-Kimi-K2-Thinking-and-Its-Breakthrough/</guid>
+      <pubDate>Fri, 21 Nov 2025 00:00:20 GMT</pubDate>
+      
+        
+        
+      <description>&lt;h2 id=&quot;引言：推理模型，为什么值得我们关注&quot;&gt;&lt;a href=&quot;#引言：推理模型，为什么值得我们关注&quot; class=&quot;headerlink&quot; title=&quot;引言：推理模型，为什么值得我们关注&quot;&gt;&lt;/a&gt;引言：推理模型，为什么值得我们关注&lt;/h2&gt;&lt;p&gt;&lt;img src=&quot;</description>
+        
+      
+      
+      
+      <content:encoded><![CDATA[<h2 id="引言：推理模型，为什么值得我们关注"><a href="#引言：推理模型，为什么值得我们关注" class="headerlink" title="引言：推理模型，为什么值得我们关注"></a>引言：推理模型，为什么值得我们关注</h2><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/11/21/2025112103.png"></p><p>在开源模型阵营中，大佬 Kimi K2 Thinking（以下简称“K2‑Thinking”）的崛起为推理模型带来了优秀学习样本。</p><p><strong>“推理模型”到底是什么？它与我们熟悉的传统大型语言模型（LLM）有什么根本不同？</strong></p><p>在信息爆炸、任务越来越复杂的时代，仅靠“训练好一个大模型、输入–输出”已经难以满足：比如依赖多步逻辑、实时工具调用、环境反馈循环，这些场景里传统 LLM 往往容易漂移、跳步或卡顿。</p><p>而推理模型强调：从多个角度思考／分析、多步推导、根据环境变化调整路径。</p><p>在这方面，K2‑Thinking 正是一个很典型的代表：它公开了技术路线，强调“思考 + 工具调用 +长流程”能力，这也为我们梳理“什么是推理模型”提供了一个很棒的资料。</p><br/><br/><h2 id="什么是推理模型？与传统-LLM-的关键区别"><a href="#什么是推理模型？与传统-LLM-的关键区别" class="headerlink" title="什么是推理模型？与传统 LLM 的关键区别"></a>什么是推理模型？与传统 LLM 的关键区别</h2><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/11/21/2025112102.png"></p><p>最重要的来了，推理模型到底具备哪些关键特性，能够让它在复杂任务中脱颖而出呢？</p><h3 id="1-链式推理（Chain-of-Thought）"><a href="#1-链式推理（Chain-of-Thought）" class="headerlink" title="1. 链式推理（Chain-of-Thought）"></a>1. <strong>链式推理（Chain-of-Thought）</strong></h3><p>链式推理是推理模型的核心特性之一，它指的是模型能够像人类一样<strong>逐步思考</strong>，而不是直接给出答案。</p><p>举个简单的例子，假设你在解决一个数学问题，推理模型不会只是直接计算出结果，而是会先拆解问题，逐步推导出解答过程，最后给出完整的答案。</p><p>这种方式能够有效避免传统模型“跳过步骤”导致的错误。</p><br/><h3 id="2-工具调用（Tool-Calling）"><a href="#2-工具调用（Tool-Calling）" class="headerlink" title="2. 工具调用（Tool Calling）"></a>2. <strong>工具调用（Tool Calling）</strong></h3><p>工具调用是推理模型的一项重要能力。</p><p>传统的大语言模型只依赖训练数据和内部知识库，而推理模型则能够<strong>主动调用外部工具</strong>来辅助完成任务。</p><p>比如，它不仅能进行搜索，还能执行代码，调取数据库中的信息，甚至访问最新的网络资源。</p><p>在解答一个问题时，推理模型不仅仅依赖“它知道的”，而是能够实时与世界互动，获取最新的有用信息。</p><br/><h3 id="3-自我反思（Self-Reflection）"><a href="#3-自我反思（Self-Reflection）" class="headerlink" title="3. 自我反思（Self-Reflection）"></a>3. <strong>自我反思（Self-Reflection）</strong></h3><p>在推理过程中，推理模型还具备<strong>自我反思</strong>的能力。</p><p>当它在执行任务时，它能够检查自己的推理过程，发现其中的漏洞并进行修正。</p><p>就像你在解数学题时，不仅仅是盯着结果，而是不断回顾每一步的推理过程，确保每个步骤都无误。</p><p>推理模型的这种能力，可以大大提高任务的准确性和可靠性。</p><br/><h3 id="4-长程推理（Long-Horizon-Reasoning）"><a href="#4-长程推理（Long-Horizon-Reasoning）" class="headerlink" title="4. 长程推理（Long-Horizon Reasoning）"></a>4. <strong>长程推理（Long-Horizon Reasoning）</strong></h3><p>长程推理指的是模型能够处理<strong>多轮推理</strong>，并且在整个推理过程中保持一致的思路。</p><p>它能够记住前面推理过程中发生的关键步骤，并且根据这些步骤来调整后续的决策。</p><p>比如，在长时间的决策过程中，推理模型能够从多个方面考虑，并一步步推进，直到问题得到完全解决。</p><br/><br/><h2 id="K2‑Thinking-的创新突破"><a href="#K2‑Thinking-的创新突破" class="headerlink" title="K2‑Thinking 的创新突破"></a>K2‑Thinking 的创新突破</h2><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/11/21/2025112101.png"></p><p>K2‑Thinking 作为开源推理模型的代表，为我们展示了推理能力在实际应用中的潜力。</p><h3 id="1-长时间自主推理（Long-Horizon-Agency）"><a href="#1-长时间自主推理（Long-Horizon-Agency）" class="headerlink" title="1. 长时间自主推理（Long-Horizon Agency）"></a><strong>1. 长时间自主推理（Long-Horizon Agency）</strong></h3><p>传统的大型语言模型（LLM）通常在面对多步骤任务时会“漂移”，在执行 30-50 步之后就容易失去逻辑连贯性。</p><p>而 K2‑Thinking 设计成一个能够持续进行 200-300 次连续工具调用且保持思路一致的“思考代理”。</p><p>这种能力让它能够完成复杂问题的推理，而不仅仅是简单的回答问题。</p><p>在一个演示中，K2‑Thinking 通过 23 次推理和工具调用，解决了一个博士级别的数学问题，展示了它在长时间、复杂任务中的自主推理能力。</p><br/><h3 id="2-测试时扩展（Test-Time-Scaling）"><a href="#2-测试时扩展（Test-Time-Scaling）" class="headerlink" title="2. 测试时扩展（Test-Time Scaling）"></a><strong>2. 测试时扩展（Test-Time Scaling）</strong></h3><p>K2‑Thinking 不像传统模型那样固定计算每个查询，而是采用 <strong>测试时扩展</strong> 的方式。</p><p>在遇到复杂任务时，它会“思考更多”，通过递归循环不断优化问题的解决路径：</p><ul><li>思考：分解问题。</li><li>行动：调用外部工具（如搜索引擎、代码解释器等）。</li><li>观察：获取工具输出。</li><li>重新评估：分析新信息并调整方案。</li></ul><p>这种递归式的推理过程使得 Kimi 可以在多轮的推理和工具调用中，始终保持清晰的思路和目标。</p><br/><h3 id="3-高效的-MoE（Mixture-of-Experts）架构"><a href="#3-高效的-MoE（Mixture-of-Experts）架构" class="headerlink" title="3. 高效的 MoE（Mixture-of-Experts）架构"></a><strong>3. 高效的 MoE（Mixture-of-Experts）架构</strong></h3><p>虽然 K2‑Thinking 拥有 1 万亿参数，但它采用了高效的 Mixture-of-Experts (MoE) 架构，在每次推理时只激活其中的 32 亿参数。</p><p>这样的“稀疏”设计让模型在拥有大量知识的同时，保持低成本的推理效率。</p><p>由于其高效设计，K2‑Thinking 可以在较为普通的硬件上运行，例如两台 M3 Ultra Mac Studios，极大地降低了运行成本和对硬件的依赖。</p><br/><h3 id="4-原生-INT4-量化加速"><a href="#4-原生-INT4-量化加速" class="headerlink" title="4. 原生 INT4 量化加速"></a><strong>4. 原生 INT4 量化加速</strong></h3><p>K2‑Thinking 采用 <strong>原生 INT4 量化</strong> 技术，将模型的权重压缩到 4 位，带来 <strong>2 倍的推理速度</strong> 提升和大幅度的内存减少。</p><p>这使得它能够在性能和成本之间实现最佳平衡，适合更多的应用场景。</p><br/><h3 id="5-优异的多步骤推理表现"><a href="#5-优异的多步骤推理表现" class="headerlink" title="5. 优异的多步骤推理表现"></a><strong>5. 优异的多步骤推理表现</strong></h3><p>在 <strong>Humanity’s Last Exam (HLE)</strong> 和 <strong>BrowseComp</strong> 等基准测试中，K2‑Thinking 超越了 GPT-5 和 Claude，展示了它在 <strong>工具调用</strong> 和 <strong>多步骤推理</strong> 任务中的卓越表现。</p><p>例如，Kimi 在 HLE 测试中获得 44.9%，优于 GPT-5 的 41.7%。在网页搜索任务 BrowseComp 中，Kimi 获得了 60.2%，大幅领先于 GPT-5 的 54.9%。</p><br/><h3 id="6-低成本训练和高效计算"><a href="#6-低成本训练和高效计算" class="headerlink" title="6. 低成本训练和高效计算"></a><strong>6. 低成本训练和高效计算</strong></h3><p>K2‑Thinking 的训练成本仅为 <strong>460 万美元</strong>，远低于 GPT-4（~7800 万美元）和 Gemini Ultra（1.91 亿美元）。</p><p>这使得 Kimi 的成本效益成为行业的颠覆性力量，证明了通过高效算法优化可以挑战资本密集型的 AI 计算模式。</p><p>Moonshot 通过创新的 <strong>Muon 优化器</strong> 和 <strong>多头潜在注意力（MLA）</strong> 进一步提升了计算效率，使得每一美元的计算支出都能获得更多的智能输出。</p><br/><h3 id="7-开源与商业模式创新"><a href="#7-开源与商业模式创新" class="headerlink" title="7. 开源与商业模式创新"></a><strong>7. 开源与商业模式创新</strong></h3><p>K2‑Thinking 采用了 <strong>修改版 MIT 许可协议</strong>，这一许可不仅允许研究人员、初创公司和企业进行商业化使用，还通过 <strong>要求商业产品显示 Kimi K2</strong> 来确保对该技术的认知和贡献。</p><p>与大部分限制性商业许可不同，Kimi 通过开放权重和宽松的许可协议，推动了 AI 技术的社区创新。</p><p>这种开放的方式挑战了现有的高 API 收费模式，给开发者带来了 <strong>低成本、开源竞争力的替代品</strong>。</p><p>相较于依赖高收费 API 的传统 AI 模型，Kimi 提供了一个几乎免费的高性能替代方案。</p><br/><h3 id="8-打破“计算壁垒”：算法为先，资本为后"><a href="#8-打破“计算壁垒”：算法为先，资本为后" class="headerlink" title="8. 打破“计算壁垒”：算法为先，资本为后"></a><strong>8. 打破“计算壁垒”：算法为先，资本为后</strong></h3><p>K2‑Thinking 打破了 <strong>“计算壁垒”</strong> 的传统观念，挑战了“大模型需要巨额资本支撑”的说法。</p><p>通过算法优化，Kimi 展现了计算效率的突破，使得较低预算的团队也能开发和部署强大的推理模型。</p><p>这种效率革命使得高端 AI 模型的门槛降低，行业竞争格局发生了根本性变化。</p><br/><br/><h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>推理模型正在成为下一代 AI 应用的新基建。</p><p>K2‑Thinking 作为一个开源且具备实战能力的代表，显示出国产模型在“推理能力”维度也有突破。</p><p>现在能看到，越来越多新产品从“简单生成”转向“复杂行动＋思考＋工具协同”。</p><p>期待国内人工智能的生态越做越好，越来越成熟 ！</p><br/><br/><br/><br/><br/><br/><h3 id="延申阅读"><a href="#延申阅读" class="headerlink" title="延申阅读"></a>延申阅读</h3><ul><li><a href="https://moonshotai.github.io/Kimi-K2/thinking.html">Introducing Kimi K2 Thinking 技术博客（Moonshot AI）</a></li><li><a href="https://www.shuttle.dev/blog/2025/11/17/kimi-k2-thinking-hands-on-review">Kimi K2 Thinking: Testing the Open-Source Reasoning Model on Real Code</a></li><li><a href="https://c3.unu.edu/blog/the-agent-has-landed-why-kimi-k2-thinking-is-more-than-just-a-new-ai-model">Why Kimi K2 Thinking Is More Than Just a New AI Model</a></li></ul>]]></content:encoded>
+      
+      
+      
+      
+      <comments>https://blog.liluhui.cn/2025/11/21/Understanding-Reasoning-Models-Exploring-Kimi-K2-Thinking-and-Its-Breakthrough/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>为什么李飞飞说：AI 真正的进步取决于世界模型</title>
@@ -457,27 +479,6 @@
       
       
       <comments>https://blog.liluhui.cn/2025/09/05/6-Design-Principles-I-Learned-from-Claude-Code/#disqus_thread</comments>
-      
-    </item>
-    
-    <item>
-      <title>2025/08 Review</title>
-      <link>https://blog.liluhui.cn/2025/09/02/202508/</link>
-      <guid>https://blog.liluhui.cn/2025/09/02/202508/</guid>
-      <pubDate>Tue, 02 Sep 2025 13:23:21 GMT</pubDate>
-      
-      <description>早早交付，经常交付</description>
-      
-      
-      
-      <content:encoded><![CDATA[<p><em>早早交付，经常交付</em></p><br/><h2 id="所见与所想"><a href="#所见与所想" class="headerlink" title="所见与所想"></a>所见与所想</h2><p>01<br>更新目前在维护的几个公开媒体渠道</p><ul><li><a href="https://www.xiaohongshu.com/user/profile/5678ff4a50c4b4434936b793">小红书@Luhui Dev</a> 开发者视角的短平快内容</li><li><a href="https://x.com/LuhuiDev">推特@LuhuiDev</a> 海外看到有意思的东西发发</li><li><a href="https://mp.weixin.qq.com/s/4m0Vpj8-mvUrZtlHVh59PA">公众号@芦荟的自留地</a> 更新长文内容，部分同步博客这边的内容</li><li><a href="https://liluhui.cn/">个人博客 liluhui.cn</a> 不方便向外发的</li></ul><br/><p>02<br>好热的8月，明明入秋了天天逼近40℃的高温，一整个不是很想出门，但是竟然还跑了两趟上海，新找了5公里外的瑜伽工作室，生命果然不至于折腾。</p><br/><p>03<br>在互联网上，1%的人创作，9%的人贡献，90%的人消费。要想融入圈子和社区，就要去贡献和创作，不要吝啬任何微小的行为，每一个都是反馈和互动的种子。我现在的创业理念是：深入和圈子互动，服务好我的1000个核心商业价值用户。</p><br/><p>04<br>现在想找人深度聊天越来越难，很多人没有deepthinking，他就不可能deeptalk，最后就都去deepseek了。<br>很扎心吧 U•ェ•*U</p><br/><br/><h2 id="学习与工作"><a href="#学习与工作" class="headerlink" title="学习与工作"></a>学习与工作</h2><p>01<br>这个月大部分时间都在疯狂迭代大角几何画板和做小红书内容上。交互上推进了工具、多画板、登录等能力，新上了重构版的几何绘图Agent，借助推理模式能力有突破式进展，希望能覆盖更多数学绘图群体的需求。截止8月底已经有400个登录用户，1000个访问用户了，3个月不到的时间就收到了很多用户反馈蛮惊喜的。</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/02/Pasted%20image%2020250902202358.png" alt="image"></p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/02/mmexport1756299569887.png" alt="image"></p><br/><p>02<br>去参加了上海的 Google I&#x2F;O 2025 开发者大会，上午主要在工作坊学习了下整个谷歌生态AI能力的SDK，下午一整个在面基网友们，上海又多了一群在干事的新朋友。<br>这次还有个小插曲，大会前2天临时起意做了个大会日程APP，正常借此做内容，24小时转化了第一批30多个用户，详细的复盘可以看<a href="https://blog.liluhui.cn/2025/08/18/googleio/">这篇</a>。<br><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/02/IMG_20250814_183840.jpg" alt="image"></p><br/><br/><h2 id="生活与社交"><a href="#生活与社交" class="headerlink" title="生活与社交"></a>生活与社交</h2><p>01<br>我的新头像系列 （感谢生图模型的迅速进展）</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/02/Weixin%20Image_2025-08-21_212357_7.png" alt="image"></p><br/><p>02<br>重启羽毛球，最近停药后疯狂长胖，加入有氧训练！<br>其实也想学网球，一直没找到合适的机会和老师 …<br><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/02/IMG_20250809_150254.jpg" alt="image"></p><br/><p>03<br>家里小植物们长得好好，每天看着桌上和阳台能感受到生命力就在这里。<br><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/02/IMG_20250825_093257.jpg" alt="image"></p><br/><p>04<br>这个月看来《捕风追影》《浪浪山小妖怪》《戏台》《南京照相馆》，我的月度最佳是《南京照相馆》。哦对，还蹭了暑假孩子们的8k星空展览，带上设备在宇宙间看星系的感觉也非常棒哈哈哈。</p><p>一句话推荐：<br>《捕风追影》不要带脑子的爽片，拳拳到肉，成龙+鲜肉，反派超帅。<br>《浪浪山小妖怪》小孩子的快乐，成年人的悲伤，雅俗共赏的分层电影。以及，上海美术电影制片厂。<br>《戏台》陈佩斯，陈佩斯，陈佩斯！<br>《南京照相馆》不以视角切入沉重的历史，跟随小人物的沉浸，看宏观世界的规律，看走出影院后的太平盛世。</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/08/02/IMG_20250823_162658.jpg" alt="image"></p><br/><br/><br/><br/><br/>]]></content:encoded>
-      
-      
-      <category domain="https://blog.liluhui.cn/categories/%E7%94%9F%E6%B4%BB/">生活</category>
-      
-      
-      
-      <comments>https://blog.liluhui.cn/2025/09/02/202508/#disqus_thread</comments>
       
     </item>
     
