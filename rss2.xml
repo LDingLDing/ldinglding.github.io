@@ -15,8 +15,27 @@
     <atom:link href="https://blog.liluhui.cn/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>关于生活、学习、工作 feedId:66855595489698816+userId:55886336755964928</description>
-    <pubDate>Fri, 28 Nov 2025 02:49:12 GMT</pubDate>
+    <pubDate>Tue, 02 Dec 2025 10:52:10 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>2025/11 Review</title>
+      <link>https://blog.liluhui.cn/2025/12/02/202511/</link>
+      <guid>https://blog.liluhui.cn/2025/12/02/202511/</guid>
+      <pubDate>Tue, 02 Dec 2025 12:00:50 GMT</pubDate>
+      
+      <description>时间流速</description>
+      
+      
+      
+      <content:encoded><![CDATA[<h2 id="所见与所想"><a href="#所见与所想" class="headerlink" title="所见与所想"></a>所见与所想</h2><p>竟然，忙得没什么笔记，那就这样吧。</p><br/><br/><h2 id="学习与工作"><a href="#学习与工作" class="headerlink" title="学习与工作"></a>学习与工作</h2><p>01<br>文本的技术文章主要围绕 几何 Agent 产品的时间 和 推理模型架构 相关的话题展开的。</p><ul><li><a href="https://mp.weixin.qq.com/s/Zvc7fEhMdo_jyOBK5Z5hpg">突破 MoE 限制，PEER 架构如何推动超级智能的未来发展</a></li><li><a href="https://mp.weixin.qq.com/s/di6jhkPC4Vv11iZbx2j3Yg">当几何遇上 CodeAct 范式：从语言理解到可执行推理的跃迁</a></li><li><a href="https://mp.weixin.qq.com/s/QskQQ5a9NsGqfPICiMUoKQ">deepseek-ocr 的几何识别，真的成立吗？</a></li><li><a href="https://mp.weixin.qq.com/s/T6yRk_IKW6yzwjvWzYf-og">Claude Multi-Agent 的核心经验精华（面向工程与产品）</a></li><li><a href="https://mp.weixin.qq.com/s/T6yRk_IKW6yzwjvWzYf-og">为什么李飞飞说：AI 真正的进步取决于世界模型</a></li><li><a href="https://mp.weixin.qq.com/s/oO00C3gwv87OR8mlcLzk2w">从顶流开源 Kimi K2-Thinking 学习：什么是推理模型？</a></li><li><a href="https://mp.weixin.qq.com/s/HT_8SQVoP3PVZgXRdFzlFw">从 GPT-5 Unified 系统设计中学到的工程精髓</a></li></ul><p>这个月自媒体账号数据下落了不少，一方面是之前的形式和选题似乎不太行了，另一方面是两次触发限流直接被锁池。</p><p>也在犹豫要不要多结合下热点，从数据来看都是和热点余温相关的内容表现流量更好，互动数据能持久一些。不过盘了自己的工作节奏，现阶段没时间追热点，踏踏实实构建自己能持续下去的 60 分。</p><p>这个月同步更新的公众号也开始有起色了，正好达成 100 粉。</p><p>发现小红书和公众号的群体画像差距很不一样，我同一篇内容在小红书点击率也低互动率也低，在公众号确是双新高，而这是一篇有点干硬的技术内容，字数特别多</p><br/><p>02<br>名下几个项目的域名又被审查到了要修备案，一年两三回，每次都很磨蹭，这个网站名问题为什么总是不能统一下呢。</p><br/><p>03<br>给自己的工作生产流程做了些改造。</p><p>一个是把 youtube 信息源做了定期监控和热度计算，作为一个蛮重要的信息源，能及时发现新视频和热门视频很重要。</p><p>另一个是把 youtube 视频的自动转音做了自动化，可以直接把视频链接丢进去，自动跑转写中文音频和字幕，方便做分发和内容提炼。</p><br/><p>04<br>几何画板 Agent 的开发工作继续推进，完成了不少基础设施和功能模块的搭建。现在团队化开发已经初见成效，大家分工协作，效率提升明显。</p><p>11 月用户量也是稳定直线增长中，目前已经又 9000+ 用户了，其中 3000 多人都用过我们的 AI 生成图形 功能了，需求量挺高。（继续打磨 AI 准确率和成本呀）</p><br/><br/><h2 id="生活与社交"><a href="#生活与社交" class="headerlink" title="生活与社交"></a>生活与社交</h2><p>01<br>去了趟圳面基和精进瑜伽，天气是真好，感觉比杭州更忙碌的一个城市。以及，这里的瑜伽名师也多多了，进到课堂我就成了最菜的（笑）。</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/12/01/20251202175507_406_425.jpg"></p><br/><p>02<br>瑜伽又进步了一个台阶。肩背力量能明显感受到支撑向上，而不是之前的只能向下掉硬撑了。</p><p>我现在甚至在想或许很多做不到的体式，并不是因为我的肩背力量不足，其实我的髋和背伸展度都挺好，但是倒置的不熟悉让我们觉得我不可能城主手倒立等体式。</p><p>可是好几次其实老师并没有给力量上的辅助，只是方向上的，我可以一直呆下去。</p><p>我需要重新认识这点上的身体感知。</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/12/01/20251202175509_407_425.jpg"></p><br/><p>03<br>医美体验新知识：</p><ol><li><p>原来水光可以不敷麻药，疼痛感不仅和针孔深度有关，还和设备的好坏有关，好的设备和枕头可以很小并且很稳，那么确实不会有太大疼痛感。虽然但是，还是疼的，医生做完问我下次还敢不敢…</p></li><li><p>fotona 虽然也是光电类，但是因为激光的原理不同，体感一点疼痛都没有，就是热乎乎的，蛮好受的。</p></li></ol><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/12/01/20251202175719_408_425.jpg"></p><br/><p>04<br>吃到了好多好吃的，又是减肥不成功的一个月 ┑(￣ Д ￣)┍。<br><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/12/01/20251202180052_410_425.jpg"></p><br/><p>05<br>给家里布置鲜花的美好，秋末初冬交替时的每一个暖洋洋的日子都值得珍惜。</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/12/01/20251202180039_409_425.jpg"></p><br/><br/><br/><br/><br/><br/>]]></content:encoded>
+      
+      
+      
+      
+      <comments>https://blog.liluhui.cn/2025/12/02/202511/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>从 GPT-5 Unified 系统设计中学到的工程精髓</title>
@@ -460,28 +479,6 @@
       
       
       <comments>https://blog.liluhui.cn/2025/09/19/Agent-Memory-Five-Layer-Model-and-Engineering-Implementation/#disqus_thread</comments>
-      
-    </item>
-    
-    <item>
-      <title>🌅 22 个顶级 Agent 工作流框架整理</title>
-      <link>https://blog.liluhui.cn/2025/09/12/22-top-level-Agent-workflow-frameworks-organized/</link>
-      <guid>https://blog.liluhui.cn/2025/09/12/22-top-level-Agent-workflow-frameworks-organized/</guid>
-      <pubDate>Fri, 12 Sep 2025 01:56:16 GMT</pubDate>
-      
-        
-        
-      <description>&lt;p&gt;最近在做一个新的独立开发产品，核心功能里涉及到 多智能体协作。&lt;br&gt;在调研阶段，我发现相关框架和工具特别多：有的强调团队角色分工，有的走可视化无代码路线，还有的专注研究“涌现行为”。&lt;br&gt;于是我干脆整理了一份 Agent 框架全景图，按时间和特点做了分类。&lt;br&gt;如果要</description>
-        
-      
-      
-      
-      <content:encoded><![CDATA[<p>最近在做一个新的独立开发产品，核心功能里涉及到 多智能体协作。<br>在调研阶段，我发现相关框架和工具特别多：有的强调团队角色分工，有的走可视化无代码路线，还有的专注研究“涌现行为”。<br>于是我干脆整理了一份 Agent 框架全景图，按时间和特点做了分类。<br>如果要做 B2B&#x2F;B2C 的 Agent 产品，可以判断该走 可视化无代码（Flowise、n8n）、多角色分工（Meta-GPT、ChatDev）、还是 通用框架（AutoGen、Agno、CrewAI）路线。<br>结合框架生态热度（Star 数、厂商背景）做市场判断，避免选型踩坑。</p><br/><p><a href="https://github.com/agentuniverse-ai/agentUniverse">AgentUniverse</a>（2023，开源 1.6k⭐）：支持多智能体协作，具备完整的规划、工具使用和内存管理能力，部署以本地为主，角色定义包括 PEER、DOE 等。<br><a href="https://github.com/OpenBMB/AgentVerse">Agentverse</a>（2023，开源 4.7k⭐）：聚焦多智能体协同与涌现行为，角色涵盖专家、决策者等，采用基于阶段的控制流架构，支持跨平台部署。<br><a href="https://github.com/agno-agi/agno">Agno</a>（2024，开源 32.5k⭐）：轻量级多模态智能体框架，支持 “团队模式” 的多智能体协作，采用混合流（数据 + 控制）架构，基于 Python 实现工具调用。<br><a href="https://github.com/microsoft/autogen">AutoGen</a>（2023，开源 49.2k⭐）：以多智能体对话为核心，角色包括指挥官、工作者、评论家等，采用控制流架构和 DAG（有向无环图）表示，支持代码执行和人机协作。<br><a href="https://github.com/camel-ai/camel">CAMEL</a>（2023，开源 14.2⭐）：专注于智能体间 “心智探索” 的协作，角色分为规划者、执行者等，基于 MCP 协议通信，支持模块化任务分解。<br><a href="https://github.com/OpenBMB/ChatDev">ChatDev</a>（2023，开源 27.4k⭐）：模拟软件开发团队协作，角色包括 CEO、CTO、程序员等，采用类 DAG 的控制流，侧重代码生成与调试。<br><a href="https://github.com/coze-dev/coze-studio">Coze</a>（2024，开源 16.7k⭐）：支持对话式智能体工作流，角色以会话型为主，采用节点式表示和 API 协议，可部署于 Web、移动端等多平台。<br><a href="https://github.com/crewAIInc/crewAI">CrewAI</a>（2024，开源 38k⭐）：强调角色化协作（规划者、团队成员），基于 Python DSL 定义流程，采用控制流架构和任务规划图，支持多 LLM 集成。<br><a href="https://openai.com/index/introducing-deep-research/">DeepResearch</a>（2025，闭源）：聚焦协作推理任务，角色包括搜索者、分析者等，依赖 OpenAI 生态，支持部分自我反思能力。<br><a href="https://github.com/langgenius/dify">Dify</a>（2023，开源 114k⭐）：以提示链为核心的单智能体框架，采用控制流和 JSON 配置，支持函数调用，部署方式包括 SaaS 和本地。<br><a href="https://github.com/stanfordnlp/dspy">DSPy</a>（2023，开源 28.1k⭐）：通过声明式语言定义工作流，角色涵盖规划者、检索者等，采用混合流架构，支持模块化图表示。<br><a href="https://github.com/PaddlePaddle/ERNIE-SDK">ERNIE-SDK</a>（2024，开源 370⭐）：百度推出的智能体框架，角色设计较隐式，采用流程图表示，支持多模态交互和本地部署。<br><a href="https://github.com/FlowiseAI/Flowise">Flowise</a>（2023，开源 43.5k⭐）：基于 LangChain 的可视化工具，以数据流为核心，采用 DAG 表示，适合无代码构建工作流。<br><a href="https://github.com/langchain-ai/langgraph">LangGraph</a>（2023，开源 18.5k⭐）：LangChain 生态的扩展，以节点为单位定义智能体角色，采用 DAG 和状态共享机制，支持复杂循环与条件路由。<br><a href="https://github.com/microsoft/autogen/tree/main/python/packages/autogen-magentic-one">Magnetic-One</a>（2024，开源 49.7k⭐）：多智能体通用框架，角色包括编排者、编码者等，基于 AutoGen 对话协议，采用 DAG 架构。<br><a href="https://github.com/FoundationAgents/MetaGPT">Meta-GPT</a>（2023，开源 58.4k⭐）：模拟软件开发的元编程框架，角色包括产品经理、工程师等，采用类定义的控制流，支持命令行部署。<br><a href="https://github.com/n8n-io/n8n">n8n</a>（2019，开源 137k⭐）：非 LLM 驱动的工作流自动化工具，按节点定义功能，支持 Webhook、REST 等协议，部署灵活（云、本地）。<br><a href="https://github.com/om-ai-lab/OmAgent">OmAgent</a>（2024，开源 2.5k⭐）：专注视频理解的多模态框架，角色包括规划者、检索者等，采用文本计划表示，适用于特定系统集成。<br><a href="https://github.com/openai/swarm">OpenAI Swarm</a>（2024，开源 20.4k⭐）：OpenAI 推出的多智能体框架，角色包括工作者、路由器，采用封装式表示，支持 Python&#x2F;YAML 配置。<br><a href="https://github.com/QwenLM/Qwen-Agent">Qwen-agent</a>（2024，开源 11.4k⭐）：阿里推出的智能体框架，支持自定义角色，基于 MCP 协议，采用代码驱动的控制流，部署灵活。<br><a href="https://github.com/facebook/react">ReAct</a>（2022，开源 239k⭐）：早期提示框架，无明确角色划分，以 “推理 - 行动” 循环为核心，是现代智能体工作流的基础。<br><a href="https://github.com/microsoft/semantic-kernel">Semantic Kernel</a>（2023，开源 26.1k⭐）：微软推出的 SDK，角色设计隐式，采用 DAG 表示和函数调用协议，支持多语言与跨平台部署。</p><br/><p>🤔 如果让你来选，你更倾向哪一类路线？</p><ul><li>无代码可视化</li><li>多角色团队协作</li><li>通用框架</li><li>厂商生态</li></ul><p>👇评论留言 </p><br/><br/><br/><br/><br/>]]></content:encoded>
-      
-      
-      
-      
-      <comments>https://blog.liluhui.cn/2025/09/12/22-top-level-Agent-workflow-frameworks-organized/#disqus_thread</comments>
       
     </item>
     
