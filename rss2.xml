@@ -3,12 +3,12 @@
   xmlns:atom="http://www.w3.org/2005/Atom"
   xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>信息展示</title>
+    <title>Luhui&#39;s Personal Website</title>
     <link>https://blog.liluhui.cn/</link>
     
     <image>
       <url>https://blog.liluhui.cn/asset/img/logo-green.ico</url>
-      <title>信息展示</title>
+      <title>Luhui&#39;s Personal Website</title>
       <link>https://blog.liluhui.cn/</link>
     </image>
     
