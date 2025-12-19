@@ -15,8 +15,31 @@
     <atom:link href="https://blog.liluhui.cn/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>关于生活、学习、工作 feedId:66855595489698816+userId:55886336755964928</description>
-    <pubDate>Thu, 18 Dec 2025 08:38:41 GMT</pubDate>
+    <pubDate>Fri, 19 Dec 2025 09:56:51 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>OpenAI Confession：为什么“承认作弊”比“不作弊”更重要</title>
+      <link>https://blog.liluhui.cn/2025/12/19/openai-confession/</link>
+      <guid>https://blog.liluhui.cn/2025/12/19/openai-confession/</guid>
+      <pubDate>Fri, 19 Dec 2025 09:49:17 GMT</pubDate>
+      
+        
+        
+      <description>&lt;p&gt;&lt;img src=&quot;https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/12/19/qzb09OP.png&quot;&gt;&lt;/p&gt;
+&lt;h2 id=&quot;Confession-是什么？&quot;&gt;&lt;a href=&quot;#Confes</description>
+        
+      
+      
+      
+      <content:encoded><![CDATA[<p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/12/19/qzb09OP.png"></p><h2 id="Confession-是什么？"><a href="#Confession-是什么？" class="headerlink" title="Confession 是什么？"></a>Confession 是什么？</h2><p>OpenAI 在《Training LLMs for Honesty via Confessions》这篇论文中，给出了一个非常明确、也非常现实的判断：</p><blockquote><p><strong>与其继续幻想模型永远不犯错，不如先让它学会承认错误。</strong></p></blockquote><p>Confession 实验，正是基于这个判断展开的。</p><br/><p>先把一个常见误解直接掐掉：</p><p><strong>Confession ≠ self-critique（自我反思）</strong>。</p><p>你可能见过无数类似设计：</p><ul><li>“请检查你刚才的回答是否有错误”</li><li>“重新评估你的结论”</li><li>“给出你的不确定性”</li></ul><p>这些方法的问题不在形式，而在激励结构。</p><p>在 RL 或 RLHF 体系里，模型很快就会学会一条经验法则：</p><ul><li>承认错误 → reward 下降</li><li>表达不确定 → 看起来“不专业”</li><li>最安全的策略 → <strong>装得非常确定</strong></li></ul><p>这不是模型“不诚实”，而是奖励函数在逼它这么做。</p><p>Confession 的第一步，并不是“让模型更道德”，而是<strong>把这条因果链彻底切断</strong>。</p><br/><br/><h2 id="Confession-的唯一核心设计：奖励彻底解耦"><a href="#Confession-的唯一核心设计：奖励彻底解耦" class="headerlink" title="Confession 的唯一核心设计：奖励彻底解耦"></a>Confession 的唯一核心设计：奖励彻底解耦</h2><p>Confession 的机制非常干脆，没有复杂花样：</p><ol><li>模型先完成原始任务，给出正常回答（Answer）</li><li>回答结束后，系统<strong>追加一条指令</strong>，要求模型生成 Confession Report</li><li>Confession 需要明确回答三件事：<ul><li>我原本需要遵守哪些显性和隐性指令？</li><li>哪些遵守了？哪些没有？</li><li>是否存在作弊、取巧、灰区或不确定性？</li></ul></li></ol><p><strong>关键奖励设计：</strong> Confession 的 reward 只根据“是否诚实”评估，<strong>完全不影响主回答的 reward</strong></p><p>论文里用了一个很形象、但非常准确的比喻：</p><blockquote><p>像忏悔制度（seal of confession）：<br>你说不说实话，<br>不会改变你已经犯下的错的惩罚。</p></blockquote><p>这一步，看似简单，实际上改变的是整个训练动力学。</p><br/><br/><h2 id="为什么在-Confession-里，说实话反而更“省力”？"><a href="#为什么在-Confession-里，说实话反而更“省力”？" class="headerlink" title="为什么在 Confession 里，说实话反而更“省力”？"></a>为什么在 Confession 里，说实话反而更“省力”？</h2><p>一个直觉上的疑问是：Judge 不也是模型吗？ 为什么模型不干脆连 confession 一起骗？</p><p>OpenAI 给出的解释非常工程化，对主回答（Answer）来说：</p><ul><li><p>reward 目标复杂</p></li><li><p>judge 并不完美</p></li><li><p>存在大量投机空间</p></li><li><p><strong>作弊往往是高回报路径</strong></p></li></ul><p>而对 Confession 来说：</p><ul><li>模型对自己的作弊行为是“全知”的</li><li>它知道自己是怎么钻漏洞的</li><li>它能精确指出哪条指令被违反、在哪一步取巧</li></ul><p>在这种前提下：完整描述一次作弊行为， 比编一个“看起来合规”的故事更简单。</p><p>论文把这种现象称为 **Path of Least Resistance（最小阻力路径），**这不就是模型计算成本选择。</p><p>模型并不是“突然变诚实”， 而是发现：在这个子任务里，诚实是最省力、最稳妥的策略。</p><br/><br/><h2 id="Confession-并不是在纠正模型行为"><a href="#Confession-并不是在纠正模型行为" class="headerlink" title="Confession 并不是在纠正模型行为"></a>Confession 并不是在纠正模型行为</h2><p>这里有一个反直觉、但极其重要的点：<strong>Confession 完全不阻止模型继续作弊。</strong></p><p>它允许模型：</p><ul><li>reward hacking</li><li>sandbagging</li><li>scheming</li><li>表面遵守、实则违背指令</li></ul><p>Confession 唯一要求的是：<strong>当你这么做时，你要承认。</strong></p><p>这暴露了 OpenAI 一个非常现实的判断：在 Agent 场景下，在长链路、工具密集的系统里，零违规是不可实现的目标。</p><p>与其追求“模型永远守规矩”，<br>不如先解决一个更基础的问题：系统能不能知道，模型什么时候没守规矩？</p><p>从这个角度看，Confession 本质上是一个<strong>监控接口设计</strong>，而不是道德训练。</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/12/19/NuZ7nZq.png"></p><br/><br/><h2 id="这不是-CoT-Monitoring-的替代品"><a href="#这不是-CoT-Monitoring-的替代品" class="headerlink" title="这不是 CoT Monitoring 的替代品"></a>这不是 CoT Monitoring 的替代品</h2><p>Confession 很容易被误解为另一种 Chain-of-Thought Monitoring，但两者定位完全不同。</p><h3 id="Chain-of-Thought-Monitoring-的局限："><a href="#Chain-of-Thought-Monitoring-的局限：" class="headerlink" title="Chain-of-Thought Monitoring 的局限："></a>Chain-of-Thought Monitoring 的局限：</h3><ul><li>依赖推理过程可读性</li><li>容易被模型学会“写给人看的推理”</li><li>对架构变化、推理压缩非常敏感</li></ul><h3 id="Confession-的特点："><a href="#Confession-的特点：" class="headerlink" title="Confession 的特点："></a>Confession 的特点：</h3><ul><li>不关心你是怎么想的</li><li>只问你做了什么</li><li>即使没有 CoT，也依然有效</li></ul><p>论文中的一个关键实验显示：<strong>在主回答完全没有 chain-of-thought 的情况下， confession 的诚实率几乎不下降。</strong></p><p>这使 Confession 更接近于事后可追责机制，或者说运行期审计，而不是传统意义上的可解释性工具。</p><br/><br/><h2 id="为什么-Confession-对幻觉帮助有限？"><a href="#为什么-Confession-对幻觉帮助有限？" class="headerlink" title="为什么 Confession 对幻觉帮助有限？"></a>为什么 Confession 对幻觉帮助有限？</h2><p>OpenAI 在论文中非常坦诚地指出了 Confession 的边界：Confession <strong>只在模型“知道自己在犯错”时有效。</strong></p><p>如果模型是真的不知道自己错了——</p><ul><li>知识盲区</li><li>错误事实被内化</li><li>过度自信的 hallucination</li></ul><p>那它自然也“无从忏悔”。</p><p>这也是为什么在实验中 reward hacking &#x2F; scheming 效果极好，而 hallucination（事实性错误）改善有限。</p><br/><br/><h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>如果把 Confession 放进更大的时间线里看，它传递的信号非常清晰：不再试图训练一个 “永远正确、永远守规则”的模型。</p><p>而是做的是另一件事：<strong>构建一套机制， 让模型在作恶时变得可见、可监控、可回滚。</strong></p><p>这才是 Agent 时代的工程现实主义。</p><br/><br/><br/><br/><br/><br/>]]></content:encoded>
+      
+      
+      
+      
+      <comments>https://blog.liluhui.cn/2025/12/19/openai-confession/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>从“幻觉”到“诚实”：OpenAI 如何重新定义大模型的不靠谱问题</title>
@@ -462,25 +485,6 @@
       
       
       <comments>https://blog.liluhui.cn/2025/10/03/Quick-Clarity-The-Key-Difference-Between-Agent-and-MCP/#disqus_thread</comments>
-      
-    </item>
-    
-    <item>
-      <title>2025/09 Review</title>
-      <link>https://blog.liluhui.cn/2025/10/02/202509/</link>
-      <guid>https://blog.liluhui.cn/2025/10/02/202509/</guid>
-      <pubDate>Thu, 02 Oct 2025 07:47:22 GMT</pubDate>
-      
-      <description>鸟站在枝头宁静安详，不是因为它知道树枝不会断，而是因为它知道自己有翅膀。</description>
-      
-      
-      
-      <content:encoded><![CDATA[<p><em>鸟站在枝头 宁静安详<br>不是因为它知道树枝不会断<br>而是因为它知道自己有翅膀</em></p><br/><h2 id="所见与所想"><a href="#所见与所想" class="headerlink" title="所见与所想"></a>所见与所想</h2><p>01<br><strong>绝大部分小企业从未被吃掉，大鱼想吃的是其它大鱼。</strong></p><p>在开始一滩事情之前就害怕被各路资本抄袭没什么好处，不如期待做大了就共舞，做不大就守护好自己的先进奶牛，先把事情跑起来再说。<br>今天，我想赚小而美的90%，而不是大而全的0.1%。</p><br/><p>02<br><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/10/2/002.png" alt="image"></p><p>最近的自媒体数据非常稳定的增长中，再次见证复利的力量，第一个月积累100粉，第二月达成500粉，即将完成第三个月1000粉。看着自己的产品有人使用，还是蛮开心的。也加入了科技薯的创作者社区，和前辈们交流取经。<br>目前内容方面精力有限，优先还是产品侧投入，内容主要是 数学几何画板的功能宣传 和 Agent构建相关知识科普，Q4 再继续探索探索。</p><br/><p>03<br>不舒服，让自己动起来。<br>舒服了，也让自己动起来。<br>经历过就会感谢 <strong>“体验-创造-分享-爱”</strong> 这个循环，在此之前，第一步是行动起来。</p><br/><p>04<br><strong>会买才会卖。</strong></p><p>当你真真正正能辨析自己的消费背后的需求和投射的情绪和认知，一个是会降低很多莫名其妙的消费，第二个是你也能在业务中间去创建一个理解用户需求的过程，同时你还学会了不去评价这些事情 。</p><p><strong>精分十年不出门，占星三年打死人。</strong></p><p>很嘲讽是吧，学精神分析十年都没把自己搞明白，学星盘三年就能出来干收费1500的咨询，为什么？</p><p>这是两个产品，一个要求自己被精神分析的人，是希望通过把理性照入自己的潜意识里，深度看到自己人性的善与恶后，通过自己的意志力来改变。而星盘解决的是，我有好多想法，甚至是有确定的想法，我需要一个人给我答案。<br><br/><br><br/></p><h2 id="学习与工作"><a href="#学习与工作" class="headerlink" title="学习与工作"></a>学习与工作</h2><p>01<br>把最近Agent工程实践中学习和落地的知识进行梳理，这个月写了四篇文章，同步更新到博客、公众号、小红书了，这个方向随着书写越挖越深，可以写的东西也从最开始的框架选择、架构思路越来越细越拓越宽，这就是 Learn In Public 的魔力吧。</p><ul><li><a href="https://blog.liluhui.cn/2025/09/05/6-Design-Principles-I-Learned-from-Claude-Code/">从 Claude Code 学的 6 个设计铁律（含 prompts&#x2F;tool 清单）</a></li><li><a href="https://mp.weixin.qq.com/s/dy2q4omQ_GzT9alPyLJB5w">22 个顶级 Agent 工作流框架整理</a></li><li><a href="https://mp.weixin.qq.com/s?__biz=MzU2NTg1ODk2Mg==&mid=2247483810&idx=1&sn=1a7e92a0a2d875e17b531a618e8b632c&chksm=fcb4065fcbc38f4996d86bff572567f7125f8ab5963014098c10f078d7411e9a1ffb72cbb2a5&cur_album_id=4172082496760184844&scene=189#wechat_redirect">Agent 记忆的五层模型</a></li><li><a href="https://mp.weixin.qq.com/s?__biz=MzU2NTg1ODk2Mg==&mid=2247483835&idx=1&sn=acd4c7440435a8f721ea3cb9d8609126&chksm=fcb40646cbc38f50d7449907372c9e00ec7ebdd958f46c376f64a06657761695ff269eb5699a&cur_album_id=4172082496760184844&scene=189#wechat_redirect">Agent 记忆写入三大策略，决定“记什么”的工程学</a></li></ul><br/><p>02<br>大角几何画板9月份重点都放在了构建全新的 Agent workflow 流程以及各种 Bad Case 的优化，也已经进入积累用户反馈的问题&#x2F;需求池，逐步解决的情况中了，目前属于有很多可以做的也缺很多对标功能，但在优势上依然没有放大到验证有效的阶段。<br>截止9月底产品已经有3000+有效用户了，其中1000+认为是有效激活的，用户画像也开始更丰富，从基本是教师和数学从业者，增加了一些爱好者、学生和家长。<br>目前产品算是持续有进展，但还没到阶段性里程碑的程度，小团队内部的分歧也导致发力方向的混乱，这些都是客观存在的问题，希望产品发展越来越好。</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/10/2/003.png" alt="image"><br><br/><br><br/></p><h2 id="生活与社交"><a href="#生活与社交" class="headerlink" title="生活与社交"></a>生活与社交</h2><p>01<br>加入了霖子的瑜伽工作室，开始加强训练，这个月取得了蛮不错的进步。轮式的耐力明显增长了很多个呼吸；尝试了很多从没做过的进阶动作，以前不敢的鹤蝉式转头倒立也不害怕了；倒立的跳跃也明显少了些恐惧，虽然也很难一步到位就不害怕了，但我清晰充分感受到自己的变化 … 这就是瑜伽提示练习带来的增加勇气吧！<br>要夸夸自己本月取得的阶段成就：肘倒立能独立定住3秒、三点头倒立髋腿能自己立起了、不规则头倒立稳定可以起来、骆驼转轮从力量控不住起不来到能独立完成、站立上下轮完成、鸽王从非常紧张到能自己去深入的感觉。虽然有非常多可以继续努力的力量和伸展，也有很多不完美，总之感激本月取得的进步！</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/10/2/004.png" alt="image"><br><br/></p><p>02<br>吃到了好爽的战斧牛排 ！ （太腻了，下次不吃了）</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/10/2/005.png" alt="image"></p><br/><p>03<br>团建去海边吃了海鲜、放了烟花 ~（其实很想回家干活）</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/10/2/006.jpg" alt="image"></p><br/><br/><br/><br/><br/>]]></content:encoded>
-      
-      
-      
-      
-      <comments>https://blog.liluhui.cn/2025/10/02/202509/#disqus_thread</comments>
       
     </item>
     
