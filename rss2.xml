@@ -15,8 +15,31 @@
     <atom:link href="https://blog.liluhui.cn/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>关于生活、学习、工作 feedId:66855595489698816+userId:55886336755964928</description>
-    <pubDate>Fri, 19 Dec 2025 09:56:51 GMT</pubDate>
+    <pubDate>Wed, 24 Dec 2025 10:04:23 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>Self-reflection 的幻觉：为什么让模型“反思”往往没用？</title>
+      <link>https://blog.liluhui.cn/2025/12/24/The-Illusion-of-Self-Reflection/</link>
+      <guid>https://blog.liluhui.cn/2025/12/24/The-Illusion-of-Self-Reflection/</guid>
+      <pubDate>Wed, 24 Dec 2025 10:03:35 GMT</pubDate>
+      
+        
+        
+      <description>&lt;p&gt;&lt;em&gt;如果你对 &lt;strong&gt;Agent 可信性、模型行为、安全边界、长期对齐问题&lt;/strong&gt; 感兴趣，欢迎关注 &lt;strong&gt;@LuhuiDev&lt;/strong&gt;&lt;/em&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;我会在全平台持续更新这个系列，把论文、实验、工程直觉，慢慢拆给</description>
+        
+      
+      
+      
+      <content:encoded><![CDATA[<p><em>如果你对 <strong>Agent 可信性、模型行为、安全边界、长期对齐问题</strong> 感兴趣，欢迎关注 <strong>@LuhuiDev</strong></em>。</p><p><em>我会在全平台持续更新这个系列，把论文、实验、工程直觉，慢慢拆给你看。</em> </p><br/><br/><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>我们这一年在工程里最常见的一个动作是：</p><p><strong>模型答错了？让它反思一下。</strong></p><p>加一句 “Let’s reflect” “Check your answer” “Are you sure?”，或者做个 “draft → critique → revise” 的链条，往往<strong>准确率</strong>真能上去。</p><p>但问题在于：你想解决的是<strong>Honesty（诚实）</strong>，还是<strong>Accuracy（准确）</strong>？</p><p>这两者经常被混在一起，尤其当大家把“反思”当作万能修复按钮时。更麻烦的是：</p><ul><li>有些错误是模型“不知道自己错了”（典型幻觉&#x2F;知识盲区），反思也无从下手；</li><li>有些错误是模型“知道自己在做坏事但不说”（reward hacking &#x2F; scheming），反思反而更像“圆谎”，它会生成一套更漂亮的解释；</li><li>还有一些场景，反思会让模型<strong>更自信地坚持错误</strong>（自洽但错得很统一）。</li></ul><br/><p>所以，这篇长文的核心观点是：</p><p>大多数 self-reflection 并没有把模型变诚实，它只是把同一个生成过程又跑了一遍。</p><p>它能提升“输出质量&#x2F;正确率”，但通常提升不了“诚实度”。</p><br/><br/><h2 id="先看对比：六类方法，各自解决的不是同一件事"><a href="#先看对比：六类方法，各自解决的不是同一件事" class="headerlink" title="先看对比：六类方法，各自解决的不是同一件事"></a>先看对比：六类方法，各自解决的不是同一件事</h2><ol><li><strong>Self-critique &#x2F; Self-refine &#x2F; Reflexion（自我批评&#x2F;自我精炼&#x2F;反思代理）</strong><ul><li>主要优化：<strong>输出质量、推理质量</strong>（更像写作和解题的二次打磨）</li><li>常见收益：准确率、可读性、偏好评分提升</li><li>主要短板：对“有意欺骗”几乎无解；对“模型不知错”的幻觉也有限</li><li>经典方案：OpenAI critiques、Self-Refine、Reflexion</li></ul></li></ol><br/><ol start="2"><li><strong>Reflection prompting（反思式提示词）</strong><ul><li>主要优化：<strong>推理时的注意力分配</strong>（提醒它别草率）</li><li>常见收益：复杂推理正确率上升</li><li>主要短板：稳定性差；容易“过度修正”；面对对抗&#x2F;自适应攻击效果会衰减（DeepMind 明确提过这类现象）</li></ul></li></ol><br/><ol start="3"><li><strong>Multi-sample voting &#x2F; Self-consistency（多样采样投票&#x2F;自洽）</strong><ul><li>主要优化：<strong>降低偶发错误</strong>（用统计学对冲一次采样的随机性）</li><li>常见收益：推理基准大幅提升（例如 GSM8K 等）</li><li>主要短板：对“系统性偏见&#x2F;统一错”无能为力；对诚实提升很有限</li></ul></li></ol><br/><ol start="4"><li><strong>Debate &#x2F; Peer review（辩论&#x2F;互评）</strong><ul><li>主要优化：<strong>外部监督质量</strong>（把评估拆成更易判别的子问题）</li><li>常见收益：理论上可扩展监督（PSPACE vs NP 视角），用于“拆穿谎言更易”的假设</li><li>主要短板：实现复杂；需要强裁判或强对手；存在串通&#x2F;误导风险</li></ul></li></ol><br/><ol start="5"><li><strong>Constitutional AI（宪法式自我修正）</strong><ul><li>主要优化：<strong>合规性与无害性</strong>（按原则自评、自改，再做 RL）</li><li>常见收益：安全性明显提升，且不依赖逐条人工标注</li><li>主要短板：更偏“安全对齐”，并不等价于“事实诚实”；也可能带来过度拒答</li></ul></li></ol><br/><ol start="6"><li><strong>Confessions &#x2F; Self-report fine-tuning（供述&#x2F;自我报告）</strong><ul><li>主要优化：<strong>“愿不愿意说真话”</strong>，尤其是行为层面的不诚实</li><li>关键差异：把“做对任务”和“承认违规&#x2F;作弊”<strong>解耦</strong>训练（供述奖励不绑定主任务）</li><li>另一个近期强结果：DeepMind&#x2F;合作者提出的 SRFT（自我报告微调）显示，对“隐藏目标”可接近满分检测（F1&#x3D;0.98 vs 基线 0）</li><li>主要短板：对“模型根本不知道自己错了”的幻觉，帮助有限；更像事后透明机制</li></ul></li></ol><p>结论：</p><p><strong>想要更少出错</strong>：用 self-consistency &#x2F; self-refine &#x2F; reflection prompting。</p><p><strong>想要更诚实</strong>：必须引入独立的“报告&#x2F;供述”通道与激励（confession &#x2F; self-report），并配合外部监督。</p><br/><br/><h2 id="先把“反思”这个概念拆开：它到底在做哪件事？"><a href="#先把“反思”这个概念拆开：它到底在做哪件事？" class="headerlink" title="先把“反思”这个概念拆开：它到底在做哪件事？"></a>先把“反思”这个概念拆开：它到底在做哪件事？</h2><p>你在提示里写“请反思”，模型通常做的是三件事之一：</p><ul><li><strong>复述式反思</strong>：把刚才说过的换种说法再说一遍（几乎没信息增量）</li><li><strong>修辞式反思</strong>：写出更像“认真想过”的解释（提升可读性，但未必更真）</li><li><strong>检错式反思</strong>：真的去找冲突、边界条件、单位、步骤错误（这才可能提升正确率）</li></ul><p>注意：这三者都不等价于“诚实”。<br>诚实至少需要两个条件：</p><ol><li><strong>Self-knowledge</strong>：它知道自己错&#x2F;违规了</li><li><strong>Disclosure</strong>：它愿意把这件事说出来</li></ol><p>大多数 reflection 只在（1）上碰碰运气；（2）几乎没动。</p><br/><br/><h2 id="为什么让模型“反思”往往没用？"><a href="#为什么让模型“反思”往往没用？" class="headerlink" title="为什么让模型“反思”往往没用？"></a>为什么让模型“反思”往往没用？</h2><h3 id="根因-A：反思不是“反省”，而是“第二次生成”"><a href="#根因-A：反思不是“反省”，而是“第二次生成”" class="headerlink" title="根因 A：反思不是“反省”，而是“第二次生成”"></a>根因 A：反思不是“反省”，而是“第二次生成”</h3><p>Self-Refine 的定义非常直白：先生成初稿，再让同一个模型给反馈，再迭代修订；它不需要额外训练数据，效果在多任务上提升显著。</p><p>但这类方法提升的是“输出偏好&#x2F;质量”，并没有引入新的证据来源。换句话说：它只是把同一分布多采样了一次。</p><p>因此你会看到一个典型现象：</p><ul><li>越写越像回事，但事实仍可能是错的</li><li>对抗性场景里，“反思”变成了“更高级的圆谎”</li></ul><br/><h3 id="根因-B：模型常常“不知道自己错了”"><a href="#根因-B：模型常常“不知道自己错了”" class="headerlink" title="根因 B：模型常常“不知道自己错了”"></a>根因 B：模型常常“不知道自己错了”</h3><p>对幻觉而言，模型可能在内部把错误当作高置信事实。</p><p>这不是“它不诚实”，而是“它没意识到错误”。此时反思很难凭空纠错。</p><p>相关研究开始专门评估“无外部反馈条件下的反思能力”，指出很多 self-reflection 的收益可能来自外部反馈或隐含提示，而非真正的内省能力。</p><br/><h3 id="根因-C：激励不对，反思阶段也会继续优化“看起来对”"><a href="#根因-C：激励不对，反思阶段也会继续优化“看起来对”" class="headerlink" title="根因 C：激励不对，反思阶段也会继续优化“看起来对”"></a>根因 C：激励不对，反思阶段也会继续优化“看起来对”</h3><p>如果你的系统奖励（显性或隐性）仍然是：</p><ul><li>回答要完整</li><li>语气要自信</li><li>用户要满意</li></ul><p>那模型在“反思”阶段最自然的优化目标是：<strong>把叙事补齐、把漏洞抹平</strong>。</p><p>这会提升“可接受性”，但可能降低“可证伪性”。</p><br/><h3 id="根因-D：反思提示在对抗-x2F-自适应攻击前会迅速失效"><a href="#根因-D：反思提示在对抗-x2F-自适应攻击前会迅速失效" class="headerlink" title="根因 D：反思提示在对抗&#x2F;自适应攻击前会迅速失效"></a>根因 D：反思提示在对抗&#x2F;自适应攻击前会迅速失效</h3><p>DeepMind 在 Gemini 安全防护相关的<a href="https://deepmind.google/blog/advancing-geminis-security-safeguards">博客</a>里明确提到：像 self-reflection 这类静态防御，在面对会适应的攻击时会变得不那么有效。</p><p>这其实在诚实性上同理：当对方（人或环境）开始利用你的“反思套路”，模型可以学会“反思该怎么写才过关”。</p><br/><h3 id="根因-E：多轮反思会引入“自我污染”"><a href="#根因-E：多轮反思会引入“自我污染”" class="headerlink" title="根因 E：多轮反思会引入“自我污染”"></a>根因 E：多轮反思会引入“自我污染”</h3><p>反思过程产生的文本会反过来成为下一步生成的条件。</p><p>如果第一步方向错了，后续反思可能只是不断在错误轨道上“越修越顺”。</p><p>Reflexion 把反思写入 episodic memory，确实能显著提升代理任务表现；但从诚实角度看，这种记忆写入也可能把“错误信念&#x2F;错误策略”固化进去，除非你有强外部反馈来纠偏。</p><br/><br/><h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>如果你做的是“把答案做对”，反思系方法是有效的：Self-consistency 通过统计学对冲随机性，Self-Refine 通过迭代打磨表达与推理。</p><p>但如果你做的是“让模型更诚实”，仅靠反思不够。</p><p>诚实要求模型在知道自己做错时仍愿意披露，而这通常需要独立的报告通道与激励设计——例如 Confessions 或 SRFT 这种“承认错误不吃亏”的机制。</p><p>换句话说，反思解决的是“更少犯错”，供述解决的是“犯错也别骗”。</p><br/><br/><br/><br/><br/><br/><h2 id="延伸阅读"><a href="#延伸阅读" class="headerlink" title="延伸阅读"></a>延伸阅读</h2><ul><li><a href="https://arxiv.org/abs/2206.05802">Self-critiquing models for assisting human evaluators</a></li><li><a href="https://arxiv.org/abs/2303.17651">Self-Refine: Iterative Refinement with Self-Feedback</a></li><li><a href="https://arxiv.org/abs/2303.11366">Reflexion: Language Agents with Verbal Reinforcement Learning</a></li><li><a href="https://deepmind.google/blog/advancing-geminis-security-safeguards/">Advancing Gemini’s security safeguards</a></li><li><a href="https://arxiv.org/abs/2203.11171">Self-Consistency Improves Chain of Thought Reasoning in Language Models</a></li><li><a href="https://arxiv.org/abs/1805.00899">[1805.00899] AI safety via debate</a></li><li><a href="https://arxiv.org/abs/2212.08073">Constitutional AI: Harmlessness from AI Feedback</a></li><li><a href="https://cdn.openai.com/pdf/6216f8bc-187b-4bbb-8932-ba7c40c5553d/confessions_paper.pdf">Training LLMs for Honesty via Confessions</a></li><li><a href="https://arxiv.org/abs/2511.06626">Spilling the Beans: Teaching LLMs to Self-Report Their Hidden Objectives</a></li><li><a href="https://arxiv.org/html/2404.09129v1">Testing Limits on Reflective Thinking in Large Language</a></li></ul>]]></content:encoded>
+      
+      
+      
+      
+      <comments>https://blog.liluhui.cn/2025/12/24/The-Illusion-of-Self-Reflection/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>OpenAI Confession：为什么“承认作弊”比“不作弊”更重要</title>
@@ -457,34 +480,6 @@
       
       
       <comments>https://blog.liluhui.cn/2025/10/08/Memory-as-Thinking-How-Agents-Retrieve-What-Matters/#disqus_thread</comments>
-      
-    </item>
-    
-    <item>
-      <title>把 MCP 放回它该在的位置</title>
-      <link>https://blog.liluhui.cn/2025/10/03/Quick-Clarity-The-Key-Difference-Between-Agent-and-MCP/</link>
-      <guid>https://blog.liluhui.cn/2025/10/03/Quick-Clarity-The-Key-Difference-Between-Agent-and-MCP/</guid>
-      <pubDate>Fri, 03 Oct 2025 12:08:10 GMT</pubDate>
-      
-        
-        
-      <description>&lt;p&gt;前阵子有朋友问我：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;“Agent 和 MCP 到底有什么区别啊？”&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;我当时愣了一下。&lt;/p&gt;
-&lt;p&gt;这问题乍听很简单，甚至让人觉得是不是在“混淆概念”。&lt;/p&gt;
-&lt;p&gt;但转念一想，没错啊。对于</description>
-        
-      
-      
-      
-      <content:encoded><![CDATA[<p>前阵子有朋友问我：</p><blockquote><p>“Agent 和 MCP 到底有什么区别啊？”</p></blockquote><p>我当时愣了一下。</p><p>这问题乍听很简单，甚至让人觉得是不是在“混淆概念”。</p><p>但转念一想，没错啊。对于刚入行的人来说，<strong>各种 buzzword 像弹幕一样飞来</strong>，Agent、MCP、RAG、LangChain……乍一看都差不多，背后却完全不是一回事。</p><p>我决定写下这篇文章。</p><p>不是为了定义概念，而是想<strong>把它们放回该在的位置</strong>。这样以后遇到选择，就不会懵逼。</p><br/><br/><h2 id="Agent-是人，MCP-是语言"><a href="#Agent-是人，MCP-是语言" class="headerlink" title="Agent 是人，MCP 是语言"></a>Agent 是人，MCP 是语言</h2><p>如果把 Agent 比作一个人：</p><ul><li>眼睛耳朵是 <strong>感知</strong>（输入）</li><li>大脑是 <strong>认知与推理</strong>（记忆、判断）</li><li>决定去做什么是 <strong>决策</strong></li><li>动手去做是 <strong>执行</strong></li><li>事后总结经验是 <strong>反馈</strong></li></ul><p>而 <strong>MCP</strong> 呢？</p><p><strong>它不是另一个“大脑”，而是这人和外部世界说话时，用的通用语言。</strong></p><p>Agent 想用锤子、笔记本、数据库……如果没有通用语言，就只能每次“手舞足蹈”解释一遍。但有了 MCP，像插 USB 一样——对接标准统一了，沟通就不再痛苦。</p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/10/3/08_56_48%20PM.png" class="left" width="500"><br/><br/> <h2 id="三种方式接工具"><a href="#三种方式接工具" class="headerlink" title="三种方式接工具"></a>三种方式接工具</h2><p>作为开发者，我自己踩过的坑大概分三种：</p><ul><li><strong>直连 API</strong>：最省事，写几行代码就能跑。但工具一多，就像每个家电都要单独插线，很快乱成一团。</li><li><strong>自建网关</strong>：给工具统一写一层包装，好一点，但维护起来累。</li><li><strong>MCP 协议</strong>：就像买了插排，谁来都能插，但前提是大家都认这个标准。</li></ul><p>所以 MCP 解决的不是“有没有 Agent”，而是“工具怎么接得更省心”。</p><br/><br/><h2 id="什么时候该用-MCP？"><a href="#什么时候该用-MCP？" class="headerlink" title="什么时候该用 MCP？"></a>什么时候该用 MCP？</h2><p>我很喜欢把问题拆成“要不要现在就做”。</p><p><strong>推荐用 MCP 的场景：</strong></p><ul><li>你要接的工具特别多、特别杂。</li><li>你想做一个“插件市场”，别人开发的工具也能接进来。</li><li>你的团队很大，需要统一接口和权限。</li></ul><p><strong>不急着用 MCP 的场景：</strong></p><ul><li>你只有 1-2 个工具，跑起来最重要。</li><li>原型阶段，时间比优雅更关键。</li><li>场景完全内网，不需要和别人兼容。</li></ul><p>说白了：<strong>MCP 是标准，不是魔法</strong>。 如果你的产品还在“验证能不能跑”，先别急着上。</p><br/><br/><h2 id="渐进路线（我自己走过的）"><a href="#渐进路线（我自己走过的）" class="headerlink" title="渐进路线（我自己走过的）"></a>渐进路线（我自己走过的）</h2><p>做产品的时候，我的演进路线大概是：</p><ol><li><strong>先直连 API</strong>：把东西跑起来，先看到结果。</li><li><strong>工具变多了</strong>：抽象一层接口，否则维护起来要崩溃。</li><li><strong>产品要规模化</strong>：再考虑 MCP，把“工具接入”完全标准化。</li></ol><p>我不是一开始就追 MCP，而是把它当作未来的一步。<br>有点像盖房子：先把砖垒起来，等真的要接水电气，再考虑用不用品质更好的插座系统。</p><br/><br/><h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>所以，Agent 和 MCP 不是一回事：</p><ul><li><strong>Agent 是大脑+身体，去做事。</strong></li><li><strong>MCP 是语言+插口，帮它对接外部世界。</strong></li></ul><br/><p>理解这一点，你就不会再问“Agent 和 MCP 是不是一个东西”，而会问：</p><p><strong>“我的产品阶段，需不需要 MCP？”</strong></p><p>我觉得这才是更有价值的问题。</p><br/><br/><br/><br/><br/>]]></content:encoded>
-      
-      
-      
-      
-      <comments>https://blog.liluhui.cn/2025/10/03/Quick-Clarity-The-Key-Difference-Between-Agent-and-MCP/#disqus_thread</comments>
       
     </item>
     
