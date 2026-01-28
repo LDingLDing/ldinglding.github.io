@@ -1,0 +1,322 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>MCP、Skills、Agents SDK 到底谁是标准？AI 能力调度接口的 3 种范式解析 | Luhui's Personal Website</title><meta name="author" content="Luhui芦荟"><meta name="copyright" content="Luhui芦荟"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="前言最近几乎每个做 Agent 的人都会听到这三个热门的词：  MCP Skills Agents SDK  它们都在讲“让 AI 会用工具、会做事、会跑流程”，但和不少人聊发现都会陷入同一个困惑：  好像都在解决能力接入 又感觉彼此不能互相替代  这篇文章帮助你对这三个概念建立清晰的认知，并且给出一些落地实践的建议。    把 Agent 系统想成一座智能工厂先忘掉 AI、模型、Agent。我们">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MCP、Skills、Agents SDK 到底谁是标准？AI 能力调度接口的 3 种范式解析">
+<meta property="og:url" content="https://blog.liluhui.cn/2026/01/28/MCP-Skills-and-Agents-SDK-Are-Not-Competing-Standards/index.html">
+<meta property="og:site_name" content="Luhui&#39;s Personal Website">
+<meta property="og:description" content="前言最近几乎每个做 Agent 的人都会听到这三个热门的词：  MCP Skills Agents SDK  它们都在讲“让 AI 会用工具、会做事、会跑流程”，但和不少人聊发现都会陷入同一个困惑：  好像都在解决能力接入 又感觉彼此不能互相替代  这篇文章帮助你对这三个概念建立清晰的认知，并且给出一些落地实践的建议。    把 Agent 系统想成一座智能工厂先忘掉 AI、模型、Agent。我们">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg">
+<meta property="article:published_time" content="2026-01-28T13:36:24.000Z">
+<meta property="article:modified_time" content="2026-01-28T13:48:50.874Z">
+<meta property="article:author" content="Luhui芦荟">
+<meta property="article:tag" content="李璐慧,芦荟,Aloea,技术博客,前端,Node">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg"><link rel="shortcut icon" href="https://i.loli.net/2017/11/26/5a19c0b50432e.png"><link rel="canonical" href="https://blog.liluhui.cn/2026/01/28/MCP-Skills-and-Agents-SDK-Are-Not-Competing-Standards/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>(()=>{
+      const saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+      
+      window.btf = {
+        saveToLocal: saveToLocal,
+        getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+          script.src = url
+          script.async = true
+          script.onerror = reject
+          script.onload = script.onreadystatechange = function() {
+            const loadState = this.readyState
+            if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+            script.onload = script.onreadystatechange = null
+            resolve()
+          }
+
+          Object.keys(attr).forEach(key => {
+            script.setAttribute(key, attr[key])
+          })
+
+          document.head.appendChild(script)
+        }),
+
+        getCSS: (url, id = false) => new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+          link.rel = 'stylesheet'
+          link.href = url
+          if (id) link.id = id
+          link.onerror = reject
+          link.onload = link.onreadystatechange = function() {
+            const loadState = this.readyState
+            if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+            link.onload = link.onreadystatechange = null
+            resolve()
+          }
+          document.head.appendChild(link)
+        }),
+
+        addGlobalFn: (key, fn, name = false, parent = window) => {
+          const pjaxEnable = false
+          if (!pjaxEnable && key.startsWith('pjax')) return
+
+          const globalFn = parent.globalFn || {}
+          const keyObj = globalFn[key] || {}
+    
+          if (name && keyObj[name]) return
+    
+          name = name || Object.keys(keyObj).length
+          keyObj[name] = fn
+          globalFn[key] = keyObj
+          parent.globalFn = globalFn
+        }
+      }
+    
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+      
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })()</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=8Z2NNDYTL9"></script><script>window.dataLayer = window.dataLayer || []
+function gtag(){dataLayer.push(arguments)}
+gtag('js', new Date())
+gtag('config', '8Z2NNDYTL9')
+btf.addGlobalFn('pjaxComplete', () => {
+  gtag('config', '8Z2NNDYTL9', {'page_path': window.location.pathname})
+}, 'google_analytics')
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":true,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'MCP、Skills、Agents SDK 到底谁是标准？AI 能力调度接口的 3 种范式解析',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-01-28 21:48:50'
+}</script><meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/rss2.xml" title="Luhui's Personal Website" type="application/rss+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">118</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" href="/process"><span> 建站历程</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/5W7DZ_A-ywM.jpg);"><nav id="nav"><span id="blog-info"><a href="/" title="Luhui's Personal Website"><span class="site-name">Luhui's Personal Website</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" href="/process"><span> 建站历程</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">MCP、Skills、Agents SDK 到底谁是标准？AI 能力调度接口的 3 种范式解析</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-01-28T13:36:24.000Z" title="发表于 2026-01-28 21:36:24">2026-01-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-01-28T13:48:50.874Z" title="更新于 2026-01-28 21:48:50">2026-01-28</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="MCP、Skills、Agents SDK 到底谁是标准？AI 能力调度接口的 3 种范式解析"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近几乎每个做 Agent 的人都会听到这三个热门的词：</p>
+<ul>
+<li>MCP</li>
+<li>Skills</li>
+<li>Agents SDK</li>
+</ul>
+<p>它们都在讲“让 AI 会用工具、会做事、会跑流程”，但和不少人聊发现都会陷入同一个困惑：</p>
+<ul>
+<li>好像都在解决能力接入</li>
+<li>又感觉彼此不能互相替代</li>
+</ul>
+<p>这篇文章帮助你对这三个概念建立清晰的认知，并且给出一些落地实践的建议。</p>
+<br/>
+<br/>
+
+<h2 id="把-Agent-系统想成一座智能工厂"><a href="#把-Agent-系统想成一座智能工厂" class="headerlink" title="把 Agent 系统想成一座智能工厂"></a>把 Agent 系统想成一座智能工厂</h2><p>先忘掉 AI、模型、Agent。<br>我们从一个现实世界最熟悉的系统开始：<strong>工厂</strong>。</p>
+<p>假设你现在要建一座自动化工厂，目标是：<br>接很多机器，跑复杂流程，尽量少人工。</p>
+<p>你一定会遇到三个问题：</p>
+<p><strong>1. 机器怎么接进来？（接口问题）</strong></p>
+<ul>
+<li>电钻、焊机、机械臂、传送带</li>
+<li>如果每台设备接口都不一样，工厂永远扩不起来</li>
+</ul>
+<p>所以现实世界一定先有 <strong>统一插头 + 接口标准</strong></p>
+<p><strong>2. 每台机器应该怎么用？（流程问题）</strong></p>
+<p>接好机器还远远不够。</p>
+<p>问题是电钻可以打孔，也可以拆螺丝，但在这条生产线上先做什么、后做什么，必须有标准。</p>
+<p>所以你一定会写 <strong>标准工艺流程 &#x2F; 操作说明书</strong></p>
+<p><strong>3. 整个生产线谁来调度？（系统问题）</strong></p>
+<p>现在你有一堆机器 + 一堆操作说明，还缺最关键的 <strong>中央调度系统</strong>。</p>
+<p>它负责任务怎么拆、先跑哪一步、出错怎么重试、多条产线如何并行。</p>
+<br/>
+
+<p>在 Agent 系统里这三件事一一对应：</p>
+<ul>
+<li>MCP &#x3D; 工厂的插头标准</li>
+<li>Skills &#x3D; 工艺流程说明书</li>
+<li>Agents SDK &#x3D; 中央调度系统</li>
+</ul>
+<p>也就是说</p>
+<ul>
+<li>MCP 解决你能接哪些工具</li>
+<li>Skills 解决这件事该怎么做</li>
+<li>Agents SDK 解决整个流程怎么跑起来</li>
+</ul>
+<p>如果你记住这三句话，以后几乎不会再混淆这三个概念。</p>
+<br/>
+<br/>
+
+<h2 id="真实-Agent-架构中的三层能力栈"><a href="#真实-Agent-架构中的三层能力栈" class="headerlink" title="真实 Agent 架构中的三层能力栈"></a>真实 Agent 架构中的三层能力栈</h2><h3 id="MCP：工具接口协议层"><a href="#MCP：工具接口协议层" class="headerlink" title="MCP：工具接口协议层"></a>MCP：工具接口协议层</h3><p>MCP 解决的问题极单一，也极基础，就是 <strong>统一模型如何发现、描述、调用外部工具</strong>。</p>
+<p>MCP 不是 Agent 框架；MCP 不做规划、不做流程；MCP 不关心任务逻辑。</p>
+<p>在 MCP 之前每个产品一套 function schema，每个工具一套 prompt 约定，每接一个系统就写一堆 glue code。</p>
+<p>MCP 的作用就是统一工具注册方式，统一参数描述，统一调用与返回格式，统一权限与安全模型。</p>
+<p>你可以把它理解为 <strong>AI 世界的系统调用接口 &#x2F; 插头协议</strong>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 把一个 MCP Server 接进来</span></span><br><span class="line"><span class="keyword">from</span> mcp <span class="keyword">import</span> ClientSession</span><br><span class="line"></span><br><span class="line">session = ClientSession(server_url=<span class="string">&quot;stdio://my-mcp-server&quot;</span>)  <span class="comment"># 或 http(s) / stdio</span></span><br><span class="line">tools = session.list_tools()                                <span class="comment"># 发现：有哪些工具可用</span></span><br><span class="line">result = session.call_tool(<span class="string">&quot;read_file&quot;</span>, &#123;<span class="string">&quot;path&quot;</span>: <span class="string">&quot;./a.txt&quot;</span>&#125;)<span class="comment"># 调用：统一schema</span></span><br><span class="line"><span class="built_in">print</span>(result)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<br/>
+
+<h3 id="Skills：能力封装层"><a href="#Skills：能力封装层" class="headerlink" title="Skills：能力封装层"></a>Skills：能力封装层</h3><p>Skills 出现的真实背景非常朴素且使用，大量团队反复在 prompt 里写身份定义和任何流程，比如</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># SKILL: Weekly Sales Report</span></span><br><span class="line"></span><br><span class="line"><span class="section">## When to use</span></span><br><span class="line"><span class="bullet">-</span> 用户要求：最近一周销售数据分析 + 输出报告</span><br><span class="line"></span><br><span class="line"><span class="section">## Steps</span></span><br><span class="line">1) 调用工具 fetch<span class="emphasis">_sales_</span>data 获取最近7天数据</span><br><span class="line">2) 清洗异常值、缺失值，输出关键指标：GMV、订单数、客单价、转化率</span><br><span class="line">3) 给出 3 条洞察 + 2 条可执行建议</span><br><span class="line">4) 输出格式：Markdown，包含 Summary / Metrics / Insights / Actions</span><br><span class="line"></span><br><span class="line"><span class="section">## Output format</span></span><br><span class="line"><span class="bullet">-</span> Summary: 3 句话</span><br><span class="line"><span class="bullet">-</span> Metrics: 表格</span><br><span class="line"><span class="bullet">-</span> Insights: 3 条 bullet</span><br><span class="line"><span class="bullet">-</span> Actions: 2 条 bullet</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这些逻辑太重要，不能靠用户临时写，又太轻量，不值得写完整插件吗，还希望复用、版本化、托管。于是 Skills 出现了。</p>
+<p>它本质是 <strong>把一段成熟的任务流程 + 操作规范，封装成一个可复用能力模块</strong>。</p>
+<br/>
+
+<h3 id="Agents-SDK：运行时与调度层"><a href="#Agents-SDK：运行时与调度层" class="headerlink" title="Agents SDK：运行时与调度层"></a>Agents SDK：运行时与调度层</h3><p>Agents SDK 解决的核心问题只有一个：<strong>一个复杂 Agent 任务，如何可靠地跑完？</strong></p>
+<p>它负责 规划（Planner）+ 调度（Executor）+ 状态与记忆（State &#x2F; Memory）。</p>
+<p>比如一个具体的任务 “帮我分析最近一周的销售数据，并生成一份报告。”</p>
+<p>这个任务在真实系统里至少包含几步：</p>
+<ol>
+<li>拉取销售数据</li>
+<li>清洗与统计</li>
+<li>调用模型分析</li>
+<li>生成结构化报告</li>
+</ol>
+<p>如果你不用 SDK，你通常要自己写：</p>
+<ul>
+<li>多次模型调用</li>
+<li>手动管理上下文</li>
+<li>手动调工具</li>
+<li>自己串流程</li>
+</ul>
+<p>以 OpenAI Agents SDK 为例，核心抽象只需要 Agent、Tool、Run（一次完整任务执行）三个部分。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">agent = Agent(</span><br><span class="line">    name=<span class="string">&quot;report_agent&quot;</span>,</span><br><span class="line">    instructions=<span class="string">&quot;你是一个数据分析助手，负责生成销售分析报告&quot;</span>,</span><br><span class="line">    tools=[fetch_sales_data, clean_data, analyze_data]</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">run = client.runs.create(</span><br><span class="line">    agent=agent,</span><br><span class="line">    <span class="built_in">input</span>=<span class="string">&quot;分析最近一周的销售数据并生成报告&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">result = client.runs.get(run.<span class="built_in">id</span>)</span><br><span class="line"><span class="built_in">print</span>(result.output)</span><br></pre></td></tr></table></figure>
+
+<br/>
+<br/>
+
+<h2 id="判断你到底该用谁"><a href="#判断你到底该用谁" class="headerlink" title="判断你到底该用谁"></a>判断你到底该用谁</h2><p><strong>❓ 我是不是要接很多外部系统？</strong> 优先上 MCP</p>
+<p><strong>❓ 这件事是不是有固定流程，值得封装下来反复用？</strong> 用 Skills 固化流程</p>
+<p><strong>❓ 这是一个多步骤、多工具、多轮执行的复杂任务吗？</strong> 你需要 Agents SDK 或自己的 Agent Runtime</p>
+<p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2026/01/28/2026012805.png"></p>
+<br/>
+<br/>
+
+<h1 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h1><p>很多人以为 MCP、Skills、Agents SDK 是三种竞争方案， 其实它们根本不在一个维度。</p>
+<p>MCP 解决的是工具怎么连 ，Skills 解决的是事情怎么规范地做，Agents SDK 解决的是整个系统怎么稳定地跑起来。</p>
+<p>在真实系统里，我们其实面临一个取舍：Skills 带来强规范、强一致性、强可控，而 Agents SDK 带来强灵活、强自动化、强自适应。</p>
+<p>在你的 Agent 系统里，你更相信模型自动规划还是强约束流程呢？</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.liluhui.cn">Luhui芦荟</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.liluhui.cn/2026/01/28/MCP-Skills-and-Agents-SDK-Are-Not-Competing-Standards/">https://blog.liluhui.cn/2026/01/28/MCP-Skills-and-Agents-SDK-Are-Not-Competing-Standards/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.liluhui.cn" target="_blank">Luhui's Personal Website</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="next-post pull-full" href="/2026/01/23/My-Favorite-AI-Tools-of-2025/" title="我这一年，如何用 AI 构建第二个大脑和第二套生产系统"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">我这一年，如何用 AI 构建第二个大脑和第二套生产系统</div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Luhui芦荟</div><div class="author-info-description">关于生活、学习、工作</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">118</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="/rss2.xml" target="_blank" title="RSS"><i class="fas fa-rss"></i></a><a class="social-icon" href="https://github.com/LDingLDing" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:liluhuizj@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%8A-Agent-%E7%B3%BB%E7%BB%9F%E6%83%B3%E6%88%90%E4%B8%80%E5%BA%A7%E6%99%BA%E8%83%BD%E5%B7%A5%E5%8E%82"><span class="toc-number">2.</span> <span class="toc-text">把 Agent 系统想成一座智能工厂</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9C%9F%E5%AE%9E-Agent-%E6%9E%B6%E6%9E%84%E4%B8%AD%E7%9A%84%E4%B8%89%E5%B1%82%E8%83%BD%E5%8A%9B%E6%A0%88"><span class="toc-number">3.</span> <span class="toc-text">真实 Agent 架构中的三层能力栈</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MCP%EF%BC%9A%E5%B7%A5%E5%85%B7%E6%8E%A5%E5%8F%A3%E5%8D%8F%E8%AE%AE%E5%B1%82"><span class="toc-number">3.1.</span> <span class="toc-text">MCP：工具接口协议层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Skills%EF%BC%9A%E8%83%BD%E5%8A%9B%E5%B0%81%E8%A3%85%E5%B1%82"><span class="toc-number">3.2.</span> <span class="toc-text">Skills：能力封装层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Agents-SDK%EF%BC%9A%E8%BF%90%E8%A1%8C%E6%97%B6%E4%B8%8E%E8%B0%83%E5%BA%A6%E5%B1%82"><span class="toc-number">3.3.</span> <span class="toc-text">Agents SDK：运行时与调度层</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A4%E6%96%AD%E4%BD%A0%E5%88%B0%E5%BA%95%E8%AF%A5%E7%94%A8%E8%B0%81"><span class="toc-number">4.</span> <span class="toc-text">判断你到底该用谁</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E"><span class="toc-number"></span> <span class="toc-text">写在最后</span></a></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/28/MCP-Skills-and-Agents-SDK-Are-Not-Competing-Standards/" title="MCP、Skills、Agents SDK 到底谁是标准？AI 能力调度接口的 3 种范式解析">MCP、Skills、Agents SDK 到底谁是标准？AI 能力调度接口的 3 种范式解析</a><time datetime="2026-01-28T13:36:24.000Z" title="发表于 2026-01-28 21:36:24">2026-01-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/23/My-Favorite-AI-Tools-of-2025/" title="我这一年，如何用 AI 构建第二个大脑和第二套生产系统">我这一年，如何用 AI 构建第二个大脑和第二套生产系统</a><time datetime="2026-01-23T10:42:44.000Z" title="发表于 2026-01-23 18:42:44">2026-01-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/20/Catching-Unconscious-Goals-Between-Each-Inhale-and-Exhale/" title="在一呼一吸间，看见那些无意识的目标">在一呼一吸间，看见那些无意识的目标</a><time datetime="2026-01-20T09:08:39.000Z" title="发表于 2026-01-20 17:08:39">2026-01-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/18/How-to-Actually-Ship-Honest-Alignment-in-the-Age-of-Agents/" title="工程视角：Agent 时代，诚实对齐该如何落地？">工程视角：Agent 时代，诚实对齐该如何落地？</a><time datetime="2026-01-18T08:57:08.000Z" title="发表于 2026-01-18 16:57:08">2026-01-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/10/When-Models-Know-They-Are-Cheating-A-Technical-Dissection-of-Scheming-and-Reward-Hacking/" title="当模型知道自己在作弊：Scheming 与 Reward Hacking 的技术解剖">当模型知道自己在作弊：Scheming 与 Reward Hacking 的技术解剖</a><time datetime="2026-01-10T11:40:41.000Z" title="发表于 2026-01-10 19:40:41">2026-01-10</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By Luhui芦荟</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn">浙ICP备19010836号</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const initGitalk = () => {
+    const gitalk = new Gitalk(Object.assign({
+      clientID: '4987f0fb0a509fb9f0af',
+      clientSecret: '7e264967a3ea557003aacdf795b9e57e36a56382',
+      repo: 'ldinglding.github.io',
+      owner: 'LDingLDing',
+      admin: ['LDingLDing'],
+      id: '84f7a8ee78424de85ec93e46d832451c',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  const loadGitalk = async() => {
+    if (typeof Gitalk === 'function') initGitalk()
+    else {
+      await btf.getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+      await btf.getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js')
+      initGitalk()
+    }
+  }
+  
+  const commentCount = n => {
+    const isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+    if (isCommentCount) {
+      isCommentCount.textContent= n
+    }
+  }
+
+  if ('Gitalk' === 'Gitalk' || !false) {
+    if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+    else loadGitalk()
+  } else {
+    window.loadOtherComment = loadGitalk
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
