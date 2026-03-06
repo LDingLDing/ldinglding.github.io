@@ -15,8 +15,25 @@
     <atom:link href="https://blog.liluhui.cn/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>关于生活、学习、工作 feedId:66855595489698816+userId:55886336755964928</description>
-    <pubDate>Tue, 03 Mar 2026 09:50:05 GMT</pubDate>
+    <pubDate>Fri, 06 Mar 2026 12:20:27 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>AlphaGeometry2 深度解析：Google AI 如何解决 IMO 几何题？</title>
+      <link>https://blog.liluhui.cn/2026/03/06/alphageometry2-google-ai-solve-imo-geometry-problems/</link>
+      <guid>https://blog.liluhui.cn/2026/03/06/alphageometry2-google-ai-solve-imo-geometry-problems/</guid>
+      <pubDate>Fri, 06 Mar 2026 12:19:12 GMT</pubDate>
+      
+      <description>拆解 AlphaGeometry2 如何把几何推理、辅助线搜索与符号证明结合起来解决 IMO 几何题，并总结对数学 AI 工程的启发。</description>
+      
+      
+      
+      
+      
+      
+      <comments>https://blog.liluhui.cn/2026/03/06/alphageometry2-google-ai-solve-imo-geometry-problems/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>2026/02 Review</title>
@@ -446,28 +463,6 @@
       
       
       <comments>https://blog.liluhui.cn/2025/11/21/Understanding-Reasoning-Models-Exploring-Kimi-K2-Thinking-and-Its-Breakthrough/#disqus_thread</comments>
-      
-    </item>
-    
-    <item>
-      <title>为什么李飞飞说：AI 真正的进步取决于世界模型</title>
-      <link>https://blog.liluhui.cn/2025/11/19/Why-Fei-Fei-Li-Says-the-Future-of-AI-Progress-Depends-on-World-Models/</link>
-      <guid>https://blog.liluhui.cn/2025/11/19/Why-Fei-Fei-Li-Says-the-Future-of-AI-Progress-Depends-on-World-Models/</guid>
-      <pubDate>Wed, 19 Nov 2025 00:00:25 GMT</pubDate>
-      
-        
-        
-      <description>&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;最近，“人工智能之母”李飞飞发布了新产品 &lt;strong&gt;Marble&lt;/strong&gt;——一个可以用一句话生成完整 3D 场景、可探索、可</description>
-        
-      
-      
-      
-      <content:encoded><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近，“人工智能之母”李飞飞发布了新产品 <strong>Marble</strong>——一个可以用一句话生成完整 3D 场景、可探索、可编辑的世界模型原型。</p><p>我花了整个周末把访谈、演示与背景研究都看完，<br>再回头想想我过去几年在做的几何 AI、空间计算、Agent 系统……<br>意识到一个很深的事：</p><p><strong>世界模型不是一个功能升级，而是下一代智能的底层逻辑。</strong></p><p>但与其说我们离 AGI 又近了一步，不如说，我们可能再一次看到“世界模型时代”的新起点。</p><br/><br/><h2 id="为什么世界模型突然被重提？"><a href="#为什么世界模型突然被重提？" class="headerlink" title="为什么世界模型突然被重提？"></a>为什么世界模型突然被重提？</h2><p>因为所有人都发现了一个共同的瓶颈：<br><strong>语言大模型无法突破“世界理解”。</strong></p><p>它们能说、能编、能解释、能写论文……</p><p>但一旦进入真实世界场景——空间、物体、动态、因果就频繁翻车：</p><ul><li>看不懂遮挡</li><li>分不清前后关系</li><li>无法从二维视频推断三维结构</li><li>对物理规律毫无概念</li><li>机器人操作路线像在瞎撞</li><li>视频生成 3 秒开始“世界解体”</li></ul><br/><p>LLM 的本质是 <strong>按语言统计模式预测文本</strong>。</p><p>而物理世界不是语言，它是空间、物体、动力学、连续性、约束和因果的组合系统。</p><p>语言模型建不出这个系统。</p><p>于是“世界模型”再次成为前沿的焦点，不是替代 LLM，而是补齐它的最重要短板 <strong>理解和模拟真实世界。</strong></p><br/><br/><h2 id="别急，路……长得很"><a href="#别急，路……长得很" class="headerlink" title="别急，路……长得很"></a>别急，路……长得很</h2><p>但我们不要幻觉：世界模型不是几年内就能商业化的奇迹。</p><p>李飞飞在访谈里讲了一个极其关键、但外界经常忽略的事实：</p><blockquote><p>自动驾驶从 2005 年 DARPA Grand Challenge 到现在，20 年了。</p><p>到 2025 年都还没完全落地。</p><p>而机器人，比自驾车难得多。</p></blockquote><br/><p>为什么？</p><br/><p><strong>原因一：自驾车 &#x3D; 2D 问题，机器人 &#x3D; 3D + 操作问题</strong></p><p>自驾车在二维地面移动，世界就是一个平面导航问题，它的主要目标是 <strong>不碰东西</strong>。</p><p>而机器人在三维世界操作物体，这是一个高度维度的连续控制问题，它的目标是 <strong>准确地“碰东西”</strong>。</p><p>当你要抓一个杯子，需要知道：杯子的位置、你的手的位置、碰撞边界、重力与摩擦、运动预测、遮挡中的可见性…<br>这不是“统计语言能处理的任务”。</p><br/><p><strong>原因二：难度指数级上升</strong></p><p>即便自驾的硬件+软件+数据+供应链都成熟到极致了，但还是没完全落地。</p><p>你要机器人落地，难度指数级上升：机械臂成本、伺服精度、力反馈传感器、三维视觉、安全规范、工业供应链、电池与运算成本、云端协作的可靠性 …</p><p>世界模型只是其中的一个关键环节，而非全部。</p><br/><p><strong>所以我认为，世界模型是正确方向，但绝不会在一两年内重塑社会。</strong> 这是一个十年级别的技术大周期。</p><br/><br/><h2 id="那么世界模型到底是什么？"><a href="#那么世界模型到底是什么？" class="headerlink" title="那么世界模型到底是什么？"></a>那么世界模型到底是什么？</h2><p>我看完 Marble 和这次访谈后，最深刻的变化就是：</p><p><strong>世界模型既不是“视频模型升级版”，也不是“3D 重建工具”。</strong></p><p><strong>它是一个生成性、可交互、可预测的空间模拟器</strong>。</p><p>下面我从工程角度拆三个关键误区。</p><br/><h3 id="误解-1：世界模型-x3D-更强的视频生成"><a href="#误解-1：世界模型-x3D-更强的视频生成" class="headerlink" title="误解 1：世界模型 &#x3D; 更强的视频生成"></a><strong>误解 1：世界模型 &#x3D; 更强的视频生成</strong></h3><p>不对。</p><p>视频生成解决的是帧一致性、光影与纹理和动态连续性，但它依然是<strong>像素层面的预测</strong>。</p><p>世界模型不是预测像素，而是预测：</p><ul><li>物体布局</li><li>空间结构</li><li>深度关系</li><li>物理状态</li><li>动作后果</li><li>多主体交互</li><li>能走、能转身、能碰撞的世界状态</li></ul><p>视频模型生成的是“视觉表面”，世界模型生成的是“场景语义与物理状态”。</p><p>这完全不同。</p><br/><h3 id="误解-2：世界模型-x3D-3D-重建"><a href="#误解-2：世界模型-x3D-3D-重建" class="headerlink" title="误解 2：世界模型 &#x3D; 3D 重建"></a><strong>误解 2：世界模型 &#x3D; 3D 重建</strong></h3><p>如果世界模型只是重建现实，那就没意义了。</p><p><strong>真正的世界模型是基于语言输入生成一个可探索的“虚拟物理世界”。</strong></p><p>我理解它至少需要满足以下几点：</p><ul><li>一个 prompt → 生成完整世界</li><li>世界包含路径、遮挡、可导航性</li><li>你可以走进去</li><li>你可以探索意料之外的角落</li><li>你可以修改它</li></ul><p>这比 3D 建模工具强太多。</p><br/><h3 id="误解-3：世界模型只是视觉系统"><a href="#误解-3：世界模型只是视觉系统" class="headerlink" title="误解 3：世界模型只是视觉系统"></a>误解 3：世界模型只是视觉系统</h3><p>不，<strong>它是 “行动智能” 的前置层</strong>。</p><p>如果 AGI 最终要在世界中执行动作（agent &#x2F; robot &#x2F; embodied intelligence），那么它必须知道：</p><ul><li>如果我推一下这个盒子会怎样</li><li>如果我走两步会撞到谁</li><li>如果我换一个视角能看到墙后什么</li></ul><p>语言模型做不到这些。</p><br/><p><strong>世界模型 &#x3D; AI 的世界状态表示层（world state representation）</strong></p><p>它不是为了生成漂亮的画面，而是为了让模型知道自己在哪里、在做什么、接下来可能发生什么。</p><br/><br/><h3 id="Marble-为什么是一个重要的标志？"><a href="#Marble-为什么是一个重要的标志？" class="headerlink" title="Marble 为什么是一个重要的标志？"></a>Marble 为什么是一个重要的标志？</h3><p>不是因为它能“做 3D”，</p><p>而是它证明了世界模型的三个核心能力：</p><br/><p><strong>能力一：世界结构可生成</strong></p><p>不是 mesh 拼贴，而是真正的结构化世界：可行走、有空间层级、有碰撞逻辑、多视角一致。</p><p>这在模型层面意味着需要在 latent space 内表示“世界状态”。</p><br/><p><strong>能力二：世界可重建 + 可编辑</strong></p><p>这意味着：</p><ul><li>世界表示是显性的（explicit）</li><li>状态之间是连续的（stateful）</li><li>可以“世界状态 → 修改 → 再渲染”</li></ul><p>这非常接近游戏引擎内部的数据结构。</p><br/><p><strong>能力三：世界可探索</strong></p><p>这是最关键的突破。</p><p>如果你能自由移动摄像机、走进去、转视角，意味着模型内部必须有“空间一致性”（spatial coherence）和“三维世界的持久性”（persistence）。</p><p>这是第一次有模型具备这种能力。</p><br/><br/><h2 id="真正的革命在哪里？"><a href="#真正的革命在哪里？" class="headerlink" title="真正的革命在哪里？"></a>真正的革命在哪里？</h2><p>我认为世界模型会沿着“由易到难”的路径影响技术。</p><br/><p><strong>阶段一</strong>：</p><p>创意行业（已开始），这些都已经能玩。</p><ul><li>虚拟影棚</li><li>游戏关卡自动生成</li><li>场景草图 → 3D 世界</li><li>教育模拟世界</li><li>AR&#x2F;VR 内容生产</li></ul><br/><p><strong>阶段二</strong>：</p><p>模拟与科学计算（中期），这部分需要更数学化、更结构化的世界模型。</p><ul><li>物理规则推演</li><li>世界状态预测</li><li>动态优化任务</li><li>机器人策略模拟</li><li>多主体交互的虚拟环境</li></ul><br/><p><strong>阶段三</strong>：</p><p>机器人与具身智能（长期），这是最难的领域。</p><ul><li>空间理解</li><li>动作规划</li><li>能力校准</li><li>实时感知</li><li>多模态世界状态对齐</li><li>连续控制策略</li></ul><p>世界模型只是其中一环。<br>硬件、算力、传感器、数据都必须一起进化。</p><br/><br/><h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>如果世界模型真能在未来十年成熟，它可能会成为人类第一次接近 <strong>重写生物智能基线</strong> 的尝试。</p><p>但站在今天回头看，我们依然不得不承认：</p><p>一个婴儿跌跌撞撞学走路时，他体内的世界模型，对重力的直觉、对遮挡的理解、对物体持久性的把握、对路径的预测，其学习效率、鲁棒性、泛化能力，都远在任何人工模型之上。</p><p>我们用数十亿帧视频训练“空间一致性”，自然界却用几个月的探索让孩子具备稳定的三维世界感知。</p><p>我们为状态持久性、渲染一致性、物理约束痛苦堆砌 priors，生物神经系统却将它们作为默认配置。</p><p><strong>世界模型之难，也正因此而迷人。</strong></p><p>它不是明年就会落地的革命，</p><p>不是可以替代所有智能的银弹，</p><p>而是一条明确但漫长的技术长坡。</p><p>好消息是：我们终于知道坡在哪；</p><p>更好的消息是：我们正站在坡的起点。</p><p>而在每一个技术突破的间隙，我们也会不断重新意识到：<strong>生物智能本身，就是我们正在努力复现的那套终极世界模型。</strong></p><br/><br/><br/><br/><br/><br/><h2 id="延伸阅读"><a href="#延伸阅读" class="headerlink" title="延伸阅读"></a>延伸阅读</h2><ul><li><p>从文字到世界：空间智能是 AI 的下一个前沿<br><a href="https://drfeifei.substack.com/p/from-words-to-worlds-spatial-intelligence">drfeifei.substack.com&#x2F;p&#x2F;from-words-to-worlds-spatial-intelligence</a></p></li><li><p>李飞飞在 X 上关于 AI 的言论<br><a href="https://x.com/drfeifei/status/963564896225918976">x.com&#x2F;drfeifei&#x2F;status&#x2F;963564896225918976</a></p></li><li><p>The Godmother of AI on jobs, robots &amp; why world models are next | Dr. Fei-Fei Li<br><a href="https://youtu.be/Ctjiatnd6Xk?si=J1Gdz3lnFiaKbF9y">youtu.be&#x2F;Ctjiatnd6Xk?si&#x3D;J1Gdz3lnFiaKbF9y</a></p></li><li><p>When Do Neural Networks Learn World Models?<br><a href="https://arxiv.org/abs/2502.09297">arxiv.org&#x2F;abs&#x2F;2502.09297</a></p></li></ul>]]></content:encoded>
-      
-      
-      
-      
-      <comments>https://blog.liluhui.cn/2025/11/19/Why-Fei-Fei-Li-Says-the-Future-of-AI-Progress-Depends-on-World-Models/#disqus_thread</comments>
       
     </item>
     
