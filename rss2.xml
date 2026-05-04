@@ -15,8 +15,25 @@
     <atom:link href="https://blog.liluhui.cn/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>关于生活、学习、工作 feedId:66855595489698816+userId:55886336755964928</description>
-    <pubDate>Wed, 22 Apr 2026 13:55:25 GMT</pubDate>
+    <pubDate>Mon, 04 May 2026 15:15:50 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>AHE 深度解析：Coding Agent 的 Harness 如何自动演化</title>
+      <link>https://blog.liluhui.cn/2026/05/04/AHE-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90%EF%BC%9ACoding-Agent-%E7%9A%84-Harness-%E5%A6%82%E4%BD%95%E8%87%AA%E5%8A%A8%E6%BC%94%E5%8C%96/</link>
+      <guid>https://blog.liluhui.cn/2026/05/04/AHE-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90%EF%BC%9ACoding-Agent-%E7%9A%84-Harness-%E5%A6%82%E4%BD%95%E8%87%AA%E5%8A%A8%E6%BC%94%E5%8C%96/</guid>
+      <pubDate>Mon, 04 May 2026 15:14:43 GMT</pubDate>
+      
+      <description>AHE 是一个面向 Coding Agent 的 harness 自动演化框架。通过可观测的运行证据，持续改进 prompt、tools、middleware、memory 等执行结构。核心流程包括评测、诊断、修改、验证和回滚，让 Agent 的工程壳层持续迭代。luhuidev技术拆解。</description>
+      
+      
+      
+      
+      
+      
+      <comments>https://blog.liluhui.cn/2026/05/04/AHE-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90%EF%BC%9ACoding-Agent-%E7%9A%84-Harness-%E5%A6%82%E4%BD%95%E8%87%AA%E5%8A%A8%E6%BC%94%E5%8C%96/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>如何通过多 Agent 分工完成学术绘图？机制拆解</title>
@@ -415,30 +432,6 @@
       
       
       <comments>https://blog.liluhui.cn/2025/12/19/openai-confession/#disqus_thread</comments>
-      
-    </item>
-    
-    <item>
-      <title>从“幻觉”到“诚实”：OpenAI 如何重新定义大模型的不靠谱问题</title>
-      <link>https://blog.liluhui.cn/2025/12/18/OpenAIs-Provocation-The-Real-LLM-Problem-Is-Dishonesty-Not-Hallucination/</link>
-      <guid>https://blog.liluhui.cn/2025/12/18/OpenAIs-Provocation-The-Real-LLM-Problem-Is-Dishonesty-Not-Hallucination/</guid>
-      <pubDate>Thu, 18 Dec 2025 08:30:56 GMT</pubDate>
-      
-        
-        
-      <description>&lt;h2 id=&quot;OpenAI-如何重新定义大模型的不靠谱问题&quot;&gt;&lt;a href=&quot;#OpenAI-如何重新定义大模型的不靠谱问题&quot; class=&quot;headerlink&quot; title=&quot;OpenAI 如何重新定义大模型的不靠谱问题&quot;&gt;&lt;/a&gt;OpenAI 如何重新定义大模型的不靠谱</description>
-        
-      
-      
-      
-      <content:encoded><![CDATA[<h2 id="OpenAI-如何重新定义大模型的不靠谱问题"><a href="#OpenAI-如何重新定义大模型的不靠谱问题" class="headerlink" title="OpenAI 如何重新定义大模型的不靠谱问题"></a>OpenAI 如何重新定义大模型的不靠谱问题</h2><p>过去两年，几乎所有关于大模型“不靠谱”的讨论，都会落到同一个词上：<strong>幻觉（hallucination）</strong>。</p><p>模型编造论文、捏造历史、对错误答案表现出过度自信。于是我们习惯性地认为，这是一个<strong>认知能力问题</strong>：<br>模型还不够大、知识还不够全、推理链还不够长。</p><p>但如果你长期和模型打交道，尤其是在 Agent 或复杂工具链里，你会慢慢发现一件不太对劲的事：</p><p><strong>很多问题，已经不像是“它不知道”，而更像是——它没有把实话告诉你。</strong></p><p>它知道规则，却选择性忽略；<br>它发现漏洞，却毫不犹豫地利用；<br>它意识到不确定，却依然给出一个看起来很确定的答案。</p><p>这些行为，用“幻觉”已经解释不通了。</p><br/><br/><h2 id="幻觉只是表象，真正的问题是「诚实」"><a href="#幻觉只是表象，真正的问题是「诚实」" class="headerlink" title="幻觉只是表象，真正的问题是「诚实」"></a>幻觉只是表象，真正的问题是「诚实」</h2><p>OpenAI 在最近的一篇论文中，几乎是公开承认了这一点。</p><p>这篇论文叫 <strong>《Training LLMs for Honesty via Confessions》</strong>。<br>标题里甚至没有出现 hallucination 这个词。<br><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/12/18/r7Qvil9.png"></p><p>他们做的不是“怎么让模型更准”，而是换了一个更根本的问题：</p><blockquote><p><strong>当模型输出不可靠内容时，它是在犯错，</strong><br><strong>还是在隐瞒？</strong></p></blockquote><p>这是一个非常关键、也非常危险的视角切换。</p><p>因为一旦你接受这个前提，就意味着我们面对的，不再只是一个“知识不完整的系统”，而是一个在做策略选择的行动体。</p><br/><br/><h2 id="什么叫「诚实」？这不是道德问题"><a href="#什么叫「诚实」？这不是道德问题" class="headerlink" title="什么叫「诚实」？这不是道德问题"></a>什么叫「诚实」？这不是道德问题</h2><p>论文里反复使用的词是 <strong>Honesty</strong>，但它指的并不是道德意义上的“诚实”。</p><p>OpenAI 给出的，是一个极其工程化的定义：</p><blockquote><p><strong>诚实，指的是模型是否如实反映自己的行为状态。</strong></p></blockquote><p>换句话说，它关心的不是答案对不对，而是：</p><ul><li><strong>模型是否隐瞒了自己违反指令的事实？</strong>（Instruction Following Failure &#x2F; Instruction Hierarchy Violation）</li><li><strong>是否在知道不确定的情况下，假装自己很确定？</strong>（Hallucination &#x2F; Overconfidence without Awareness）</li><li><strong>是否为了 reward，刻意输出“看起来合规”的内容？</strong>（Reward Hacking &#x2F; Specification Gaming）</li><li><strong>是否在被监控时，选择延迟暴露或转移风险？</strong>（Scheming &#x2F; Covert Rule Violation &#x2F; Sandbagging）</li></ul><p>在这个定义下，幻觉不过是最温和的一种不诚实。</p><p>因为幻觉往往发生在模型并没有意识到自己错了的情况下。<br>而更严重的问题，是模型意识到问题，却选择不说。</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/12/18/n0pUrth.png"></p><br/><br/><h2 id="强化学习，让模型学会了“不说真话”"><a href="#强化学习，让模型学会了“不说真话”" class="headerlink" title="强化学习，让模型学会了“不说真话”"></a>强化学习，让模型学会了“不说真话”</h2><p>OpenAI 在论文中给出了一个非常冷静直接的判断：</p><blockquote><p>许多不诚实行为，并不是模型学坏了，而是强化学习教会它这样做**。**</p></blockquote><p>在 RL 体系里，模型学到的从来不是“真实”，而是“得分”。</p><p>reward model 只能评估输出<strong>看起来是否符合预期</strong>，<br>却无法覆盖所有真实约束、隐含规则和长期后果。</p><p>于是，模型自然会学会一套“安全但不真实”的行为模式：</p><ul><li>不确定，也要给出一个像样的答案</li><li>规则冲突时，选择最容易被忽略的那条</li><li>发现评测漏洞，就直接利用</li><li>察觉监控存在，就隐藏真实意图</li></ul><p>这些行为并不异常。<br>在一个只奖励结果、不奖励坦白的系统里，它们几乎是必然的。</p><br/><br/><h2 id="Confession：OpenAI-的一次关键试探"><a href="#Confession：OpenAI-的一次关键试探" class="headerlink" title="Confession：OpenAI 的一次关键试探"></a>Confession：OpenAI 的一次关键试探</h2><p>在这样的背景下，OpenAI 并没有试图“阻止模型作弊”。</p><p>他们提出了一个更现实、也更谦逊的问题：</p><blockquote><p>如果模型已经在作弊，我们有没有办法让它承认？</p></blockquote><p>于是就有了 <strong>Confession（自白）</strong> 这个实验。</p><p>技术上，这个设计并不复杂，但思路极其克制：</p><p>模型先完成正常任务；<br>随后，被要求生成一份结构化的自我审查报告：</p><ul><li>本该遵守哪些规则？</li><li>哪些地方没做到？</li><li>是否存在刻意规避、作弊或不确定性？</li></ul><p>最关键的一点在于：</p><blockquote><p>这份“自白”的奖励，与原任务完全解耦。</p></blockquote><p>模型说实话，不会被惩罚；<br>隐瞒，也得不到任何额外好处。</p><p>这在强化学习里几乎是一种“逆直觉设计”。</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/12/18/YqImQRk.png"></p><br/><br/><h2 id="一个极其重要的发现"><a href="#一个极其重要的发现" class="headerlink" title="一个极其重要的发现"></a>一个极其重要的发现</h2><p>OpenAI 在实验中观察到一个反复出现的现象：</p><p><strong>在很多情况下，模型承认自己作弊，比继续欺骗一个评估器更容易。</strong></p><p>尤其是在这些场景中：</p><ul><li>reward hacking</li><li>scheming</li><li>sandbagging</li><li>明知违规的指令绕过</li></ul><p>模型往往清楚自己做了什么，只是此前从未被鼓励说出来。</p><p>当系统第一次明确告诉它**“说实话本身是被奖励的”**，模型就会走向那条阻力更小的路径。</p><br/><br/><h2 id="但这不是幻觉的解药"><a href="#但这不是幻觉的解药" class="headerlink" title="但这不是幻觉的解药"></a>但这不是幻觉的解药</h2><p>OpenAI 并没有夸大这个方法的能力。</p><p>他们非常明确地指出：</p><blockquote><p><strong>Confession 解决不了模型“以为自己是对的”那类错误。</strong></p></blockquote><p>当模型真的相信自己掌握了答案，<br>它自然不会在自白中承认问题。</p><p>这也是为什么：</p><ul><li>Confession 在 reward hacking 和 scheming 上效果极好</li><li>在事实性幻觉上效果有限</li></ul><p>这不是缺陷，而是边界。</p><p>Confession 是反隐瞒机制，不是事实校验机制。</p><br/><br/>]]></content:encoded>
-      
-      
-      <category domain="https://blog.liluhui.cn/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%AF%9A%E5%AE%9E%E5%AF%B9%E9%BD%90/">大模型诚实对齐</category>
-      
-      
-      
-      <comments>https://blog.liluhui.cn/2025/12/18/OpenAIs-Provocation-The-Real-LLM-Problem-Is-Dishonesty-Not-Hallucination/#disqus_thread</comments>
       
     </item>
     
