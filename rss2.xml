@@ -20,8 +20,9 @@
     
     <item>
       <title>AHE 深度解析：Coding Agent 的 Harness 如何自动演化</title>
-      <link>https://blog.liluhui.cn/2026/05/04/AHE-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90%EF%BC%9ACoding-Agent-%E7%9A%84-Harness-%E5%A6%82%E4%BD%95%E8%87%AA%E5%8A%A8%E6%BC%94%E5%8C%96/</link>
-      <guid>https://blog.liluhui.cn/2026/05/04/AHE-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90%EF%BC%9ACoding-Agent-%E7%9A%84-Harness-%E5%A6%82%E4%BD%95%E8%87%AA%E5%8A%A8%E6%BC%94%E5%8C%96/</guid>
+      
+      <link>https://luhuidev.com/zh-cn/essays/agentic-harness-engineering-coding-agent-harness-evolution</link>
+      <guid>https://luhuidev.com/zh-cn/essays/agentic-harness-engineering-coding-agent-harness-evolution</guid>
       <pubDate>Mon, 04 May 2026 15:14:43 GMT</pubDate>
       
       <description>AHE 是一个面向 Coding Agent 的 harness 自动演化框架。通过可观测的运行证据，持续改进 prompt、tools、middleware、memory 等执行结构。核心流程包括评测、诊断、修改、验证和回滚，让 Agent 的工程壳层持续迭代。luhuidev技术拆解。</description>
@@ -31,14 +32,15 @@
       
       
       
-      <comments>https://blog.liluhui.cn/2026/05/04/AHE-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90%EF%BC%9ACoding-Agent-%E7%9A%84-Harness-%E5%A6%82%E4%BD%95%E8%87%AA%E5%8A%A8%E6%BC%94%E5%8C%96/#disqus_thread</comments>
+      <comments>https://luhuidev.com/zh-cn/essays/agentic-harness-engineering-coding-agent-harness-evolution#disqus_thread</comments>
       
     </item>
     
     <item>
       <title>如何通过多 Agent 分工完成学术绘图？机制拆解</title>
-      <link>https://blog.liluhui.cn/2026/04/22/paperbanana-academic-figure-multi-agent-roles-mechanism/</link>
-      <guid>https://blog.liluhui.cn/2026/04/22/paperbanana-academic-figure-multi-agent-roles-mechanism/</guid>
+      
+      <link>https://luhuidev.com/zh-cn/essays/paperbanana-academic-figure-multi-agent-roles-mechanism</link>
+      <guid>https://luhuidev.com/zh-cn/essays/paperbanana-academic-figure-multi-agent-roles-mechanism</guid>
       <pubDate>Wed, 22 Apr 2026 02:00:00 GMT</pubDate>
       
       <description>拆解 PaperBanana 学术绘图流程中的多 Agent 分工机制，聚焦 Retriever、Planner、Stylist、Visualizer 与 Critic 如何协作生成论文方法图。</description>
@@ -48,14 +50,15 @@
       
       
       
-      <comments>https://blog.liluhui.cn/2026/04/22/paperbanana-academic-figure-multi-agent-roles-mechanism/#disqus_thread</comments>
+      <comments>https://luhuidev.com/zh-cn/essays/paperbanana-academic-figure-multi-agent-roles-mechanism#disqus_thread</comments>
       
     </item>
     
     <item>
       <title>DSPy 教程：为什么 Signature 比直接写 Prompt 更容易做自动优化</title>
-      <link>https://blog.liluhui.cn/2026/04/22/why-dspy-signatures-are-easier-to-optimize-than-prompts/</link>
-      <guid>https://blog.liluhui.cn/2026/04/22/why-dspy-signatures-are-easier-to-optimize-than-prompts/</guid>
+      
+      <link>https://luhuidev.com/zh-cn/essays/why-dspy-signatures-are-easier-to-optimize-than-prompts</link>
+      <guid>https://luhuidev.com/zh-cn/essays/why-dspy-signatures-are-easier-to-optimize-than-prompts</guid>
       <pubDate>Tue, 21 Apr 2026 16:00:00 GMT</pubDate>
       
       <description>拆解 DSPy 的 Signature、Module 与 Optimizer，解释为什么 DSPy 比直接写 Prompt 更容易做自动优化，适合关注提示词工程、LLM 工作流、AI 内容生成与教育 AI 的团队。</description>
@@ -65,14 +68,15 @@
       
       
       
-      <comments>https://blog.liluhui.cn/2026/04/22/why-dspy-signatures-are-easier-to-optimize-than-prompts/#disqus_thread</comments>
+      <comments>https://luhuidev.com/zh-cn/essays/why-dspy-signatures-are-easier-to-optimize-than-prompts#disqus_thread</comments>
       
     </item>
     
     <item>
       <title>拆解 PaperBanana：AI 如何协作生成学术方法图</title>
-      <link>https://blog.liluhui.cn/2026/04/11/paperbanana-ai-academic-method-figure-collaboration/</link>
-      <guid>https://blog.liluhui.cn/2026/04/11/paperbanana-ai-academic-method-figure-collaboration/</guid>
+      
+      <link>https://luhuidev.com/zh-cn/essays/paperbanana-ai-academic-method-figure-collaboration</link>
+      <guid>https://luhuidev.com/zh-cn/essays/paperbanana-ai-academic-method-figure-collaboration</guid>
       <pubDate>Fri, 10 Apr 2026 16:00:00 GMT</pubDate>
       
       <description>拆解 PaperBanana 的 Retriever、Planner、Stylist、Visualizer 与 Critic 五个 Agent，系统梳理 AI 如何协作生成学术方法图，适合关注论文配图、学术写作与科研工作流的中文读者。</description>
@@ -82,14 +86,15 @@
       
       
       
-      <comments>https://blog.liluhui.cn/2026/04/11/paperbanana-ai-academic-method-figure-collaboration/#disqus_thread</comments>
+      <comments>https://luhuidev.com/zh-cn/essays/paperbanana-ai-academic-method-figure-collaboration#disqus_thread</comments>
       
     </item>
     
     <item>
       <title>AlphaGeometry DSL 教程：Google 几何构造语言、defs.txt 与 Predicate 详解</title>
-      <link>https://blog.liluhui.cn/2026/03/08/google-alphageometry-dsl-guide/</link>
-      <guid>https://blog.liluhui.cn/2026/03/08/google-alphageometry-dsl-guide/</guid>
+      
+      <link>https://luhuidev.com/zh-cn/essays/google-alphageometry-dsl-guide</link>
+      <guid>https://luhuidev.com/zh-cn/essays/google-alphageometry-dsl-guide</guid>
       <pubDate>Sun, 08 Mar 2026 07:42:28 GMT</pubDate>
       
       <description>系统拆解 AlphaGeometry DSL 的问题格式、defs.txt action 定义、predicate 语义、rules.txt 推理规则与构造流程，适合做几何求解器、数据生成与 AlphaGeometry 复现。</description>
@@ -99,14 +104,15 @@
       
       
       
-      <comments>https://blog.liluhui.cn/2026/03/08/google-alphageometry-dsl-guide/#disqus_thread</comments>
+      <comments>https://luhuidev.com/zh-cn/essays/google-alphageometry-dsl-guide#disqus_thread</comments>
       
     </item>
     
     <item>
       <title>AlphaGeometry2 深度解析：Google AI 如何解决 IMO 几何题？</title>
-      <link>https://blog.liluhui.cn/2026/03/06/alphageometry2-google-ai-solve-imo-geometry-problems/</link>
-      <guid>https://blog.liluhui.cn/2026/03/06/alphageometry2-google-ai-solve-imo-geometry-problems/</guid>
+      
+      <link>https://luhuidev.com/zh-cn/essays/alphageometry2-google-ai-solve-imo-geometry-problems</link>
+      <guid>https://luhuidev.com/zh-cn/essays/alphageometry2-google-ai-solve-imo-geometry-problems</guid>
       <pubDate>Fri, 06 Mar 2026 12:19:12 GMT</pubDate>
       
       <description>拆解 AlphaGeometry2 如何把几何推理、辅助线搜索与符号证明结合起来解决 IMO 几何题，并总结对数学 AI 工程的启发。</description>
@@ -116,12 +122,13 @@
       
       
       
-      <comments>https://blog.liluhui.cn/2026/03/06/alphageometry2-google-ai-solve-imo-geometry-problems/#disqus_thread</comments>
+      <comments>https://luhuidev.com/zh-cn/essays/alphageometry2-google-ai-solve-imo-geometry-problems#disqus_thread</comments>
       
     </item>
     
     <item>
       <title>2026/02 Review</title>
+      
       <link>https://blog.liluhui.cn/2026/03/03/202602/</link>
       <guid>https://blog.liluhui.cn/2026/03/03/202602/</guid>
       <pubDate>Tue, 03 Mar 2026 13:17:41 GMT</pubDate>
@@ -143,8 +150,9 @@
     
     <item>
       <title>Google DeepMind Aletheia：完全自主研究的数学 Agent 解读</title>
-      <link>https://blog.liluhui.cn/2026/02/25/essay-google-deepmind-aletheia-autonomous-math-research-agent/</link>
-      <guid>https://blog.liluhui.cn/2026/02/25/essay-google-deepmind-aletheia-autonomous-math-research-agent/</guid>
+      
+      <link>https://luhuidev.com/zh-cn/essays/google-deepmind-aletheia-autonomous-math-research-agent</link>
+      <guid>https://luhuidev.com/zh-cn/essays/google-deepmind-aletheia-autonomous-math-research-agent</guid>
       <pubDate>Wed, 25 Feb 2026 10:01:14 GMT</pubDate>
       
         
@@ -159,12 +167,13 @@
       
       
       
-      <comments>https://blog.liluhui.cn/2026/02/25/essay-google-deepmind-aletheia-autonomous-math-research-agent/#disqus_thread</comments>
+      <comments>https://luhuidev.com/zh-cn/essays/google-deepmind-aletheia-autonomous-math-research-agent#disqus_thread</comments>
       
     </item>
     
     <item>
       <title>HKU CodePlot-CoT 深度解析：视觉推理还是几何推理？</title>
+      
       <link>https://blog.liluhui.cn/2026/02/18/HKU-CodePlot-CoT-Deep-Dive/</link>
       <guid>https://blog.liluhui.cn/2026/02/18/HKU-CodePlot-CoT-Deep-Dive/</guid>
       <pubDate>Wed, 18 Feb 2026 09:00:09 GMT</pubDate>
@@ -187,6 +196,7 @@
     
     <item>
       <title>AI 与数学的融合：技术路径、应用前沿与未来展望（2026 版）</title>
+      
       <link>https://blog.liluhui.cn/2026/02/06/AI-and-Mathematics-2026/</link>
       <guid>https://blog.liluhui.cn/2026/02/06/AI-and-Mathematics-2026/</guid>
       <pubDate>Fri, 06 Feb 2026 12:04:11 GMT</pubDate>
@@ -210,6 +220,7 @@
     
     <item>
       <title>2026/01 Review</title>
+      
       <link>https://blog.liluhui.cn/2026/02/02/202601/</link>
       <guid>https://blog.liluhui.cn/2026/02/02/202601/</guid>
       <pubDate>Mon, 02 Feb 2026 14:56:17 GMT</pubDate>
@@ -229,6 +240,7 @@
     
     <item>
       <title>MCP、Skills、Agents SDK 到底谁是标准？AI 能力调度接口的 3 种范式解析</title>
+      
       <link>https://blog.liluhui.cn/2026/01/28/MCP-Skills-and-Agents-SDK-Are-Not-Competing-Standards/</link>
       <guid>https://blog.liluhui.cn/2026/01/28/MCP-Skills-and-Agents-SDK-Are-Not-Competing-Standards/</guid>
       <pubDate>Wed, 28 Jan 2026 13:36:24 GMT</pubDate>
@@ -255,6 +267,7 @@
     
     <item>
       <title>我这一年，如何用 AI 构建第二个大脑和第二套生产系统</title>
+      
       <link>https://blog.liluhui.cn/2026/01/23/My-Favorite-AI-Tools-of-2025/</link>
       <guid>https://blog.liluhui.cn/2026/01/23/My-Favorite-AI-Tools-of-2025/</guid>
       <pubDate>Fri, 23 Jan 2026 10:42:44 GMT</pubDate>
@@ -274,6 +287,7 @@
     
     <item>
       <title>在一呼一吸间，看见那些无意识的目标</title>
+      
       <link>https://blog.liluhui.cn/2026/01/20/Catching-Unconscious-Goals-Between-Each-Inhale-and-Exhale/</link>
       <guid>https://blog.liluhui.cn/2026/01/20/Catching-Unconscious-Goals-Between-Each-Inhale-and-Exhale/</guid>
       <pubDate>Tue, 20 Jan 2026 09:08:39 GMT</pubDate>
@@ -296,6 +310,7 @@
     
     <item>
       <title>工程视角：Agent 时代，诚实对齐该如何落地？</title>
+      
       <link>https://blog.liluhui.cn/2026/01/18/How-to-Actually-Ship-Honest-Alignment-in-the-Age-of-Agents/</link>
       <guid>https://blog.liluhui.cn/2026/01/18/How-to-Actually-Ship-Honest-Alignment-in-the-Age-of-Agents/</guid>
       <pubDate>Sun, 18 Jan 2026 08:57:08 GMT</pubDate>
@@ -321,6 +336,7 @@
     
     <item>
       <title>当模型知道自己在作弊：Scheming 与 Reward Hacking 的技术解剖</title>
+      
       <link>https://blog.liluhui.cn/2026/01/10/When-Models-Know-They-Are-Cheating-A-Technical-Dissection-of-Scheming-and-Reward-Hacking/</link>
       <guid>https://blog.liluhui.cn/2026/01/10/When-Models-Know-They-Are-Cheating-A-Technical-Dissection-of-Scheming-and-Reward-Hacking/</guid>
       <pubDate>Sat, 10 Jan 2026 11:40:41 GMT</pubDate>
@@ -345,6 +361,7 @@
     
     <item>
       <title>2025/12 Review</title>
+      
       <link>https://blog.liluhui.cn/2026/01/02/202512/</link>
       <guid>https://blog.liluhui.cn/2026/01/02/202512/</guid>
       <pubDate>Fri, 02 Jan 2026 14:04:56 GMT</pubDate>
@@ -364,6 +381,7 @@
     
     <item>
       <title>2025 开源大模型生态回顾一览</title>
+      
       <link>https://blog.liluhui.cn/2025/12/26/A-2025-Retrospective-on-the-OpenSource-Large-Language-Model-Ecosystem/</link>
       <guid>https://blog.liluhui.cn/2025/12/26/A-2025-Retrospective-on-the-OpenSource-Large-Language-Model-Ecosystem/</guid>
       <pubDate>Fri, 26 Dec 2025 13:00:29 GMT</pubDate>
@@ -386,6 +404,7 @@
     
     <item>
       <title>Self-reflection 的幻觉：为什么让模型“反思”往往没用？</title>
+      
       <link>https://blog.liluhui.cn/2025/12/24/The-Illusion-of-Self-Reflection/</link>
       <guid>https://blog.liluhui.cn/2025/12/24/The-Illusion-of-Self-Reflection/</guid>
       <pubDate>Wed, 24 Dec 2025 10:03:35 GMT</pubDate>
@@ -412,6 +431,7 @@
     
     <item>
       <title>OpenAI Confession：为什么“承认作弊”比“不作弊”更重要</title>
+      
       <link>https://blog.liluhui.cn/2025/12/19/openai-confession/</link>
       <guid>https://blog.liluhui.cn/2025/12/19/openai-confession/</guid>
       <pubDate>Fri, 19 Dec 2025 09:49:17 GMT</pubDate>
