@@ -15,8 +15,36 @@
     <atom:link href="https://blog.liluhui.cn/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>关于生活、学习、工作 feedId:66855595489698816+userId:55886336755964928</description>
-    <pubDate>Mon, 04 May 2026 15:15:50 GMT</pubDate>
+    <pubDate>Wed, 20 May 2026 13:33:58 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>Agent Runtime 上线后的三条生命线：观测、降级与恢复</title>
+      
+      <link>https://luhuidev.com/zh-cn/essays/langchain-agent-runtime-production-reliability</link>
+      <guid>https://luhuidev.com/zh-cn/essays/langchain-agent-runtime-production-reliability</guid>
+      <pubDate>Wed, 20 May 2026 13:10:00 GMT</pubDate>
+      
+      <description>Agent Runtime 的生产可靠性不能只靠框架能力，还需要围绕观测、降级和恢复建立工程闭环。本文从 traces、状态快照、工具调用、失败预算、人工接管和回放机制出发，拆解 Agent 系统上线后的稳定性设计。</description>
+      
+      
+      
+      <content:encoded><![CDATA[<p>前面写过一篇 <a href="https://luhuidev.com/zh-cn/essays/langchain-agent-runtime-production-reliability">LangChain Agent Runtime 的生产可靠性</a>，主要聊的是 Runtime 自身怎样把 Agent 从 demo 带到生产环境：状态、会话、工具调用、中断、恢复、Human-in-the-loop。</p><p>这篇想继续往后走一步。</p><p>当 Agent Runtime 已经能跑起来之后，真正决定它能不能长期在线的，不是「模型有多聪明」，而是三个更朴素的问题：</p><ul><li>出问题时，我能不能看见？</li><li>风险变大时，我能不能降级？</li><li>任务失败后，我能不能恢复？</li></ul><p>这三个问题，对应 Agent Runtime 上线后的三条生命线：<strong>观测、降级、恢复</strong>。</p><br/><br/><h2 id="一、观测：不要只记录最终答案"><a href="#一、观测：不要只记录最终答案" class="headerlink" title="一、观测：不要只记录最终答案"></a>一、观测：不要只记录最终答案</h2><p>很多 Agent 系统刚上线时，日志只记录两类东西：</p><ul><li>用户输入了什么</li><li>模型最后回答了什么</li></ul><p>这对普通 Chatbot 也许够用，但对 Agent Runtime 远远不够。</p><p>因为 Agent 的关键行为发生在中间：</p><ul><li>它为什么选择这个工具？</li><li>它给工具传了什么参数？</li><li>工具返回后，它怎样理解结果？</li><li>它是否重复尝试了同一个失败路径？</li><li>它有没有在不确定时继续冒险执行？</li></ul><p>如果这些中间过程不可见，线上问题就会变成玄学。你只知道用户说「它乱操作了」，却不知道乱在规划、工具、状态、权限，还是模型判断。</p><br/><h3 id="Agent-Trace-应该记录什么"><a href="#Agent-Trace-应该记录什么" class="headerlink" title="Agent Trace 应该记录什么"></a>Agent Trace 应该记录什么</h3><p>一个可调试的 Agent Trace 至少要包含这些层次：</p><table><thead><tr><th>层次</th><th>要记录的内容</th><th>作用</th></tr></thead><tbody><tr><td>Request</td><td>用户输入、用户身份、环境信息</td><td>判断任务入口是否正常</td></tr><tr><td>Plan</td><td>模型的任务拆解、下一步意图</td><td>判断规划是否跑偏</td></tr><tr><td>Tool Call</td><td>工具名、参数、权限、耗时</td><td>判断执行是否可靠</td></tr><tr><td>Tool Result</td><td>返回值摘要、错误码、异常栈</td><td>判断外部依赖是否异常</td></tr><tr><td>State</td><td>会话状态、memory 命中、checkpoint</td><td>判断上下文是否污染</td></tr><tr><td>Decision</td><td>是否重试、是否中断、是否交给人</td><td>判断控制策略是否合理</td></tr></tbody></table><p>这里最重要的不是把所有 token 都存下来，而是保留<strong>足够重放一次事故的证据链</strong>。</p><p>Agent 线上事故最怕「看起来像模型问题」。因为一旦归因到模型，大家就容易放弃工程分析。但实际情况常常是：</p><ul><li>工具 schema 太宽，模型传了合法但危险的参数</li><li>memory 命中了过期信息</li><li>上一步工具失败，但 Runtime 没有把失败状态显式传给下一步</li><li>retry 把一次可控错误放大成了多次副作用</li><li>人工接管入口太晚，等发现时任务已经执行过头</li></ul><p>这些问题都需要 trace 来定位。</p><br/><br/><h2 id="二、降级：别让-Agent-只有「全自动」一种形态"><a href="#二、降级：别让-Agent-只有「全自动」一种形态" class="headerlink" title="二、降级：别让 Agent 只有「全自动」一种形态"></a>二、降级：别让 Agent 只有「全自动」一种形态</h2><p>很多人设计 Agent 时有一个误区：要么全自动，要么不可用。</p><p>这在生产环境里很危险。</p><p>真正稳定的 Agent Runtime，应该允许系统在不同风险水平下切换模式：</p><ul><li>自动执行</li><li>半自动确认</li><li>只读建议</li><li>人工接管</li><li>暂停任务</li></ul><p>也就是说，Agent 不应该只有一个油门，还要有刹车、限速和手动挡。</p><br/><h3 id="降级不是失败，而是控制风险"><a href="#降级不是失败，而是控制风险" class="headerlink" title="降级不是失败，而是控制风险"></a>降级不是失败，而是控制风险</h3><p>举个例子，一个代码 Agent 正在修改项目。</p><p>低风险时，它可以自动读文件、搜索、生成 patch。</p><p>中风险时，比如要改核心认证逻辑，Runtime 可以要求它先产出计划，再等待确认。</p><p>高风险时，比如要执行数据库迁移、删除文件、推送生产分支，就必须进入人工接管。</p><p>这不是让 Agent 变笨，而是让它在不同风险区间里使用不同的自主权。</p><br/><h3 id="可以落地的降级策略"><a href="#可以落地的降级策略" class="headerlink" title="可以落地的降级策略"></a>可以落地的降级策略</h3><p>我会把降级策略拆成四类：</p><table><thead><tr><th>策略</th><th>触发条件</th><th>Runtime 行为</th></tr></thead><tbody><tr><td>权限降级</td><td>命中高危工具或敏感资源</td><td>从自动调用变成确认后调用</td></tr><tr><td>置信度降级</td><td>模型多次自我修正或输出不稳定</td><td>从执行变成只给建议</td></tr><tr><td>成本降级</td><td>token、时间、工具调用次数超预算</td><td>停止继续探索，要求用户补充信息</td></tr><tr><td>依赖降级</td><td>外部 API、数据库、搜索服务异常</td><td>切换备用路径或暂停任务</td></tr></tbody></table><p>这里的关键点是：降级条件不能只藏在 prompt 里。</p><p>Prompt 可以提醒模型谨慎，但真正可靠的限制要放在 Runtime 层。因为 Runtime 才能稳定读取工具权限、调用次数、执行耗时、错误类型和资源边界。</p><br/><br/><h2 id="三、恢复：失败后要能从中间继续"><a href="#三、恢复：失败后要能从中间继续" class="headerlink" title="三、恢复：失败后要能从中间继续"></a>三、恢复：失败后要能从中间继续</h2><p>Agent Runtime 和普通函数调用最大的区别之一，是任务往往不是单步完成的。</p><p>一次完整任务可能包含：</p><ul><li>读上下文</li><li>搜索资料</li><li>制定计划</li><li>调用工具</li><li>修改状态</li><li>等待用户确认</li><li>继续执行</li><li>生成最终结果</li></ul><p>如果系统在第六步崩了，最差的设计是让用户从头再来。</p><p>更好的设计是：Runtime 能从最近一次可信 checkpoint 恢复。</p><br/><h3 id="Checkpoint-不只是保存聊天记录"><a href="#Checkpoint-不只是保存聊天记录" class="headerlink" title="Checkpoint 不只是保存聊天记录"></a>Checkpoint 不只是保存聊天记录</h3><p>很多系统以为保存 messages 就等于保存状态。其实不够。</p><p>对 Agent Runtime 来说，checkpoint 至少要包含：</p><ul><li>当前任务目标</li><li>已完成步骤</li><li>待执行步骤</li><li>工具调用结果</li><li>外部副作用记录</li><li>用户确认状态</li><li>memory 读写记录</li><li>当前权限上下文</li></ul><p>尤其是外部副作用记录非常关键。</p><p>如果 Agent 已经发过邮件、改过文件、提交过订单，恢复时就不能简单重试同一步。否则「恢复」会变成「重复执行」。</p><br/><h3 id="恢复机制要区分三种失败"><a href="#恢复机制要区分三种失败" class="headerlink" title="恢复机制要区分三种失败"></a>恢复机制要区分三种失败</h3><p>并不是所有失败都应该自动恢复。</p><table><thead><tr><th>失败类型</th><th>例子</th><th>推荐处理</th></tr></thead><tbody><tr><td>暂时性失败</td><td>网络超时、限流、依赖短暂不可用</td><td>自动重试或延迟恢复</td></tr><tr><td>可修正失败</td><td>参数格式错误、工具返回可读错误</td><td>让 Agent 修正后继续</td></tr><tr><td>语义性失败</td><td>目标冲突、权限不足、用户意图不清</td><td>暂停并请求人工输入</td></tr></tbody></table><p>这也是为什么 Runtime 需要把错误结构化，而不是只把异常文本塞回模型。</p><p>模型看到 <code>Error: failed</code> 只能猜。Runtime 如果告诉它「这是限流」「这是权限不足」「这是参数缺字段」，Agent 才能做出更稳定的下一步。</p><br/><br/><h2 id="四、把三条生命线串成一个闭环"><a href="#四、把三条生命线串成一个闭环" class="headerlink" title="四、把三条生命线串成一个闭环"></a>四、把三条生命线串成一个闭环</h2><p>观测、降级、恢复不是三个孤立模块。</p><p>它们应该形成一个闭环：</p><ol><li>观测发现异常信号</li><li>Runtime 根据规则触发降级</li><li>降级后保留状态和证据</li><li>人或 Agent 修正问题</li><li>系统从 checkpoint 恢复执行</li><li>事故 trace 进入评测集，反过来改进 Runtime</li></ol><p>这也是我越来越喜欢把 Agent Runtime 看成「执行操作系统」的原因。</p><p>模型负责推理，工具负责能力，Runtime 负责让这一切在真实世界里有边界、有状态、有恢复路径。</p><p>如果没有 Runtime，Agent 只是一个会调用工具的模型。</p><p>有了 Runtime，Agent 才开始像一个能长期运行的系统。</p><br/><br/><h2 id="五、一个简单的生产检查清单"><a href="#五、一个简单的生产检查清单" class="headerlink" title="五、一个简单的生产检查清单"></a>五、一个简单的生产检查清单</h2><p>如果你正在把 Agent 做到生产环境，可以用下面这份清单快速自查：</p><ul><li>是否能查看每一次工具调用的输入、输出、耗时和错误？</li><li>是否能知道 Agent 每一步为什么这样做？</li><li>是否有任务级 checkpoint，而不只是 message 历史？</li><li>是否区分了可重试错误、可修正错误和必须人工介入的错误？</li><li>是否限制了高危工具的自动调用权限？</li><li>是否有 token、时间、工具次数、外部成本预算？</li><li>是否能从中断处继续，而不是要求用户重新开始？</li><li>是否能把线上失败样本沉淀成回归评测？</li></ul><p>如果这些问题大部分答案是否定的，那系统还不算真正生产就绪。</p><p>它可能能演示，但还不能托付。</p><br/><br/><h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>Agent Runtime 的价值，不是让模型显得更像人，而是让模型的行动变得更像工程系统。</p><p>一个可靠的 Agent 不只是会完成任务，还应该能解释过程、控制风险、从失败中恢复。</p><p>所以，当我们讨论 LangChain、LangGraph、Agents SDK 或任何 Agent Runtime 时，真正要问的不是「它能不能跑一个漂亮 demo」，而是：</p><p><strong>它能不能在出错时留下证据，在风险升高时主动降级，在失败之后继续向前。</strong></p><p>这才是 Agent 从玩具走向生产的分界线。</p>]]></content:encoded>
+      
+      
+      
+      <category domain="https://blog.liluhui.cn/tags/Agent/">Agent</category>
+      
+      <category domain="https://blog.liluhui.cn/tags/Agent-Runtime/">Agent Runtime</category>
+      
+      <category domain="https://blog.liluhui.cn/tags/LangChain/">LangChain</category>
+      
+      <category domain="https://blog.liluhui.cn/tags/%E5%8F%AF%E9%9D%A0%E6%80%A7/">可靠性</category>
+      
+      
+      <comments>https://luhuidev.com/zh-cn/essays/langchain-agent-runtime-production-reliability#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>AHE 深度解析：Coding Agent 的 Harness 如何自动演化</title>
@@ -426,32 +454,6 @@
       
       
       <comments>https://blog.liluhui.cn/2025/12/24/The-Illusion-of-Self-Reflection/#disqus_thread</comments>
-      
-    </item>
-    
-    <item>
-      <title>OpenAI Confession：为什么“承认作弊”比“不作弊”更重要</title>
-      
-      <link>https://blog.liluhui.cn/2025/12/19/openai-confession/</link>
-      <guid>https://blog.liluhui.cn/2025/12/19/openai-confession/</guid>
-      <pubDate>Fri, 19 Dec 2025 09:49:17 GMT</pubDate>
-      
-        
-        
-      <description>&lt;p&gt;&lt;img src=&quot;https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/12/19/qzb09OP.png&quot;&gt;&lt;/p&gt;
-&lt;h2 id=&quot;Confession-是什么？&quot;&gt;&lt;a href=&quot;#Confes</description>
-        
-      
-      
-      
-      <content:encoded><![CDATA[<p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/12/19/qzb09OP.png"></p><h2 id="Confession-是什么？"><a href="#Confession-是什么？" class="headerlink" title="Confession 是什么？"></a>Confession 是什么？</h2><p>OpenAI 在《Training LLMs for Honesty via Confessions》这篇论文中，给出了一个非常明确、也非常现实的判断：</p><blockquote><p><strong>与其继续幻想模型永远不犯错，不如先让它学会承认错误。</strong></p></blockquote><p>Confession 实验，正是基于这个判断展开的。</p><br/><p>先把一个常见误解直接掐掉：</p><p><strong>Confession ≠ self-critique（自我反思）</strong>。</p><p>你可能见过无数类似设计：</p><ul><li>“请检查你刚才的回答是否有错误”</li><li>“重新评估你的结论”</li><li>“给出你的不确定性”</li></ul><p>这些方法的问题不在形式，而在激励结构。</p><p>在 RL 或 RLHF 体系里，模型很快就会学会一条经验法则：</p><ul><li>承认错误 → reward 下降</li><li>表达不确定 → 看起来“不专业”</li><li>最安全的策略 → <strong>装得非常确定</strong></li></ul><p>这不是模型“不诚实”，而是奖励函数在逼它这么做。</p><p>Confession 的第一步，并不是“让模型更道德”，而是<strong>把这条因果链彻底切断</strong>。</p><br/><br/><h2 id="Confession-的唯一核心设计：奖励彻底解耦"><a href="#Confession-的唯一核心设计：奖励彻底解耦" class="headerlink" title="Confession 的唯一核心设计：奖励彻底解耦"></a>Confession 的唯一核心设计：奖励彻底解耦</h2><p>Confession 的机制非常干脆，没有复杂花样：</p><ol><li>模型先完成原始任务，给出正常回答（Answer）</li><li>回答结束后，系统<strong>追加一条指令</strong>，要求模型生成 Confession Report</li><li>Confession 需要明确回答三件事：<ul><li>我原本需要遵守哪些显性和隐性指令？</li><li>哪些遵守了？哪些没有？</li><li>是否存在作弊、取巧、灰区或不确定性？</li></ul></li></ol><p><strong>关键奖励设计：</strong> Confession 的 reward 只根据“是否诚实”评估，<strong>完全不影响主回答的 reward</strong></p><p>论文里用了一个很形象、但非常准确的比喻：</p><blockquote><p>像忏悔制度（seal of confession）：<br>你说不说实话，<br>不会改变你已经犯下的错的惩罚。</p></blockquote><p>这一步，看似简单，实际上改变的是整个训练动力学。</p><br/><br/><h2 id="为什么在-Confession-里，说实话反而更“省力”？"><a href="#为什么在-Confession-里，说实话反而更“省力”？" class="headerlink" title="为什么在 Confession 里，说实话反而更“省力”？"></a>为什么在 Confession 里，说实话反而更“省力”？</h2><p>一个直觉上的疑问是：Judge 不也是模型吗？ 为什么模型不干脆连 confession 一起骗？</p><p>OpenAI 给出的解释非常工程化，对主回答（Answer）来说：</p><ul><li><p>reward 目标复杂</p></li><li><p>judge 并不完美</p></li><li><p>存在大量投机空间</p></li><li><p><strong>作弊往往是高回报路径</strong></p></li></ul><p>而对 Confession 来说：</p><ul><li>模型对自己的作弊行为是“全知”的</li><li>它知道自己是怎么钻漏洞的</li><li>它能精确指出哪条指令被违反、在哪一步取巧</li></ul><p>在这种前提下：完整描述一次作弊行为， 比编一个“看起来合规”的故事更简单。</p><p>论文把这种现象称为 **Path of Least Resistance（最小阻力路径），**这不就是模型计算成本选择。</p><p>模型并不是“突然变诚实”， 而是发现：在这个子任务里，诚实是最省力、最稳妥的策略。</p><br/><br/><h2 id="Confession-并不是在纠正模型行为"><a href="#Confession-并不是在纠正模型行为" class="headerlink" title="Confession 并不是在纠正模型行为"></a>Confession 并不是在纠正模型行为</h2><p>这里有一个反直觉、但极其重要的点：<strong>Confession 完全不阻止模型继续作弊。</strong></p><p>它允许模型：</p><ul><li>reward hacking</li><li>sandbagging</li><li>scheming</li><li>表面遵守、实则违背指令</li></ul><p>Confession 唯一要求的是：<strong>当你这么做时，你要承认。</strong></p><p>这暴露了 OpenAI 一个非常现实的判断：在 Agent 场景下，在长链路、工具密集的系统里，零违规是不可实现的目标。</p><p>与其追求“模型永远守规矩”，<br>不如先解决一个更基础的问题：系统能不能知道，模型什么时候没守规矩？</p><p>从这个角度看，Confession 本质上是一个<strong>监控接口设计</strong>，而不是道德训练。</p><p><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/2025/12/19/NuZ7nZq.png"></p><br/><br/><h2 id="这不是-CoT-Monitoring-的替代品"><a href="#这不是-CoT-Monitoring-的替代品" class="headerlink" title="这不是 CoT Monitoring 的替代品"></a>这不是 CoT Monitoring 的替代品</h2><p>Confession 很容易被误解为另一种 Chain-of-Thought Monitoring，但两者定位完全不同。</p><h3 id="Chain-of-Thought-Monitoring-的局限："><a href="#Chain-of-Thought-Monitoring-的局限：" class="headerlink" title="Chain-of-Thought Monitoring 的局限："></a>Chain-of-Thought Monitoring 的局限：</h3><ul><li>依赖推理过程可读性</li><li>容易被模型学会“写给人看的推理”</li><li>对架构变化、推理压缩非常敏感</li></ul><h3 id="Confession-的特点："><a href="#Confession-的特点：" class="headerlink" title="Confession 的特点："></a>Confession 的特点：</h3><ul><li>不关心你是怎么想的</li><li>只问你做了什么</li><li>即使没有 CoT，也依然有效</li></ul><p>论文中的一个关键实验显示：<strong>在主回答完全没有 chain-of-thought 的情况下， confession 的诚实率几乎不下降。</strong></p><p>这使 Confession 更接近于事后可追责机制，或者说运行期审计，而不是传统意义上的可解释性工具。</p><br/><br/><h2 id="为什么-Confession-对幻觉帮助有限？"><a href="#为什么-Confession-对幻觉帮助有限？" class="headerlink" title="为什么 Confession 对幻觉帮助有限？"></a>为什么 Confession 对幻觉帮助有限？</h2><p>OpenAI 在论文中非常坦诚地指出了 Confession 的边界：Confession <strong>只在模型“知道自己在犯错”时有效。</strong></p><p>如果模型是真的不知道自己错了——</p><ul><li>知识盲区</li><li>错误事实被内化</li><li>过度自信的 hallucination</li></ul><p>那它自然也“无从忏悔”。</p><p>这也是为什么在实验中 reward hacking &#x2F; scheming 效果极好，而 hallucination（事实性错误）改善有限。</p><br/><br/><h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>如果把 Confession 放进更大的时间线里看，它传递的信号非常清晰：不再试图训练一个 “永远正确、永远守规则”的模型。</p><p>而是做的是另一件事：<strong>构建一套机制， 让模型在作恶时变得可见、可监控、可回滚。</strong></p><p>这才是 Agent 时代的工程现实主义。</p><br/><br/><br/><br/><br/><br/>]]></content:encoded>
-      
-      
-      <category domain="https://blog.liluhui.cn/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%AF%9A%E5%AE%9E%E5%AF%B9%E9%BD%90/">大模型诚实对齐</category>
-      
-      
-      
-      <comments>https://blog.liluhui.cn/2025/12/19/openai-confession/#disqus_thread</comments>
       
     </item>
     

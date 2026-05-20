@@ -1,0 +1,463 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Agent Runtime 上线后的三条生命线：观测、降级与恢复 | Luhui's Personal Website</title><meta name="author" content="Luhui芦荟"><meta name="copyright" content="Luhui芦荟"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Agent Runtime 的生产可靠性不能只靠框架能力，还需要围绕观测、降级和恢复建立工程闭环。本文从 traces、状态快照、工具调用、失败预算、人工接管和回放机制出发，拆解 Agent 系统上线后的稳定性设计。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Agent Runtime 上线后的三条生命线：观测、降级与恢复">
+<meta property="og:url" content="https://blog.liluhui.cn/2026/05/20/Agent-Runtime-Production-Observability-Degradation-Recovery/index.html">
+<meta property="og:site_name" content="Luhui&#39;s Personal Website">
+<meta property="og:description" content="Agent Runtime 的生产可靠性不能只靠框架能力，还需要围绕观测、降级和恢复建立工程闭环。本文从 traces、状态快照、工具调用、失败预算、人工接管和回放机制出发，拆解 Agent 系统上线后的稳定性设计。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg">
+<meta property="article:published_time" content="2026-05-20T13:10:00.000Z">
+<meta property="article:modified_time" content="2026-05-20T13:33:58.704Z">
+<meta property="article:author" content="Luhui芦荟">
+<meta property="article:tag" content="Agent">
+<meta property="article:tag" content="Agent Runtime">
+<meta property="article:tag" content="LangChain">
+<meta property="article:tag" content="可靠性">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg"><link rel="shortcut icon" href="https://i.loli.net/2017/11/26/5a19c0b50432e.png"><link rel="canonical" href="https://blog.liluhui.cn/2026/05/20/Agent-Runtime-Production-Observability-Degradation-Recovery/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>(()=>{
+      const saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+      
+      window.btf = {
+        saveToLocal: saveToLocal,
+        getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+          script.src = url
+          script.async = true
+          script.onerror = reject
+          script.onload = script.onreadystatechange = function() {
+            const loadState = this.readyState
+            if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+            script.onload = script.onreadystatechange = null
+            resolve()
+          }
+
+          Object.keys(attr).forEach(key => {
+            script.setAttribute(key, attr[key])
+          })
+
+          document.head.appendChild(script)
+        }),
+
+        getCSS: (url, id = false) => new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+          link.rel = 'stylesheet'
+          link.href = url
+          if (id) link.id = id
+          link.onerror = reject
+          link.onload = link.onreadystatechange = function() {
+            const loadState = this.readyState
+            if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+            link.onload = link.onreadystatechange = null
+            resolve()
+          }
+          document.head.appendChild(link)
+        }),
+
+        addGlobalFn: (key, fn, name = false, parent = window) => {
+          const pjaxEnable = false
+          if (!pjaxEnable && key.startsWith('pjax')) return
+
+          const globalFn = parent.globalFn || {}
+          const keyObj = globalFn[key] || {}
+    
+          if (name && keyObj[name]) return
+    
+          name = name || Object.keys(keyObj).length
+          keyObj[name] = fn
+          globalFn[key] = keyObj
+          parent.globalFn = globalFn
+        }
+      }
+    
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+      
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })()</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=8Z2NNDYTL9"></script><script>window.dataLayer = window.dataLayer || []
+function gtag(){dataLayer.push(arguments)}
+gtag('js', new Date())
+gtag('config', '8Z2NNDYTL9')
+btf.addGlobalFn('pjaxComplete', () => {
+  gtag('config', '8Z2NNDYTL9', {'page_path': window.location.pathname})
+}, 'google_analytics')
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":true,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Agent Runtime 上线后的三条生命线：观测、降级与恢复',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-05-20 21:33:58'
+}</script><meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/rss2.xml" title="Luhui's Personal Website" type="application/rss+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">130</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" href="/process"><span> 建站历程</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/5W7DZ_A-ywM.jpg);"><nav id="nav"><span id="blog-info"><a href="/" title="Luhui's Personal Website"><span class="site-name">Luhui's Personal Website</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" href="/process"><span> 建站历程</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Agent Runtime 上线后的三条生命线：观测、降级与恢复</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-20T13:10:00.000Z" title="发表于 2026-05-20 21:10:00">2026-05-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-20T13:33:58.704Z" title="更新于 2026-05-20 21:33:58">2026-05-20</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Agent Runtime 上线后的三条生命线：观测、降级与恢复"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>前面写过一篇 <a target="_blank" rel="noopener" href="https://luhuidev.com/zh-cn/essays/langchain-agent-runtime-production-reliability">LangChain Agent Runtime 的生产可靠性</a>，主要聊的是 Runtime 自身怎样把 Agent 从 demo 带到生产环境：状态、会话、工具调用、中断、恢复、Human-in-the-loop。</p>
+<p>这篇想继续往后走一步。</p>
+<p>当 Agent Runtime 已经能跑起来之后，真正决定它能不能长期在线的，不是「模型有多聪明」，而是三个更朴素的问题：</p>
+<ul>
+<li>出问题时，我能不能看见？</li>
+<li>风险变大时，我能不能降级？</li>
+<li>任务失败后，我能不能恢复？</li>
+</ul>
+<p>这三个问题，对应 Agent Runtime 上线后的三条生命线：<strong>观测、降级、恢复</strong>。</p>
+<br/>
+<br/>
+
+<h2 id="一、观测：不要只记录最终答案"><a href="#一、观测：不要只记录最终答案" class="headerlink" title="一、观测：不要只记录最终答案"></a>一、观测：不要只记录最终答案</h2><p>很多 Agent 系统刚上线时，日志只记录两类东西：</p>
+<ul>
+<li>用户输入了什么</li>
+<li>模型最后回答了什么</li>
+</ul>
+<p>这对普通 Chatbot 也许够用，但对 Agent Runtime 远远不够。</p>
+<p>因为 Agent 的关键行为发生在中间：</p>
+<ul>
+<li>它为什么选择这个工具？</li>
+<li>它给工具传了什么参数？</li>
+<li>工具返回后，它怎样理解结果？</li>
+<li>它是否重复尝试了同一个失败路径？</li>
+<li>它有没有在不确定时继续冒险执行？</li>
+</ul>
+<p>如果这些中间过程不可见，线上问题就会变成玄学。你只知道用户说「它乱操作了」，却不知道乱在规划、工具、状态、权限，还是模型判断。</p>
+<br/>
+
+<h3 id="Agent-Trace-应该记录什么"><a href="#Agent-Trace-应该记录什么" class="headerlink" title="Agent Trace 应该记录什么"></a>Agent Trace 应该记录什么</h3><p>一个可调试的 Agent Trace 至少要包含这些层次：</p>
+<table>
+<thead>
+<tr>
+<th>层次</th>
+<th>要记录的内容</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Request</td>
+<td>用户输入、用户身份、环境信息</td>
+<td>判断任务入口是否正常</td>
+</tr>
+<tr>
+<td>Plan</td>
+<td>模型的任务拆解、下一步意图</td>
+<td>判断规划是否跑偏</td>
+</tr>
+<tr>
+<td>Tool Call</td>
+<td>工具名、参数、权限、耗时</td>
+<td>判断执行是否可靠</td>
+</tr>
+<tr>
+<td>Tool Result</td>
+<td>返回值摘要、错误码、异常栈</td>
+<td>判断外部依赖是否异常</td>
+</tr>
+<tr>
+<td>State</td>
+<td>会话状态、memory 命中、checkpoint</td>
+<td>判断上下文是否污染</td>
+</tr>
+<tr>
+<td>Decision</td>
+<td>是否重试、是否中断、是否交给人</td>
+<td>判断控制策略是否合理</td>
+</tr>
+</tbody></table>
+<p>这里最重要的不是把所有 token 都存下来，而是保留<strong>足够重放一次事故的证据链</strong>。</p>
+<p>Agent 线上事故最怕「看起来像模型问题」。因为一旦归因到模型，大家就容易放弃工程分析。但实际情况常常是：</p>
+<ul>
+<li>工具 schema 太宽，模型传了合法但危险的参数</li>
+<li>memory 命中了过期信息</li>
+<li>上一步工具失败，但 Runtime 没有把失败状态显式传给下一步</li>
+<li>retry 把一次可控错误放大成了多次副作用</li>
+<li>人工接管入口太晚，等发现时任务已经执行过头</li>
+</ul>
+<p>这些问题都需要 trace 来定位。</p>
+<br/>
+<br/>
+
+<h2 id="二、降级：别让-Agent-只有「全自动」一种形态"><a href="#二、降级：别让-Agent-只有「全自动」一种形态" class="headerlink" title="二、降级：别让 Agent 只有「全自动」一种形态"></a>二、降级：别让 Agent 只有「全自动」一种形态</h2><p>很多人设计 Agent 时有一个误区：要么全自动，要么不可用。</p>
+<p>这在生产环境里很危险。</p>
+<p>真正稳定的 Agent Runtime，应该允许系统在不同风险水平下切换模式：</p>
+<ul>
+<li>自动执行</li>
+<li>半自动确认</li>
+<li>只读建议</li>
+<li>人工接管</li>
+<li>暂停任务</li>
+</ul>
+<p>也就是说，Agent 不应该只有一个油门，还要有刹车、限速和手动挡。</p>
+<br/>
+
+<h3 id="降级不是失败，而是控制风险"><a href="#降级不是失败，而是控制风险" class="headerlink" title="降级不是失败，而是控制风险"></a>降级不是失败，而是控制风险</h3><p>举个例子，一个代码 Agent 正在修改项目。</p>
+<p>低风险时，它可以自动读文件、搜索、生成 patch。</p>
+<p>中风险时，比如要改核心认证逻辑，Runtime 可以要求它先产出计划，再等待确认。</p>
+<p>高风险时，比如要执行数据库迁移、删除文件、推送生产分支，就必须进入人工接管。</p>
+<p>这不是让 Agent 变笨，而是让它在不同风险区间里使用不同的自主权。</p>
+<br/>
+
+<h3 id="可以落地的降级策略"><a href="#可以落地的降级策略" class="headerlink" title="可以落地的降级策略"></a>可以落地的降级策略</h3><p>我会把降级策略拆成四类：</p>
+<table>
+<thead>
+<tr>
+<th>策略</th>
+<th>触发条件</th>
+<th>Runtime 行为</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>权限降级</td>
+<td>命中高危工具或敏感资源</td>
+<td>从自动调用变成确认后调用</td>
+</tr>
+<tr>
+<td>置信度降级</td>
+<td>模型多次自我修正或输出不稳定</td>
+<td>从执行变成只给建议</td>
+</tr>
+<tr>
+<td>成本降级</td>
+<td>token、时间、工具调用次数超预算</td>
+<td>停止继续探索，要求用户补充信息</td>
+</tr>
+<tr>
+<td>依赖降级</td>
+<td>外部 API、数据库、搜索服务异常</td>
+<td>切换备用路径或暂停任务</td>
+</tr>
+</tbody></table>
+<p>这里的关键点是：降级条件不能只藏在 prompt 里。</p>
+<p>Prompt 可以提醒模型谨慎，但真正可靠的限制要放在 Runtime 层。因为 Runtime 才能稳定读取工具权限、调用次数、执行耗时、错误类型和资源边界。</p>
+<br/>
+<br/>
+
+<h2 id="三、恢复：失败后要能从中间继续"><a href="#三、恢复：失败后要能从中间继续" class="headerlink" title="三、恢复：失败后要能从中间继续"></a>三、恢复：失败后要能从中间继续</h2><p>Agent Runtime 和普通函数调用最大的区别之一，是任务往往不是单步完成的。</p>
+<p>一次完整任务可能包含：</p>
+<ul>
+<li>读上下文</li>
+<li>搜索资料</li>
+<li>制定计划</li>
+<li>调用工具</li>
+<li>修改状态</li>
+<li>等待用户确认</li>
+<li>继续执行</li>
+<li>生成最终结果</li>
+</ul>
+<p>如果系统在第六步崩了，最差的设计是让用户从头再来。</p>
+<p>更好的设计是：Runtime 能从最近一次可信 checkpoint 恢复。</p>
+<br/>
+
+<h3 id="Checkpoint-不只是保存聊天记录"><a href="#Checkpoint-不只是保存聊天记录" class="headerlink" title="Checkpoint 不只是保存聊天记录"></a>Checkpoint 不只是保存聊天记录</h3><p>很多系统以为保存 messages 就等于保存状态。其实不够。</p>
+<p>对 Agent Runtime 来说，checkpoint 至少要包含：</p>
+<ul>
+<li>当前任务目标</li>
+<li>已完成步骤</li>
+<li>待执行步骤</li>
+<li>工具调用结果</li>
+<li>外部副作用记录</li>
+<li>用户确认状态</li>
+<li>memory 读写记录</li>
+<li>当前权限上下文</li>
+</ul>
+<p>尤其是外部副作用记录非常关键。</p>
+<p>如果 Agent 已经发过邮件、改过文件、提交过订单，恢复时就不能简单重试同一步。否则「恢复」会变成「重复执行」。</p>
+<br/>
+
+<h3 id="恢复机制要区分三种失败"><a href="#恢复机制要区分三种失败" class="headerlink" title="恢复机制要区分三种失败"></a>恢复机制要区分三种失败</h3><p>并不是所有失败都应该自动恢复。</p>
+<table>
+<thead>
+<tr>
+<th>失败类型</th>
+<th>例子</th>
+<th>推荐处理</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>暂时性失败</td>
+<td>网络超时、限流、依赖短暂不可用</td>
+<td>自动重试或延迟恢复</td>
+</tr>
+<tr>
+<td>可修正失败</td>
+<td>参数格式错误、工具返回可读错误</td>
+<td>让 Agent 修正后继续</td>
+</tr>
+<tr>
+<td>语义性失败</td>
+<td>目标冲突、权限不足、用户意图不清</td>
+<td>暂停并请求人工输入</td>
+</tr>
+</tbody></table>
+<p>这也是为什么 Runtime 需要把错误结构化，而不是只把异常文本塞回模型。</p>
+<p>模型看到 <code>Error: failed</code> 只能猜。Runtime 如果告诉它「这是限流」「这是权限不足」「这是参数缺字段」，Agent 才能做出更稳定的下一步。</p>
+<br/>
+<br/>
+
+<h2 id="四、把三条生命线串成一个闭环"><a href="#四、把三条生命线串成一个闭环" class="headerlink" title="四、把三条生命线串成一个闭环"></a>四、把三条生命线串成一个闭环</h2><p>观测、降级、恢复不是三个孤立模块。</p>
+<p>它们应该形成一个闭环：</p>
+<ol>
+<li>观测发现异常信号</li>
+<li>Runtime 根据规则触发降级</li>
+<li>降级后保留状态和证据</li>
+<li>人或 Agent 修正问题</li>
+<li>系统从 checkpoint 恢复执行</li>
+<li>事故 trace 进入评测集，反过来改进 Runtime</li>
+</ol>
+<p>这也是我越来越喜欢把 Agent Runtime 看成「执行操作系统」的原因。</p>
+<p>模型负责推理，工具负责能力，Runtime 负责让这一切在真实世界里有边界、有状态、有恢复路径。</p>
+<p>如果没有 Runtime，Agent 只是一个会调用工具的模型。</p>
+<p>有了 Runtime，Agent 才开始像一个能长期运行的系统。</p>
+<br/>
+<br/>
+
+<h2 id="五、一个简单的生产检查清单"><a href="#五、一个简单的生产检查清单" class="headerlink" title="五、一个简单的生产检查清单"></a>五、一个简单的生产检查清单</h2><p>如果你正在把 Agent 做到生产环境，可以用下面这份清单快速自查：</p>
+<ul>
+<li>是否能查看每一次工具调用的输入、输出、耗时和错误？</li>
+<li>是否能知道 Agent 每一步为什么这样做？</li>
+<li>是否有任务级 checkpoint，而不只是 message 历史？</li>
+<li>是否区分了可重试错误、可修正错误和必须人工介入的错误？</li>
+<li>是否限制了高危工具的自动调用权限？</li>
+<li>是否有 token、时间、工具次数、外部成本预算？</li>
+<li>是否能从中断处继续，而不是要求用户重新开始？</li>
+<li>是否能把线上失败样本沉淀成回归评测？</li>
+</ul>
+<p>如果这些问题大部分答案是否定的，那系统还不算真正生产就绪。</p>
+<p>它可能能演示，但还不能托付。</p>
+<br/>
+<br/>
+
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>Agent Runtime 的价值，不是让模型显得更像人，而是让模型的行动变得更像工程系统。</p>
+<p>一个可靠的 Agent 不只是会完成任务，还应该能解释过程、控制风险、从失败中恢复。</p>
+<p>所以，当我们讨论 LangChain、LangGraph、Agents SDK 或任何 Agent Runtime 时，真正要问的不是「它能不能跑一个漂亮 demo」，而是：</p>
+<p><strong>它能不能在出错时留下证据，在风险升高时主动降级，在失败之后继续向前。</strong></p>
+<p>这才是 Agent 从玩具走向生产的分界线。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.liluhui.cn">Luhui芦荟</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.liluhui.cn/2026/05/20/Agent-Runtime-Production-Observability-Degradation-Recovery/">https://blog.liluhui.cn/2026/05/20/Agent-Runtime-Production-Observability-Degradation-Recovery/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.liluhui.cn" target="_blank">Luhui's Personal Website</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Agent/">Agent</a><a class="post-meta__tags" href="/tags/Agent-Runtime/">Agent Runtime</a><a class="post-meta__tags" href="/tags/LangChain/">LangChain</a><a class="post-meta__tags" href="/tags/%E5%8F%AF%E9%9D%A0%E6%80%A7/">可靠性</a></div><div class="post-share"><div class="social-share" data-image="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="next-post pull-full" href="/2026/05/04/AHE-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90%EF%BC%9ACoding-Agent-%E7%9A%84-Harness-%E5%A6%82%E4%BD%95%E8%87%AA%E5%8A%A8%E6%BC%94%E5%8C%96/" title="AHE 深度解析：Coding Agent 的 Harness 如何自动演化"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">AHE 深度解析：Coding Agent 的 Harness 如何自动演化</div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="https://liluhui.oss-cn-hangzhou.aliyuncs.com/assets/imgs/C31A6047.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Luhui芦荟</div><div class="author-info-description">关于生活、学习、工作</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">130</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="/rss2.xml" target="_blank" title="RSS"><i class="fas fa-rss"></i></a><a class="social-icon" href="https://github.com/LDingLDing" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:liluhuizj@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%A7%82%E6%B5%8B%EF%BC%9A%E4%B8%8D%E8%A6%81%E5%8F%AA%E8%AE%B0%E5%BD%95%E6%9C%80%E7%BB%88%E7%AD%94%E6%A1%88"><span class="toc-number">1.</span> <span class="toc-text">一、观测：不要只记录最终答案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Agent-Trace-%E5%BA%94%E8%AF%A5%E8%AE%B0%E5%BD%95%E4%BB%80%E4%B9%88"><span class="toc-number">1.1.</span> <span class="toc-text">Agent Trace 应该记录什么</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E9%99%8D%E7%BA%A7%EF%BC%9A%E5%88%AB%E8%AE%A9-Agent-%E5%8F%AA%E6%9C%89%E3%80%8C%E5%85%A8%E8%87%AA%E5%8A%A8%E3%80%8D%E4%B8%80%E7%A7%8D%E5%BD%A2%E6%80%81"><span class="toc-number">2.</span> <span class="toc-text">二、降级：别让 Agent 只有「全自动」一种形态</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%99%8D%E7%BA%A7%E4%B8%8D%E6%98%AF%E5%A4%B1%E8%B4%A5%EF%BC%8C%E8%80%8C%E6%98%AF%E6%8E%A7%E5%88%B6%E9%A3%8E%E9%99%A9"><span class="toc-number">2.1.</span> <span class="toc-text">降级不是失败，而是控制风险</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AF%E4%BB%A5%E8%90%BD%E5%9C%B0%E7%9A%84%E9%99%8D%E7%BA%A7%E7%AD%96%E7%95%A5"><span class="toc-number">2.2.</span> <span class="toc-text">可以落地的降级策略</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%81%A2%E5%A4%8D%EF%BC%9A%E5%A4%B1%E8%B4%A5%E5%90%8E%E8%A6%81%E8%83%BD%E4%BB%8E%E4%B8%AD%E9%97%B4%E7%BB%A7%E7%BB%AD"><span class="toc-number">3.</span> <span class="toc-text">三、恢复：失败后要能从中间继续</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Checkpoint-%E4%B8%8D%E5%8F%AA%E6%98%AF%E4%BF%9D%E5%AD%98%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95"><span class="toc-number">3.1.</span> <span class="toc-text">Checkpoint 不只是保存聊天记录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%81%A2%E5%A4%8D%E6%9C%BA%E5%88%B6%E8%A6%81%E5%8C%BA%E5%88%86%E4%B8%89%E7%A7%8D%E5%A4%B1%E8%B4%A5"><span class="toc-number">3.2.</span> <span class="toc-text">恢复机制要区分三种失败</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%8A%8A%E4%B8%89%E6%9D%A1%E7%94%9F%E5%91%BD%E7%BA%BF%E4%B8%B2%E6%88%90%E4%B8%80%E4%B8%AA%E9%97%AD%E7%8E%AF"><span class="toc-number">4.</span> <span class="toc-text">四、把三条生命线串成一个闭环</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E7%94%9F%E4%BA%A7%E6%A3%80%E6%9F%A5%E6%B8%85%E5%8D%95"><span class="toc-number">5.</span> <span class="toc-text">五、一个简单的生产检查清单</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AF%AD"><span class="toc-number">6.</span> <span class="toc-text">结语</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" target="_blank" rel="noopener" href="https://luhuidev.com/zh-cn/essays/langchain-agent-runtime-production-reliability" title="Agent Runtime 上线后的三条生命线：观测、降级与恢复">Agent Runtime 上线后的三条生命线：观测、降级与恢复</a><time datetime="2026-05-20T13:10:00.000Z" title="发表于 2026-05-20 21:10:00">2026-05-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" target="_blank" rel="noopener" href="https://luhuidev.com/zh-cn/essays/agentic-harness-engineering-coding-agent-harness-evolution" title="AHE 深度解析：Coding Agent 的 Harness 如何自动演化">AHE 深度解析：Coding Agent 的 Harness 如何自动演化</a><time datetime="2026-05-04T15:14:43.000Z" title="发表于 2026-05-04 23:14:43">2026-05-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" target="_blank" rel="noopener" href="https://luhuidev.com/zh-cn/essays/paperbanana-academic-figure-multi-agent-roles-mechanism" title="如何通过多 Agent 分工完成学术绘图？机制拆解">如何通过多 Agent 分工完成学术绘图？机制拆解</a><time datetime="2026-04-22T02:00:00.000Z" title="发表于 2026-04-22 10:00:00">2026-04-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" target="_blank" rel="noopener" href="https://luhuidev.com/zh-cn/essays/why-dspy-signatures-are-easier-to-optimize-than-prompts" title="DSPy 教程：为什么 Signature 比直接写 Prompt 更容易做自动优化">DSPy 教程：为什么 Signature 比直接写 Prompt 更容易做自动优化</a><time datetime="2026-04-21T16:00:00.000Z" title="发表于 2026-04-22 00:00:00">2026-04-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" target="_blank" rel="noopener" href="https://luhuidev.com/zh-cn/essays/paperbanana-ai-academic-method-figure-collaboration" title="拆解 PaperBanana：AI 如何协作生成学术方法图">拆解 PaperBanana：AI 如何协作生成学术方法图</a><time datetime="2026-04-10T16:00:00.000Z" title="发表于 2026-04-11 00:00:00">2026-04-11</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By Luhui芦荟</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn">浙ICP备19010836号</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const initGitalk = () => {
+    const gitalk = new Gitalk(Object.assign({
+      clientID: '4987f0fb0a509fb9f0af',
+      clientSecret: '7e264967a3ea557003aacdf795b9e57e36a56382',
+      repo: 'ldinglding.github.io',
+      owner: 'LDingLDing',
+      admin: ['LDingLDing'],
+      id: 'aaef516fc3e27c6f4a0495a144c6e8bd',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  const loadGitalk = async() => {
+    if (typeof Gitalk === 'function') initGitalk()
+    else {
+      await btf.getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+      await btf.getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js')
+      initGitalk()
+    }
+  }
+  
+  const commentCount = n => {
+    const isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+    if (isCommentCount) {
+      isCommentCount.textContent= n
+    }
+  }
+
+  if ('Gitalk' === 'Gitalk' || !false) {
+    if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+    else loadGitalk()
+  } else {
+    window.loadOtherComment = loadGitalk
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
