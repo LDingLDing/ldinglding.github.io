@@ -1,3 +1,4 @@
+https://blog.liluhui.cn/2026/05/13/Anthropic-2026-Agent-Harness-Managed-Agents/
 https://blog.liluhui.cn/2026/05/20/Agent-Runtime-Production-Observability-Degradation-Recovery/
 https://blog.liluhui.cn/2026/05/04/AHE-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90%EF%BC%9ACoding-Agent-%E7%9A%84-Harness-%E5%A6%82%E4%BD%95%E8%87%AA%E5%8A%A8%E6%BC%94%E5%8C%96/
 https://blog.liluhui.cn/2026/04/22/why-dspy-signatures-are-easier-to-optimize-than-prompts/
@@ -170,6 +171,8 @@ https://blog.liluhui.cn/tags/Agent/
 https://blog.liluhui.cn/tags/Agent-Runtime/
 https://blog.liluhui.cn/tags/LangChain/
 https://blog.liluhui.cn/tags/%E5%8F%AF%E9%9D%A0%E6%80%A7/
+https://blog.liluhui.cn/tags/Anthropic/
+https://blog.liluhui.cn/tags/Agent-Harness/
 https://blog.liluhui.cn/categories/%E7%94%9F%E6%B4%BB/
 https://blog.liluhui.cn/categories/%E5%89%8D%E7%AB%AF/
 https://blog.liluhui.cn/categories/%E8%BF%90%E7%BB%B4/

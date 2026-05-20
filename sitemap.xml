@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.liluhui.cn/2026/05/13/Anthropic-2026-Agent-Harness-Managed-Agents/</loc>
+    
+    <lastmod>2026-05-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.liluhui.cn/2026/05/20/Agent-Runtime-Production-Observability-Degradation-Recovery/</loc>
     
     <lastmod>2026-05-20</lastmod>
@@ -1474,6 +1483,20 @@
   
   <url>
     <loc>https://blog.liluhui.cn/tags/%E5%8F%AF%E9%9D%A0%E6%80%A7/</loc>
+    <lastmod>2026-05-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.liluhui.cn/tags/Anthropic/</loc>
+    <lastmod>2026-05-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.liluhui.cn/tags/Agent-Harness/</loc>
     <lastmod>2026-05-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
